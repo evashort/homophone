@@ -27,3 +27,15 @@ $RECYCLE.BIN/
 elm-stuff/
 # elm-repl generated files
 repl-temp-*
+
+python/downloads/
+
+# Created by https://www.gitignore.io/api/python
+
+### Python ###
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+index.html

@@ -1,0 +1,82 @@
+0
+DH DH, DH
+F F, F
+S S, S
+SH SH, SH
+TH TH, TH
+V V, V
+Z Z, Z
+ZH ZH, ZH
+AW W, AW
+AY Y, AY
+ER R, ER
+EY Y, EY
+IY Y, IY
+OW W, OW
+OY Y, OY
+UW W, UW
+B B, B
+D D, D
+G G, G
+K K, K
+P P, P
+T T, T
+L L, L
+M M, M
+N N, N
+NG NG, NG
+R R, R
+1
+D, T, T D, D T
+B, P, P B, B P
+G, K, G K, K G
+F, V
+S, Z
+TH, DH
+CH, JH
+ZH, SH
+HH,
+AH,
+AA, AH
+AE, AH
+AO, AH
+EH, AH
+ER, AH
+IH, AH
+OW, AH
+UH, AH
+UW, AH
+R, ER, ER R
+AA R, ER
+AE R, ER
+AH R, ER
+AO R, ER
+EH R, ER
+IH R, ER
+UH R, ER
+UW R, ER
+AA, AO
+W AO, AO
+IH, EH
+IY, IH
+EY, EH
+N, NG
+T SH, CH, SH, T CH
+IH, AH
+D JH, JH
+D SH, SH
+2
+AY R, ER
+P F, F
+SH T, S T
+N D, N T, N
+AE, AO
+AY, IH
+AY, IY
+EH, AE
+IY, AH
+AW, AO
+IH, AA
+UH, IH
+UH, AO
+EY, IY
