@@ -9,11 +9,11 @@ import DAG exposing (DAG, Edge)
 import DeletionCosts exposing (DeletionCosts)
 import Deletions exposing (Hiker)
 import Knapsack exposing (Priced)
-import PricedValue exposing (PricedValue)
+import Perforation exposing (PerforatedValue)
 import SubCosts exposing (SubCosts)
 
 type alias SubChoice =
-  { value : PricedValue
+  { value : PerforatedValue
   , cost : Float
   , rest : Hiker
   }
@@ -90,7 +90,7 @@ toSubChoice key spaces pricedValue deletion =
       if deletionsAddedSpace then (String.length key) :: spaces else spaces
   in
     { value =
-        PricedValue.price key (List.reverse newSpaces) <| fst pricedValue
+        Perforation.perforate key (List.reverse newSpaces) <| fst pricedValue
     , cost = (snd pricedValue) + deletion.cost
     , rest = deletion.state
     }

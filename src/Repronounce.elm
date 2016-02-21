@@ -10,10 +10,16 @@ import DAG exposing (DAG)
 import DeletionCosts exposing (DeletionCosts)
 import Deletions exposing (Hiker)
 import Knapsack exposing (Priced)
-import PricedValue exposing (PricedValue, ValueSplit)
+import Perforation exposing (Perforation, PerforatedValue, ValueSplit)
 import SubCosts exposing (SubCosts)
 import Subs exposing (SubChoice)
 import WordCosts exposing (WordCosts)
+
+shallowCost : Float
+shallowCost = 1.0
+
+deepCost : Float
+deepCost = 2.0
 
 type alias CostData =
   { deletionCosts : DeletionCosts
@@ -24,7 +30,7 @@ type alias CostData =
 type alias State =
   { spelling : Maybe String
   , rest : Hiker
-  , leftovers : PricedValue
+  , leftovers : PerforatedValue
   }
 
 repronounce : CostData -> List (List String) -> Maybe (String, Float)
@@ -40,7 +46,7 @@ repronounce data wordLists =
   in
     case
       Dict.get
-        ((DAG.length dag - 1), CBool.cTrue, PricedValue.empty)
+        ((DAG.length dag - 1), CBool.cTrue, Perforation.emptyValue)
         knapsacks
     of
       Nothing -> Nothing
@@ -69,15 +75,15 @@ deletionToState deletion =
       }
   }
 
-stateKey : State -> (Int, CBool, PricedValue)
+stateKey : State -> (Int, CBool, PerforatedValue)
 stateKey state =
   (state.rest.i, CBool.cBool state.rest.inSpace, state.leftovers)
 
 getSuccessors :
-  CostData -> DAG -> (Int, CBool, PricedValue) -> List (Priced State)
+  CostData -> DAG -> (Int, CBool, PerforatedValue) -> List (Priced State)
 getSuccessors data dag (i, cInSpace, leftovers) =
   let
-    word = PricedValue.getValue leftovers
+    word = Perforation.getValue leftovers
     hiker = { i = i, inSpace = CBool.toBool cInSpace }
   in let
     rest =
@@ -89,14 +95,14 @@ getSuccessors data dag (i, cInSpace, leftovers) =
   in
     List.filterMap
       (toWordChoice data.wordCosts "" 0.0 hiker)
-      (PricedValue.getValueSplits leftovers)
+      (Perforation.getValueSplits leftovers)
     ++ rest
 
 getWordChoices :
   CostData -> DAG -> String -> Float -> SubChoice -> List (Priced State)
 getWordChoices data dag word cost subChoice =
   let
-    newWord = word ++ PricedValue.getValue subChoice.value
+    newWord = word ++ Perforation.getValue subChoice.value
     newCost = cost + subChoice.cost
   in let
     rest =
@@ -112,7 +118,7 @@ getWordChoices data dag word cost subChoice =
   in
     List.filterMap
       (toWordChoice data.wordCosts word newCost subChoice.rest)
-      (PricedValue.getValueSplits subChoice.value)
+      (Perforation.getValueSplits subChoice.value)
     ++ rest
 
 toWordChoice :
@@ -127,5 +133,11 @@ toWordChoice wordCosts word cost rest split =
             , rest = rest
             , leftovers = split.leftovers
             }
-        , cost = cost + split.cost + wordCost
+        , cost = cost + perforationCost split.perforation + wordCost
         }
+
+perforationCost : Perforation -> Float
+perforationCost perforation =
+  if perforation == Perforation.shallow then shallowCost
+  else if perforation == Perforation.deep then deepCost
+  else 0.0
