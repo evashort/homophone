@@ -16,15 +16,11 @@ type alias LoadedData =
   , wordCosts : WordCosts
   }
 
-respell : LoadedData -> String -> String
+respell : LoadedData -> String -> Maybe (String, Float)
 respell data text =
-  String.join
-    " " <|
-    Maybe.withDefault
-      [] <|
-      Repronounce.repronounce
-        (getCostData data) <|
-        pronounce data.pronouncer <| String.toLower text
+  Repronounce.repronounce
+    (getCostData data) <|
+    pronounce data.pronouncer <| String.toLower text
 
 getCostData : LoadedData -> CostData
 getCostData data =

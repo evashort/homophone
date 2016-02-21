@@ -27,7 +27,7 @@ type alias State =
   , leftovers : PricedValue
   }
 
-repronounce : CostData -> List (List String) -> Maybe (List String)
+repronounce : CostData -> List (List String) -> Maybe (String, Float)
 repronounce data wordLists =
   let
     dag = DAG.fromPathLists wordLists
@@ -38,11 +38,19 @@ repronounce data wordLists =
         (getSuccessors data dag) <|
         getSeed data.deletionCosts dag
   in
-    Maybe.map
-      (List.reverse << .spellings << .state) <|
+    case
       Dict.get
         ((DAG.length dag - 1), CBool.cTrue, PricedValue.empty)
         knapsacks
+    of
+      Nothing -> Nothing
+      Just pricedResultState ->
+        Just
+          ( String.join
+              " " <|
+              List.reverse <| pricedResultState.state.spellings
+          , pricedResultState.cost
+          )
 
 getSeed : DeletionCosts -> DAG -> List (Priced State)
 getSeed deletionCosts dag =

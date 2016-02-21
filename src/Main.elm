@@ -83,7 +83,10 @@ update action model =
         | genText =
             case model.dataLoader of
               DataLoader.NotLoaded _ -> "not loaded"
-              DataLoader.Loaded data -> Respell.respell data model.userText
+              DataLoader.Loaded data ->
+                Maybe.withDefault
+                  "no solution" <|
+                  Maybe.map fst <| Respell.respell data model.userText
         }
       , Effects.none
       )

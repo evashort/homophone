@@ -14,7 +14,7 @@ all =
     [ test
         "It can repeat the same rabbit in order to create the right leftovers" <|
         assertEqual
-          "abca bcab cabcar" <|
+          (Just ("abca bcab cabcar", 3 * whiteCost)) <|
           respellExample
             [["ar"]]
             [("abca", 0.0), ("bcab", 0.0), ("cabcar", 0.0)]
@@ -25,7 +25,7 @@ all =
 respellExample :
   List (List String) -> List (String, Float) ->
     List (String, List (String, Float)) -> List (String, Float) ->
-    String
+    Maybe (String, Float)
 respellExample sentence wordCosts subCosts deletionCosts =
   let
     maybePronouncer = -- does not support more than 10 words
@@ -48,4 +48,4 @@ respellExample sentence wordCosts subCosts deletionCosts =
           , wordCosts = wordCosts
           } <|
           String.join " " <| List.indexedMap (always << toString) sentence
-      _ -> "error in test setup: unsorted data"
+      _ -> Nothing

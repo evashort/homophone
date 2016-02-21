@@ -29,10 +29,12 @@ price key spaces value =
     costTiers =
       case (List.head spaces, List.head <| List.reverse spaces) of
         (Just firstSpace, Just lastSpace) ->
-          [ (lastSpace + valueLength - keyLength, blackCost)
-          , (valueLength - 1, whiteCost)
-          , (firstSpace - 1, grayCost)
-          ]
+          if keyLength == 0 then [ (0, whiteCost) ]
+          else
+            [ (lastSpace + valueLength - keyLength, blackCost)
+            , (valueLength - 1, whiteCost)
+            , (firstSpace - 1, grayCost)
+            ]
         _ -> []
   in
     List.indexedMap (pricePhoneme costTiers) <| String.toList value
