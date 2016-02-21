@@ -22,7 +22,7 @@ type alias CostData =
   }
 
 type alias State =
-  { spellings : List String
+  { spelling : Maybe String
   , rest : Hiker
   , leftovers : PricedValue
   }
@@ -44,12 +44,15 @@ repronounce data wordLists =
         knapsacks
     of
       Nothing -> Nothing
-      Just pricedResultState ->
+      Just knapsack ->
         Just
           ( String.join
               " " <|
-              List.reverse <| pricedResultState.state.spellings
-          , pricedResultState.cost
+              List.reverse <|
+                List.filterMap
+                  .spelling <|
+                  knapsack.state :: knapsack.ancestors
+          , knapsack.cost
           )
 
 getSeed : DeletionCosts -> DAG -> List (Priced State)
@@ -60,7 +63,7 @@ deletionToState : Priced Hiker -> Priced State
 deletionToState deletion =
   { deletion
   | state =
-      { spellings = []
+      { spelling = Nothing
       , rest = deletion.state
       , leftovers = []
       }
@@ -70,27 +73,28 @@ stateKey : State -> (Int, CBool, PricedValue)
 stateKey state =
   (state.rest.i, CBool.cBool state.rest.inSpace, state.leftovers)
 
-getSuccessors : CostData -> DAG -> State -> List (Priced State)
-getSuccessors data dag state =
+getSuccessors :
+  CostData -> DAG -> (Int, CBool, PricedValue) -> List (Priced State)
+getSuccessors data dag (i, cInSpace, leftovers) =
   let
-    word = PricedValue.getValue state.leftovers
+    word = PricedValue.getValue leftovers
+    hiker = { i = i, inSpace = CBool.toBool cInSpace }
   in let
     rest =
       if CompletionDict.startWith word data.wordCosts then
         List.concatMap
-          (getWordChoices data dag state.spellings word 0.0) <|
-          Subs.getSubChoices data.deletionCosts data.subCosts dag state.rest
+          (getWordChoices data dag word 0.0) <|
+          Subs.getSubChoices data.deletionCosts data.subCosts dag hiker
       else []
   in
     List.filterMap
-      (toWordChoice data.wordCosts state.spellings "" 0.0 state.rest)
-      (PricedValue.getValueSplits state.leftovers)
+      (toWordChoice data.wordCosts "" 0.0 hiker)
+      (PricedValue.getValueSplits leftovers)
     ++ rest
 
 getWordChoices :
-  CostData -> DAG -> List String -> String -> Float -> SubChoice ->
-    List (Priced State)
-getWordChoices data dag spellings word cost subChoice =
+  CostData -> DAG -> String -> Float -> SubChoice -> List (Priced State)
+getWordChoices data dag word cost subChoice =
   let
     newWord = word ++ PricedValue.getValue subChoice.value
     newCost = cost + subChoice.cost
@@ -98,7 +102,7 @@ getWordChoices data dag spellings word cost subChoice =
     rest =
       if CompletionDict.startWith newWord data.wordCosts then
         List.concatMap
-          (getWordChoices data dag spellings newWord newCost) <|
+          (getWordChoices data dag newWord newCost) <|
           Subs.getSubChoices
             data.deletionCosts
             data.subCosts
@@ -107,20 +111,19 @@ getWordChoices data dag spellings word cost subChoice =
       else []
   in
     List.filterMap
-      (toWordChoice data.wordCosts spellings word newCost subChoice.rest)
+      (toWordChoice data.wordCosts word newCost subChoice.rest)
       (PricedValue.getValueSplits subChoice.value)
     ++ rest
 
 toWordChoice :
-  WordCosts -> List String -> String -> Float -> Hiker -> ValueSplit ->
-    Maybe (Priced State)
-toWordChoice wordCosts spellings word cost rest split =
+  WordCosts -> String -> Float -> Hiker -> ValueSplit -> Maybe (Priced State)
+toWordChoice wordCosts word cost rest split =
   case CompletionDict.get (word ++ split.used) wordCosts of
     Nothing -> Nothing
     Just (spelling, wordCost) ->
       Just
         { state =
-            { spellings = spelling :: spellings
+            { spelling = Just spelling
             , rest = rest
             , leftovers = split.leftovers
             }

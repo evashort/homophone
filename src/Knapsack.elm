@@ -8,62 +8,76 @@ type alias Priced s =
   , cost : Float
   }
 
+type alias Knapsack s =
+  { state : s
+  , ancestors : List s
+  , cost : Float
+  }
+
 -- keyFunc should produce a unique result for each state in seed because
 -- there's no guarantee that the lower-cost state will be chosen in the case
 -- of a conflict.
 getKnapsacks :
-  (s -> comparable) -> (s -> List (Priced s)) -> List (Priced s) ->
-    Dict comparable (Priced s)
+  (s -> comparable) -> (comparable -> List (Priced s)) -> List (Priced s) ->
+    Dict comparable (Knapsack s)
 getKnapsacks keyFunc successorFunc seed =
   let
     keys = List.map (keyFunc << .state) seed
   in let
-    states = Dict.fromList <| List.map2 (,) keys seed
+    states =
+      Dict.fromList <|
+        List.map2 (,) keys <| List.map (toChild [] 0.0) seed
     fringe = PrioritySet.fromList keys
   in
     knapsackHelper keyFunc successorFunc states fringe
 
+toChild : List s -> Float -> Priced s -> Knapsack s
+toChild ancestors parentCost pricedState =
+  { state = pricedState.state
+  , ancestors = ancestors
+  , cost = parentCost + pricedState.cost
+  }
+
 knapsackHelper :
-  (s -> comparable) -> (s -> List (Priced s)) -> Dict comparable (Priced s) ->
-    PrioritySet comparable -> Dict comparable (Priced s)
-knapsackHelper keyFunc successorFunc states fringe =
+  (s -> comparable) -> (comparable -> List (Priced s)) ->
+    Dict comparable (Knapsack s) -> PrioritySet comparable ->
+    Dict comparable (Knapsack s)
+knapsackHelper keyFunc successorFunc knapsacks fringe =
   case PrioritySet.findMin fringe of
-    Nothing -> states
+    Nothing -> knapsacks
     Just key ->
-      case Dict.get key states of
+      case Dict.get key knapsacks of
         Nothing -> Dict.empty -- this should never happen
-        Just pricedState ->
+        Just knapsack ->
           let
+            ancestors = knapsack.state :: knapsack.ancestors
+          in let
             successors =
               List.map
-                (increaseCostBy pricedState.cost) <|
-                successorFunc pricedState.state
+                (toChild ancestors knapsack.cost) <|
+                successorFunc key
           in let
-            (newStates, newFringe) =
+            (newKnapsacks, newFringe) =
               List.foldl
-                (insertState keyFunc)
-                (states, PrioritySet.deleteMin fringe)
+                (insertKnapsack keyFunc)
+                (knapsacks, PrioritySet.deleteMin fringe)
                 successors
           in
-            knapsackHelper keyFunc successorFunc newStates newFringe
+            knapsackHelper keyFunc successorFunc newKnapsacks newFringe
 
-increaseCostBy : Float -> Priced s -> Priced s
-increaseCostBy increase pricedState =
-  { pricedState | cost = pricedState.cost + increase }
-
-insertState :
-  (s -> comparable) -> Priced s ->
-    (Dict comparable (Priced s), PrioritySet comparable) ->
-    (Dict comparable (Priced s), PrioritySet comparable)
-insertState keyFunc pricedState (states, fringe) =
+insertKnapsack :
+  (s -> comparable) -> Knapsack s ->
+    (Dict comparable (Knapsack s), PrioritySet comparable) ->
+    (Dict comparable (Knapsack s), PrioritySet comparable)
+insertKnapsack keyFunc knapsack (knapsacks, fringe) =
   let
-    key = keyFunc pricedState.state
+    key = keyFunc knapsack.state
   in let
     shouldInsert =
       Maybe.withDefault
         True <|
-        Maybe.map ((<) pricedState.cost << .cost) <| Dict.get key states
+        Maybe.map ((<) knapsack.cost << .cost) <| Dict.get key knapsacks
   in
     if shouldInsert then
-      ( Dict.insert key pricedState states , PrioritySet.insert key fringe )
-    else (states, fringe)
+      ( Dict.insert key knapsack knapsacks, PrioritySet.insert key fringe )
+    else (knapsacks, fringe)

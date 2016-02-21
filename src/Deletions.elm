@@ -6,7 +6,7 @@ import String
 import CompletionDict exposing (CompletionDict)
 import DAG exposing (DAG, Edge)
 import DeletionCosts exposing (DeletionCosts)
-import Knapsack exposing (Priced)
+import Knapsack exposing (Priced, Knapsack)
 
 type alias Hiker =
   { i : Int
@@ -23,13 +23,13 @@ getDeletions deletionCosts dag i =
         (deletionChoices deletionCosts dag)
         [ { state = i, cost = 0.0 } ]
 
-toHiker : DAG -> Int -> Priced Int -> Priced Hiker
+toHiker : DAG -> Int -> Knapsack Int -> Priced Hiker
 toHiker dag start deletion =
-  { deletion
-  | state =
+  { state =
       { i = deletion.state
       , inSpace = DAG.spaceInRange start deletion.state dag
       }
+  , cost = deletion.cost
   }
 
 deletionChoices :
