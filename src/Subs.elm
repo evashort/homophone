@@ -16,7 +16,7 @@ type alias SubChoice =
   , cost : Float
   , i : Int
   , valueEnd : Int
-  , pluralKey : Bool
+  , key : String
   }
 
 getSubChoices :
@@ -25,7 +25,7 @@ getSubChoices deletionCosts subCosts dag i =
   let
     rabbits =
       List.concatMap
-        (toSubChoices False i [{ state = i, cost = 0.0 }]) <|
+        (toSubChoices "" i [{ state = i, cost = 0.0 }]) <|
         Maybe.withDefault [] <| CompletionDict.get "" subCosts
     subs =
       List.concatMap
@@ -54,10 +54,9 @@ subChoicesHelper deletionCosts subCosts dag key edge =
       Just valueChoices ->
         let
           deletions = Deletions.getDeletions deletionCosts dag edge.dst
-          pluralKey = String.length newKey > 1
         in
           List.concatMap
-            (toSubChoices pluralKey edge.dst deletions)
+            (toSubChoices newKey edge.dst deletions)
             valueChoices
           ++ rest
 
@@ -68,15 +67,15 @@ getValueChoices key subCosts =
       (key, 0.0) :: (Maybe.withDefault [] <| CompletionDict.get key subCosts)
   else CompletionDict.get key subCosts
 
-toSubChoices : Bool -> Int -> List (Priced Int) -> CostPair -> List SubChoice
-toSubChoices pluralKey valueEnd deletions pricedValue =
-  List.map (toSubChoice pluralKey pricedValue valueEnd) deletions
+toSubChoices : String -> Int -> List (Priced Int) -> CostPair -> List SubChoice
+toSubChoices key valueEnd deletions pricedValue =
+  List.map (toSubChoice key pricedValue valueEnd) deletions
 
-toSubChoice : Bool -> CostPair -> Int -> Priced Int -> SubChoice
-toSubChoice pluralKey pricedValue valueEnd deletion =
+toSubChoice : String -> CostPair -> Int -> Priced Int -> SubChoice
+toSubChoice key pricedValue valueEnd deletion =
   { value = fst pricedValue
   , cost = snd pricedValue + deletion.cost
   , i = deletion.state
   , valueEnd = valueEnd
-  , pluralKey = pluralKey
+  , key = key
   }

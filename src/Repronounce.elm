@@ -29,7 +29,7 @@ type alias CostData =
 type alias State =
   { spelling : Maybe String
   , i : Int
-  , inSpace : Bool
+  , rspace : Bool
   , leftovers : String
   }
 
@@ -68,7 +68,7 @@ deletionToState deletion =
   { state =
       { spelling = Nothing
       , i = deletion.state
-      , inSpace = True
+      , rspace = True
       , leftovers = ""
       }
   , cost = deletion.cost
@@ -76,85 +76,89 @@ deletionToState deletion =
 
 stateKey : State -> (Int, CBool, String)
 stateKey state =
-  (state.i, CBool.cBool state.inSpace, state.leftovers)
+  (state.i, CBool.cBool state.rspace, state.leftovers)
 
 getSuccessors : CostData -> DAG -> (Int, CBool, String) -> List (Priced State)
-getSuccessors data dag (i, cInSpace, leftovers) =
+getSuccessors data dag (i, cRspace, leftovers) =
   let
-    inSpace = CBool.toBool cInSpace
+    rspace = CBool.toBool cRspace
   in let
     rest =
       if CompletionDict.startWith leftovers data.wordCosts then
         List.concatMap
-          (getWordChoices data dag leftovers i inSpace 0.0) <|
+          (getWordChoices data dag leftovers i rspace 0.0) <|
           Subs.getSubChoices data.deletionCosts data.subCosts dag i
       else []
   in
     List.filterMap
-      (toWordChoice data.wordCosts dag "" i inSpace False False 0.0)
-      (getValueSplits leftovers)
+      ( toWordChoice data.wordCosts dag "" i False rspace 0.0
+          { value = leftovers
+          , cost = 3.14159
+          , i = i
+          , valueEnd = i
+          , key = "12"
+          }
+      )
+      [1..String.length leftovers]
     ++ rest
 
 getWordChoices :
   CostData -> DAG -> String -> Int -> Bool -> Float -> SubChoice ->
     List (Priced State)
-getWordChoices data dag word i inSpace cost subChoice =
+getWordChoices data dag word i lspace cost subChoice =
   let
     newWord = word ++ subChoice.value
     newCost = cost + subChoice.cost
-    rabbit = i == subChoice.i
-  in let
-    newInSpace =
-      if rabbit then inSpace
+    rspace =
+      if subChoice.key == "" then lspace
       else DAG.spaceInRange subChoice.valueEnd subChoice.i dag
   in let
-    spaced =
-      if subChoice.pluralKey then
-        DAG.spaceInRange (i + 1) (subChoice.valueEnd - 1) dag
-      else (String.length subChoice.value > 1) &&  (inSpace || newInSpace)
     rest =
       if CompletionDict.startWith newWord data.wordCosts then
         List.concatMap
-          (getWordChoices data dag newWord subChoice.i newInSpace newCost) <|
+          (getWordChoices data dag newWord subChoice.i rspace newCost) <|
           Subs.getSubChoices data.deletionCosts data.subCosts dag subChoice.i
       else []
   in
     List.filterMap
-      ( toWordChoice
-          data.wordCosts dag word subChoice.i newInSpace spaced rabbit newCost
-      )
-      (getValueSplits subChoice.value)
+      (toWordChoice data.wordCosts dag word i lspace rspace newCost subChoice)
+      [1..String.length subChoice.value]
     ++ rest
 
-getValueSplits : String -> List (String, String)
-getValueSplits value = List.map (splitValue value) [1..String.length value]
-
-splitValue : String -> Int -> (String, String)
-splitValue value i =
-  (String.left i value, String.right (String.length value - i) value)
-
 toWordChoice :
-  WordCosts -> DAG -> String -> Int -> Bool -> Bool -> Bool -> Float ->
-    (String, String) -> Maybe (Priced State)
-toWordChoice
-  wordCosts dag word i inSpace spaced rabbit cost (used, leftovers) =
-  case CompletionDict.get (word ++ used) wordCosts of
-    Nothing -> Nothing
-    Just (spelling, wordCost) ->
-      let
-        boundaryCost =
-          if inSpace && (leftovers == "" || rabbit) then deepCost
-          else
-            if spaced && (leftovers /= "" || String.length used == 1) then
-              shallowCost
-            else 0.0
-      in
-        Just
-          { state =
-              { spelling = Just spelling
-              , i = i
-              , inSpace = inSpace
-              , leftovers = leftovers
-              }
-          , cost = cost + boundaryCost + wordCost
-          }
+  WordCosts -> DAG -> String -> Int -> Bool -> Bool -> Float -> SubChoice ->
+    Int -> Maybe (Priced State)
+toWordChoice wordCosts dag word i lspace rspace cost subChoice usedLen =
+  let used = String.left usedLen subChoice.value in
+    case CompletionDict.get (word ++ used) wordCosts of
+      Nothing -> Nothing
+      Just (spelling, wordCost) ->
+        let
+          leftovers =
+            String.right
+              (String.length subChoice.value - usedLen)
+              subChoice.value
+        in let
+          boundaryCost =
+            if subChoice.key == "" then
+              if rspace then deepCost else 0.0
+            else if String.length subChoice.key == 1 then
+              if leftovers == "" then
+                if rspace then deepCost else 0.0
+              else
+                if lspace || rspace then shallowCost else 0.0
+            else
+              if DAG.spaceInRange (i + 1) (subChoice.valueEnd - 1) dag then
+                shallowCost
+              else
+                if leftovers == "" && rspace then deepCost else 0.0
+        in
+          Just
+            { state =
+                { spelling = Just spelling
+                , i = subChoice.i
+                , rspace = rspace
+                , leftovers = leftovers
+                }
+            , cost = cost + boundaryCost + wordCost
+            }
