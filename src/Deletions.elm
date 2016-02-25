@@ -8,28 +8,20 @@ import DAG exposing (DAG, Edge)
 import DeletionCosts exposing (DeletionCosts)
 import Knapsack exposing (Priced, Knapsack)
 
-type alias Hiker =
-  { i : Int
-  , inSpace : Bool
-  }
-
-getDeletions : DeletionCosts -> DAG -> Int -> List (Priced Hiker)
+getDeletions : DeletionCosts -> DAG -> Int -> List (Priced Int)
 getDeletions deletionCosts dag i =
   List.map
-    (toHiker dag i) <|
+    orphan <|
     Dict.values <|
       Knapsack.getKnapsacks
         identity
         (deletionChoices deletionCosts dag)
         [ { state = i, cost = 0.0 } ]
 
-toHiker : DAG -> Int -> Knapsack Int -> Priced Hiker
-toHiker dag start deletion =
-  { state =
-      { i = deletion.state
-      , inSpace = DAG.spaceInRange start deletion.state dag
-      }
-  , cost = deletion.cost
+orphan : Knapsack Int -> Priced Int
+orphan knapsack =
+  { state = knapsack.state
+  , cost = knapsack.cost
   }
 
 deletionChoices :

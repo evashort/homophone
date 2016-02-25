@@ -53,16 +53,16 @@ all =
     , test
         "deepCost applies in the space left by entire deleted words" <|
         assertEqual
-          (Just ("ah h ha", 3 * deepCost + 3 * unsplitCost)) <|
+          (Just ("ah ha", 2 * deepCost + 2 * unsplitCost)) <|
           respellExample
             [["a"], ["uu"], ["u"], ["uu"], ["a"]]
-            [("ah", 0.0), ("h", 0.0), ("ha", 0.0)]
-            [("", [("hhh", 0.0)])]
+            [("ah", 0.0), ("ha", 0.0)]
+            [("", [("hh", 0.0)])]
             [("u", 0.0)]
     , test
-        "When a word is fully replaced, a boundary within it gets shallowCost" <|
+        "When a word is fully replaced, a boundary within it gets no cost" <|
         assertEqual
-          (Just ("ado go", shallowCost + deepCost)) <|
+          (Just ("ado go", deepCost)) <|
           respellExample
             [["a"], ["cat"], ["o"]]
             [("ado", 0.0), ("go", 0.0)]
@@ -176,15 +176,6 @@ all =
             [("ii", 0.0), ("p", 0.0), ("zza", 0.0)]
             [("", [("izz", 0.0), ("pi", 0.0), ("pzz", 1000.0)])]
             []
-    , test
-        "It can choose words that increase the length of the leftovers" <|
-        assertEqual
-          (Just ("p ii zza", 3 * deepCost + 3 * unsplitCost)) <|
-          respellExample
-            [["a"]]
-            [("ii", 0.0), ("p", 0.0), ("zza", 0.0)]
-            [("", [("izz", 0.0), ("pi", 0.0), ("pzz", 1000.0)])]
-            []
     {-, test
         "unsplitCost applies to words ending in spaced 1val + rabbit" <|
         assertEqual
@@ -251,7 +242,7 @@ all =
     , test
         "unsplitCost n/a if final sub starts with space" <|
         assertEqual
-          (Just ("ballad tin ner", shallowCost + deepCost)) <|
+          (Just ("ballad tin ner", deepCost)) <|
           respellExample
             [["balla"], ["td"], ["inner"]]
             [("ballad", 0.0), ("ner", 0.0), ("tin", 0.0)]
@@ -368,7 +359,7 @@ all =
     , test
         "unsplitCost n/a if word starts inside unspaced nval followed by space" <|
         assertEqual
-          (Just ("bal lad tinner", shallowCost + deepCost)) <|
+          (Just ("bal lad tinner", deepCost)) <|
           respellExample
             [["balla"], ["td"], ["inner"]]
             [("bal", 0.0), ("lad", 0.0), ("tinner", 0.0)]
