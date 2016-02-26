@@ -11,12 +11,18 @@ import Deletions
 import Knapsack exposing (Priced)
 import SubCosts exposing (SubCosts)
 
+type KeyType
+  = EmptyKey
+  | SingularKey
+  | PluralKey
+  | SpacedKey
+
 type alias SubChoice =
   { value : String
   , cost : Float
   , i : Int
-  , valueEnd : Int
-  , key : String
+  , rspace : Bool
+  , keyType : KeyType
   }
 
 getSubChoices :
@@ -25,18 +31,18 @@ getSubChoices deletionCosts subCosts dag i =
   let
     rabbits =
       List.concatMap
-        (toSubChoices "" i [{ state = i, cost = 0.0 }]) <|
+        (toSubChoices dag EmptyKey i [{ state = i, cost = 0.0 }]) <|
         Maybe.withDefault [] <| CompletionDict.get "" subCosts
     subs =
       List.concatMap
-        (subChoicesHelper deletionCosts subCosts dag "") <|
+        (subChoicesHelper deletionCosts subCosts dag i "") <|
         DAG.get i dag
   in
     rabbits ++ subs
 
 subChoicesHelper :
-  DeletionCosts -> SubCosts -> DAG -> String -> Edge -> List SubChoice
-subChoicesHelper deletionCosts subCosts dag key edge =
+  DeletionCosts -> SubCosts -> DAG -> Int -> String -> Edge -> List SubChoice
+subChoicesHelper deletionCosts subCosts dag keyStart key edge =
   let
     newKey = key ++ String.fromChar edge.phoneme
   in let
@@ -45,7 +51,7 @@ subChoicesHelper deletionCosts subCosts dag key edge =
     rest =
       if CompletionDict.startWith newKey subCosts then
         List.concatMap
-          (subChoicesHelper deletionCosts subCosts dag newKey) <|
+          (subChoicesHelper deletionCosts subCosts dag keyStart newKey) <|
           DAG.get edge.dst dag
       else []
   in
@@ -54,9 +60,17 @@ subChoicesHelper deletionCosts subCosts dag key edge =
       Just valueChoices ->
         let
           deletions = Deletions.getDeletions deletionCosts dag edge.dst
+          keyType =
+            case String.length newKey of
+              0 -> EmptyKey
+              1 -> SingularKey
+              _ ->
+                if DAG.spaceInRange (keyStart + 1) (edge.dst - 1) dag then
+                  SpacedKey
+                else PluralKey
         in
           List.concatMap
-            (toSubChoices newKey edge.dst deletions)
+            (toSubChoices dag keyType edge.dst deletions)
             valueChoices
           ++ rest
 
@@ -67,15 +81,16 @@ getValueChoices key subCosts =
       (key, 0.0) :: (Maybe.withDefault [] <| CompletionDict.get key subCosts)
   else CompletionDict.get key subCosts
 
-toSubChoices : String -> Int -> List (Priced Int) -> CostPair -> List SubChoice
-toSubChoices key valueEnd deletions pricedValue =
-  List.map (toSubChoice key pricedValue valueEnd) deletions
+toSubChoices :
+  DAG -> KeyType -> Int -> List (Priced Int) -> CostPair -> List SubChoice
+toSubChoices dag keyType keyEnd deletions pricedValue =
+  List.map (toSubChoice dag keyType pricedValue keyEnd) deletions
 
-toSubChoice : String -> CostPair -> Int -> Priced Int -> SubChoice
-toSubChoice key pricedValue valueEnd deletion =
+toSubChoice : DAG -> KeyType -> CostPair -> Int -> Priced Int -> SubChoice
+toSubChoice dag keyType pricedValue keyEnd deletion =
   { value = fst pricedValue
   , cost = snd pricedValue + deletion.cost
   , i = deletion.state
-  , valueEnd = valueEnd
-  , key = key
+  , rspace = DAG.spaceInRange keyEnd deletion.state dag
+  , keyType = keyType
   }

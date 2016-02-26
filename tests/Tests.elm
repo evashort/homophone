@@ -5,11 +5,8 @@ import List
 import String
 
 import CompletionDict
-import Repronounce exposing (shallowCost, deepCost)
+import Repronounce exposing (shallowCost, deepCost, unsplitCost)
 import Respell
-
-unsplitCost : Float
-unsplitCost = 0.0
 
 all : Test
 all =
@@ -69,9 +66,9 @@ all =
             [("cat", [("dog", 0.0)])]
             []
     , test
-        "unsplitCost and shallowCost apply if key and value both contain space" <|
+        "unsplitCost and deepCost apply if key and value both contain space" <|
         assertEqual
-          (Just ("bet dime", 2 * unsplitCost + shallowCost + deepCost)) <|
+          (Just ("bet dime", 2 * unsplitCost + 2 * deepCost)) <|
           respellExample
             [["bed"], ["time"]]
             [("bet", 0.0), ("dime", 0.0)]
