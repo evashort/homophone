@@ -23,6 +23,11 @@ deepCost = 2.0
 unsplitCost : Float
 unsplitCost = 0.0
 
+type SpaceType
+  = NoSpace
+  | ShallowSpace
+  | DeepSpace
+
 type alias CostData =
   { deletionCosts : DeletionCosts
   , subCosts : SubCosts
@@ -86,15 +91,18 @@ getSuccessors data dag (i, cRspace, leftovers) =
   let
     rspace = CBool.toBool cRspace
   in let
+    shallowEh = leftovers == "" && not rspace
+    rspaceType = if rspace then DeepSpace else NoSpace
+  in let
     rest =
       if CompletionDict.startWith leftovers data.wordCosts then
         List.concatMap
-          (getWordChoices data dag leftovers i rspace 0.0) <|
+          (getWordChoices data dag leftovers i rspaceType shallowEh 0.0) <|
           Subs.getSubChoices data.deletionCosts data.subCosts dag i
       else []
   in
     List.filterMap
-      ( toWordChoice data.wordCosts dag "" False 0.0
+      ( toWordChoice data.wordCosts dag "" NoSpace 0.0
           { value = leftovers
           , cost = 3.14159
           , i = i
@@ -106,19 +114,30 @@ getSuccessors data dag (i, cRspace, leftovers) =
     ++ rest
 
 getWordChoices :
-  CostData -> DAG -> String -> Int -> Bool -> Float -> SubChoice ->
-    List (Priced State)
-getWordChoices data dag word i lspace cost subChoice =
+  CostData -> DAG -> String -> Int -> SpaceType -> Bool -> Float ->
+    SubChoice -> List (Priced State)
+getWordChoices data dag word i lspace shallowEh cost subChoice =
   let
     newWord = word ++ subChoice.value
-    newCost = cost + subChoice.cost
     rspace =
-      if subChoice.keyType == Subs.EmptyKey then lspace else subChoice.rspace
+      if subChoice.keyType == Subs.EmptyKey then lspace
+      else if subChoice.rspace then DeepSpace
+      else if subChoice.keyType == Subs.SpacedKey
+        && String.length subChoice.value == 1 then ShallowSpace
+      else NoSpace
+    retroactiveShallowPenalty =
+      if shallowEh && subChoice.keyType == Subs.SpacedKey
+        && String.length subChoice.value == 1 then shallowCost else 0.0
+    newShallowEh = shallowEh && subChoice.keyType == Subs.EmptyKey
+  in let
+    newCost = cost + subChoice.cost + retroactiveShallowPenalty
   in let
     rest =
       if CompletionDict.startWith newWord data.wordCosts then
         List.concatMap
-          (getWordChoices data dag newWord subChoice.i rspace newCost) <|
+          ( getWordChoices
+              data dag newWord subChoice.i rspace newShallowEh newCost
+          ) <|
           Subs.getSubChoices data.deletionCosts data.subCosts dag subChoice.i
       else []
   in
@@ -128,7 +147,7 @@ getWordChoices data dag word i lspace cost subChoice =
     ++ rest
 
 toWordChoice :
-  WordCosts -> DAG -> String -> Bool -> Float -> SubChoice -> Int ->
+  WordCosts -> DAG -> String -> SpaceType -> Float -> SubChoice -> Int ->
     Maybe (Priced State)
 toWordChoice wordCosts dag word lspace cost subChoice usedLen =
   let used = String.left usedLen subChoice.value in
@@ -143,10 +162,15 @@ toWordChoice wordCosts dag word lspace cost subChoice usedLen =
         in let
           boundaryCost =
             case subChoice.keyType of
-              Subs.EmptyKey -> if lspace then deepCost else 0.0
+              Subs.EmptyKey ->
+                case lspace of
+                  DeepSpace -> deepCost
+                  ShallowSpace -> shallowCost
+                  NoSpace -> 0.0
               Subs.SingularKey ->
                 if leftovers == "" && subChoice.rspace then deepCost
-                else if leftovers /= "" && (lspace || subChoice.rspace) then
+                else if leftovers /= ""
+                  && (lspace == DeepSpace || subChoice.rspace) then
                   shallowCost
                 else 0.0
               Subs.PluralKey ->

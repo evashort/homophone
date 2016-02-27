@@ -173,7 +173,7 @@ all =
             [("ii", 0.0), ("p", 0.0), ("zza", 0.0)]
             [("", [("izz", 0.0), ("pi", 0.0), ("pzz", 1000.0)])]
             []
-    {-, test
+    , test
         "unsplitCost applies to words ending in spaced 1val + rabbit" <|
         assertEqual
           (Just ("balladh in ner", unsplitCost + shallowCost + deepCost)) <|
@@ -183,23 +183,23 @@ all =
             [("", [("h", 0.0)]), ("td", [("d", 0.0)])]
             []
     , test
-        "unsplitCost applies if next word starts with spaced 1val" <|
+        "unsplitCost n/a if next word starts with spaced 1val" <|
         assertEqual
-          (Just ("balla tin ner", unsplitCost + shallowCost + deepCost)) <|
+          (Just ("balla tin ner", shallowCost + deepCost)) <|
           respellExample
             [["ballat"], ["dinner"]]
             [("balla", 0.0), ("ner", 0.0), ("tin", 0.0)]
             [("td", [("t", 0.0)])]
             []
     , test
-        "unsplitCost applies if next word starts with rabbit + spaced 1val" <|
+        "unsplitCost n/a if next word starts with rabbit + spaced 1val" <|
         assertEqual
-          (Just ("balla htin ner", unsplitCost + shallowCost + deepCost)) <|
+          (Just ("balla htin ner", shallowCost + deepCost)) <|
           respellExample
             [["ballat"], ["dinner"]]
             [("balla", 0.0), ("htin", 0.0), ("ner", 0.0)]
             [("", [("h", 0.0)]), ("td", [("t", 0.0)])]
-            []-}
+            []
     , test
         "unsplitCost n/a if next word starts with spaced nval" <|
         assertEqual
@@ -228,9 +228,9 @@ all =
             [("t", [("tt", 0.0)])]
             []
     , test
-        "unsplitCost applies if final nval is from lspaced 1key" <|
+        "unsplitCost n/a if final nval is from lspaced 1key" <|
         assertEqual
-          (Just ("ballad din ner", unsplitCost + shallowCost + deepCost)) <|
+          (Just ("ballad din ner", shallowCost + deepCost)) <|
           respellExample
             [["balla"], ["dinner"]]
             [("ballad", 0.0), ("din", 0.0), ("ner", 0.0)]
@@ -245,7 +245,7 @@ all =
             [("ballad", 0.0), ("ner", 0.0), ("tin", 0.0)]
             [("td", [("dt", 0.0)])]
             []
-    {-, test
+    , test
         "unsplitCost applies if word starts with rabbit + spaced 1val " <|
         assertEqual
           (Just ("bal la htinner", unsplitCost + shallowCost + deepCost)) <|
@@ -253,11 +253,11 @@ all =
             [["ballat"], ["dinner"]]
             [("bal", 0.0), ("htinner", 0.0), ("la", 0.0)]
             [("", [("h", 0.0)]), ("td", [("t", 0.0)])]
-            []-}
+            []
     , test
-        "unsplitCost applies if initial nval is from rspaced 1key" <|
+        "unsplitCost n/a if initial nval is from rspaced 1key" <|
         assertEqual
-          (Just ("bal lad dinner", unsplitCost + shallowCost + deepCost)) <|
+          (Just ("bal lad dinner", shallowCost + deepCost)) <|
           respellExample
             [["ballad"], ["inner"]]
             [("bal", 0.0), ("dinner", 0.0), ("lad", 0.0)]
@@ -291,16 +291,16 @@ all =
             [("td", [("dt", 0.0)])]
             []
     , test
-        "unsplitCost applies? if final nval is from 1key with deletion after lspace" <|
+        "unsplitCost n/a if final nval is from 1key with deletion after lspace" <|
         assertEqual
-          (Just ("ballad din ner", unsplitCost + shallowCost + deepCost)) <|
+          (Just ("ballad din ner", shallowCost + deepCost)) <|
           respellExample
             [["balla"], ["hdinner"]]
             [("ballad", 0.0), ("din", 0.0), ("ner", 0.0)]
             [("d", [("dd", 0.0)])]
             [("h", 0.0)]
     , test
-        "unsplitCost applies? if final nval is from 1key with deletion before rspace" <|
+        "unsplitCost applies if final nval is from 1key with deletion before rspace" <|
         assertEqual
           (Just ("ballat tin ner", unsplitCost + shallowCost + deepCost)) <|
           respellExample
@@ -308,15 +308,15 @@ all =
             [("ballat", 0.0), ("ner", 0.0), ("tin", 0.0)]
             [("t", [("tt", 0.0)])]
             [("h", 0.0)]
-    {-, test
-        "unsplitCost applies if next word starts with spaced 1val followed by deletion" <|
+    , test
+        "unsplitCost n/a if next word starts with spaced 1val followed by deletion" <|
         assertEqual
-          (Just ("balla tin ner", unsplitCost + shallowCost + deepCost)) <|
+          (Just ("balla tin ner", shallowCost + deepCost)) <|
           respellExample
             [["ballat"], ["dhinner"]]
             [("balla", 0.0), ("ner", 0.0), ("tin", 0.0)]
             [("td", [("t", 0.0)])]
-            [("h", 0.0)]-}
+            [("h", 0.0)]
     , test
         "unsplitCost n/a if next word starts with unspaced 1val from nkey + space + deletion" <|
         assertEqual
@@ -327,18 +327,18 @@ all =
             [("td", [("t", 0.0)])]
             [("h", 0.0)]
     , test
-        "unsplitCost applies if word starts inside nval from 1key + space + deletion" <|
+        "unsplitCost n/a if word starts inside nval from 1key + space + deletion" <|
         assertEqual
-          (Just ("bal lat tinner", unsplitCost + shallowCost + deepCost)) <|
+          (Just ("bal lat tinner", shallowCost + deepCost)) <|
           respellExample
             [["ballat"], ["hinner"]]
             [("bal", 0.0), ("lat", 0.0), ("tinner", 0.0)]
             [("t", [("tt", 0.0)])]
             [("h", 0.0)]
     , test
-        "unsplitCost applies? if word starts inside nval from 1key + deletion + space" <|
+        "unsplitCost n/a if word starts inside nval from 1key + deletion + space" <|
         assertEqual
-          (Just ("bal lat tinner", unsplitCost + shallowCost + deepCost)) <|
+          (Just ("bal lat tinner", shallowCost + deepCost)) <|
           respellExample
             [["ballath"], ["inner"]]
             [("bal", 0.0), ("lat", 0.0), ("tinner", 0.0)]
