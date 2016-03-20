@@ -9,68 +9,64 @@ import DAG exposing (DAG, Edge)
 import DeletionCosts exposing (DeletionCosts)
 import Deletions
 import Knapsack exposing (Priced)
+import Space exposing (Space)
 import SubCosts exposing (SubCosts)
-
-type KeyType
-  = EmptyKey
-  | SingularKey
-  | PluralKey
-  | SpacedKey
 
 type alias SubChoice =
   { value : String
-  , cost : Float
+  , spaces : Maybe (List Space)
+  , startSpace : Bool
   , i : Int
-  , rspace : Bool
-  , keyType : KeyType
+  , cost : Float
   }
 
 getSubChoices :
-  DeletionCosts -> SubCosts -> DAG -> Int -> List SubChoice
-getSubChoices deletionCosts subCosts dag i =
+  DeletionCosts -> SubCosts -> DAG -> Bool -> Int -> List SubChoice
+getSubChoices deletionCosts subCosts dag startSpace i =
   let
     rabbits =
-      List.concatMap
-        (toSubChoices dag EmptyKey i [{ state = i, cost = 0.0 }]) <|
+      List.map
+        (toRabbit startSpace i) <|
         Maybe.withDefault [] <| CompletionDict.get "" subCosts
     subs =
       List.concatMap
-        (subChoicesHelper deletionCosts subCosts dag i "") <|
+        (subChoicesHelper deletionCosts subCosts dag "" [startSpace]) <|
         DAG.get i dag
   in
     rabbits ++ subs
 
+toRabbit : Bool -> Int -> CostPair -> SubChoice
+toRabbit startSpace i (value, cost) =
+  { value = value
+  , spaces = Nothing
+  , startSpace = startSpace
+  , i = i
+  , cost = cost
+  }
+
 subChoicesHelper :
-  DeletionCosts -> SubCosts -> DAG -> Int -> String -> Edge -> List SubChoice
-subChoicesHelper deletionCosts subCosts dag keyStart key edge =
+  DeletionCosts -> SubCosts -> DAG -> String -> List Bool -> Edge ->
+    List SubChoice
+subChoicesHelper deletionCosts subCosts dag key rPins edge =
   let
     newKey = key ++ String.fromChar edge.phoneme
+    newRPins = DAG.isSpace edge.dst dag :: rPins
   in let
     -- we don't have to modify startWith to account for identity subs because
     -- newKey != ""
     rest =
       if CompletionDict.startWith newKey subCosts then
         List.concatMap
-          (subChoicesHelper deletionCosts subCosts dag keyStart newKey) <|
+          (subChoicesHelper deletionCosts subCosts dag newKey newRPins) <|
           DAG.get edge.dst dag
       else []
   in
     case getValueChoices newKey subCosts of
       Nothing -> rest
       Just valueChoices ->
-        let
-          deletions = Deletions.getDeletions deletionCosts dag edge.dst
-          keyType =
-            case String.length newKey of
-              0 -> EmptyKey
-              1 -> SingularKey
-              _ ->
-                if DAG.spaceInRange (keyStart + 1) (edge.dst - 1) dag then
-                  SpacedKey
-                else PluralKey
-        in
+        let deletions = Deletions.getDeletions deletionCosts dag edge.dst in
           List.concatMap
-            (toSubChoices dag keyType edge.dst deletions)
+            (toSubChoices dag rPins deletions edge.dst)
             valueChoices
           ++ rest
 
@@ -82,15 +78,26 @@ getValueChoices key subCosts =
   else CompletionDict.get key subCosts
 
 toSubChoices :
-  DAG -> KeyType -> Int -> List (Priced Int) -> CostPair -> List SubChoice
-toSubChoices dag keyType keyEnd deletions pricedValue =
-  List.map (toSubChoice dag keyType pricedValue keyEnd) deletions
+  DAG -> List Bool -> List (Priced Int) -> Int -> CostPair -> List SubChoice
+toSubChoices dag rPins deletions keyEnd pricedValue =
+  List.map (toSubChoice dag rPins pricedValue keyEnd) deletions
 
-toSubChoice : DAG -> KeyType -> CostPair -> Int -> Priced Int -> SubChoice
-toSubChoice dag keyType pricedValue keyEnd deletion =
-  { value = fst pricedValue
-  , cost = snd pricedValue + deletion.cost
-  , i = deletion.state
-  , rspace = DAG.spaceInRange keyEnd deletion.state dag
-  , keyType = keyType
-  }
+toSubChoice : DAG -> List Bool -> CostPair -> Int -> Priced Int -> SubChoice
+toSubChoice dag rPins (value, cost) keyEnd deletion =
+  let startSpace = DAG.spaceInRange keyEnd deletion.state dag in
+    { value = value
+    , spaces =
+        Just <|
+          convertSpaces
+            (List.reverse <| startSpace :: rPins) <|
+            String.length value
+    , startSpace = startSpace
+    , i = deletion.state
+    , cost = cost + deletion.cost
+    }
+
+convertSpaces : List Bool -> Int -> List Space
+convertSpaces pins vLen =
+  List.map
+    (Space.fromKIndex (List.length pins - 1) vLen << fst) <|
+    List.filter snd <| List.indexedMap (,) pins
