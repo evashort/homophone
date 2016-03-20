@@ -28,12 +28,11 @@ getSubChoices deletionCosts subCosts dag startSpace i =
       List.map
         (toRabbit startSpace i) <|
         Maybe.withDefault [] <| CompletionDict.get "" subCosts
-    subs =
-      List.concatMap
-        (subChoicesHelper deletionCosts subCosts dag "" [startSpace]) <|
-        DAG.get i dag
   in
-    rabbits ++ subs
+    List.foldl
+      (subChoicesHelper deletionCosts subCosts dag "" [startSpace])
+      rabbits <|
+      DAG.get i dag
 
 toRabbit : Bool -> Int -> CostPair -> SubChoice
 toRabbit startSpace i (value, cost) =
@@ -46,29 +45,31 @@ toRabbit startSpace i (value, cost) =
 
 subChoicesHelper :
   DeletionCosts -> SubCosts -> DAG -> String -> List Bool -> Edge ->
-    List SubChoice
-subChoicesHelper deletionCosts subCosts dag key rPins edge =
+    List SubChoice -> List SubChoice
+subChoicesHelper deletionCosts subCosts dag key rPins edge choices =
   let
     newKey = key ++ String.fromChar edge.phoneme
     newRPins = DAG.isSpace edge.dst dag :: rPins
   in let
+    newChoices =
+      case getValueChoices newKey subCosts of
+        Nothing -> choices
+        Just valueChoices ->
+          let deletions = Deletions.getDeletions deletionCosts dag edge.dst in
+            List.concatMap
+              (toSubChoices dag rPins deletions edge.dst)
+              valueChoices
+            ++ choices
     -- we don't have to modify startWith to account for identity subs because
     -- newKey != ""
-    rest =
-      if CompletionDict.startWith newKey subCosts then
-        List.concatMap
-          (subChoicesHelper deletionCosts subCosts dag newKey newRPins) <|
-          DAG.get edge.dst dag
-      else []
+    continuable = CompletionDict.startWith newKey subCosts
   in
-    case getValueChoices newKey subCosts of
-      Nothing -> rest
-      Just valueChoices ->
-        let deletions = Deletions.getDeletions deletionCosts dag edge.dst in
-          List.concatMap
-            (toSubChoices dag rPins deletions edge.dst)
-            valueChoices
-          ++ rest
+    if continuable then
+      List.foldl
+        (subChoicesHelper deletionCosts subCosts dag newKey newRPins)
+        newChoices <|
+        DAG.get edge.dst dag
+    else newChoices
 
 getValueChoices : String -> SubCosts -> Maybe (List CostPair)
 getValueChoices key subCosts =

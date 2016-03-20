@@ -93,25 +93,24 @@ getSuccessors data dag (i, leftovers, ghostlySpaces, cHasKey, cStartSpace) =
     bState = BoundaryState.initial
   in let
     newBState = BoundaryState.update (String.length leftovers) spaces bState
-  in let
-    rest =
-      if CompletionDict.startWith leftovers data.wordCosts then
-        List.concatMap
-          (getWordChoices data dag leftovers newBState i 0.0) <|
-          Subs.getSubChoices data.deletionCosts data.subCosts dag startSpace i
-      else []
+    successors =
+      List.filterMap
+        ( toWordChoice
+            data.wordCosts dag "" leftovers spaces startSpace bState i 0.0
+        )
+        [1..String.length leftovers]
   in
-    List.filterMap
-      ( toWordChoice
-          data.wordCosts dag "" leftovers spaces startSpace bState i 0.0
-      )
-      [1..String.length leftovers]
-    ++ rest
+    if CompletionDict.startWith leftovers data.wordCosts then
+      List.foldl
+        (getWordChoices data dag leftovers newBState i 0.0)
+        successors <|
+        Subs.getSubChoices data.deletionCosts data.subCosts dag startSpace i
+    else successors
 
 getWordChoices :
   CostData -> DAG -> String -> BoundaryState -> Int -> Float -> SubChoice ->
-    List (Priced State)
-getWordChoices data dag word bState i cost subChoice =
+    List (Priced State) -> List (Priced State)
+getWordChoices data dag word bState i cost subChoice successors =
   let
     value = subChoice.value
     spaces = subChoice.spaces
@@ -122,20 +121,22 @@ getWordChoices data dag word bState i cost subChoice =
     newI = subChoice.i
     newCost = cost + subChoice.cost
   in let
-    rest =
-      if CompletionDict.startWith newWord data.wordCosts then
-        List.concatMap
-          (getWordChoices data dag newWord newBState newI newCost) <|
-          Subs.getSubChoices
-            data.deletionCosts data.subCosts dag startSpace newI
-      else []
+    newSuccessors =
+      List.filterMap
+        ( toWordChoice
+            data.wordCosts dag word value spaces startSpace bState newI
+              newCost
+        )
+        [1..String.length value]
+      ++ successors
   in
-    List.filterMap
-      ( toWordChoice
-          data.wordCosts dag word value spaces startSpace bState newI newCost
-      )
-      [1..String.length value]
-    ++ rest
+    if CompletionDict.startWith newWord data.wordCosts then
+      List.foldl
+        (getWordChoices data dag newWord newBState newI newCost)
+        newSuccessors <|
+        Subs.getSubChoices
+          data.deletionCosts data.subCosts dag startSpace newI
+    else newSuccessors
 
 toWordChoice :
   WordCosts -> DAG -> String -> String -> Maybe (List Space) -> Bool ->
