@@ -60,7 +60,9 @@ repronounce data wordLists =
 
 getSeed : DeletionCosts -> DAG -> List (Priced State)
 getSeed deletionCosts dag =
-  List.map deletionToState <| Deletions.getDeletions deletionCosts dag 0
+  List.map
+    deletionToState <|
+    fst <| Deletions.getDeletions deletionCosts dag 0
 
 deletionToState : Priced Int -> Priced State
 deletionToState deletion =
@@ -85,7 +87,7 @@ stateKey state =
 
 getSuccessors :
   CostData -> DAG -> (Int, String, List Space, CBool, CBool) ->
-    List (Priced State)
+    (List (Priced State), Int)
 getSuccessors data dag (i, leftovers, ghostlySpaces, cHasKey, cStartSpace) =
   let
     spaces = if CBool.toBool cHasKey then Just ghostlySpaces else Nothing
@@ -101,16 +103,20 @@ getSuccessors data dag (i, leftovers, ghostlySpaces, cHasKey, cStartSpace) =
         [1..String.length leftovers]
   in
     if CompletionDict.startWith leftovers data.wordCosts then
-      List.foldl
-        (getWordChoices data dag leftovers newBState i 0.0)
-        successors <|
-        Subs.getSubChoices data.deletionCosts data.subCosts dag startSpace i
-    else successors
+      let
+        subChoicesWithRoadblock =
+          Subs.getSubChoices data.deletionCosts data.subCosts dag startSpace i
+      in
+        List.foldl
+          (getWordChoices data dag leftovers newBState i 0.0)
+          (successors, snd subChoicesWithRoadblock) <|
+          fst subChoicesWithRoadblock
+    else (successors, 0)
 
 getWordChoices :
   CostData -> DAG -> String -> BoundaryState -> Int -> Float -> SubChoice ->
-    List (Priced State) -> List (Priced State)
-getWordChoices data dag word bState i cost subChoice successors =
+    (List (Priced State), Int) -> (List (Priced State), Int)
+getWordChoices data dag word bState i cost subChoice (successors, roadblock) =
   let
     value = subChoice.value
     spaces = subChoice.spaces
@@ -131,12 +137,16 @@ getWordChoices data dag word bState i cost subChoice successors =
       ++ successors
   in
     if CompletionDict.startWith newWord data.wordCosts then
-      List.foldl
-        (getWordChoices data dag newWord newBState newI newCost)
-        newSuccessors <|
-        Subs.getSubChoices
-          data.deletionCosts data.subCosts dag startSpace newI
-    else newSuccessors
+      let
+        subChoicesWithRoadblock =
+          Subs.getSubChoices
+            data.deletionCosts data.subCosts dag startSpace newI
+      in
+        List.foldl
+          (getWordChoices data dag newWord newBState newI newCost)
+          (newSuccessors, max roadblock <| snd subChoicesWithRoadblock) <|
+          fst subChoicesWithRoadblock
+    else (newSuccessors, roadblock)
 
 toWordChoice :
   WordCosts -> DAG -> String -> String -> Maybe (List Space) -> Bool ->

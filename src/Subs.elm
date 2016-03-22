@@ -21,7 +21,7 @@ type alias SubChoice =
   }
 
 getSubChoices :
-  DeletionCosts -> SubCosts -> DAG -> Bool -> Int -> List SubChoice
+  DeletionCosts -> SubCosts -> DAG -> Bool -> Int -> (List SubChoice, Int)
 getSubChoices deletionCosts subCosts dag startSpace i =
   let
     rabbits =
@@ -31,7 +31,7 @@ getSubChoices deletionCosts subCosts dag startSpace i =
   in
     List.foldl
       (subChoicesHelper deletionCosts subCosts dag "" [startSpace])
-      rabbits <|
+      (rabbits, 0) <|
       DAG.get i dag
 
 toRabbit : Bool -> Int -> CostPair -> SubChoice
@@ -45,31 +45,36 @@ toRabbit startSpace i (value, cost) =
 
 subChoicesHelper :
   DeletionCosts -> SubCosts -> DAG -> String -> List Bool -> Edge ->
-    List SubChoice -> List SubChoice
-subChoicesHelper deletionCosts subCosts dag key rPins edge choices =
+    (List SubChoice, Int) -> (List SubChoice, Int)
+subChoicesHelper
+  deletionCosts subCosts dag key rPins edge (choices, roadblock) =
   let
     newKey = key ++ String.fromChar edge.phoneme
     newRPins = DAG.isSpace edge.dst dag :: rPins
   in let
-    newChoices =
+    newChoicesAndRoadblock =
       case getValueChoices newKey subCosts of
-        Nothing -> choices
+        Nothing -> (choices, roadblock)
         Just valueChoices ->
-          let deletions = Deletions.getDeletions deletionCosts dag edge.dst in
-            List.concatMap
-              (toSubChoices dag rPins deletions edge.dst)
-              valueChoices
-            ++ choices
+          let
+            deletionsAndRoadblock = Deletions.getDeletions deletionCosts dag edge.dst
+          in
+            ( List.concatMap
+                (toSubChoices dag rPins (fst deletionsAndRoadblock) edge.dst)
+                valueChoices
+              ++ choices
+            , max roadblock <| snd deletionsAndRoadblock
+            )
+  in
     -- we don't have to modify startWith to account for identity subs because
     -- newKey != ""
-    continuable = CompletionDict.startWith newKey subCosts
-  in
-    if continuable then
+    if CompletionDict.startWith newKey subCosts then
       List.foldl
         (subChoicesHelper deletionCosts subCosts dag newKey newRPins)
-        newChoices <|
+        newChoicesAndRoadblock <|
         DAG.get edge.dst dag
-    else newChoices
+    else
+      (fst newChoicesAndRoadblock, max edge.dst <| snd newChoicesAndRoadblock)
 
 getValueChoices : String -> SubCosts -> Maybe (List CostPair)
 getValueChoices key subCosts =

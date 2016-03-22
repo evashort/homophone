@@ -12,14 +12,15 @@ type alias Knapsack s =
   { state : s
   , ancestors : List s
   , cost : Float
+  , roadblock : Int
   }
 
 -- keyFunc should produce a unique result for each state in seed because
 -- there's no guarantee that the lower-cost state will be chosen in the case
 -- of a conflict.
 getKnapsacks :
-  (s -> comparable) -> (comparable -> List (Priced s)) -> List (Priced s) ->
-    Dict comparable (Knapsack s)
+  (s -> comparable) -> (comparable -> (List (Priced s), Int)) ->
+    List (Priced s) -> Dict comparable (Knapsack s)
 getKnapsacks keyFunc successorFunc seed =
   let
     keys = List.map (keyFunc << .state) seed
@@ -36,10 +37,11 @@ toChild ancestors parentCost pricedState =
   { state = pricedState.state
   , ancestors = ancestors
   , cost = parentCost + pricedState.cost
+  , roadblock = 0
   }
 
 knapsackHelper :
-  (s -> comparable) -> (comparable -> List (Priced s)) ->
+  (s -> comparable) -> (comparable -> (List (Priced s), Int)) ->
     Dict comparable (Knapsack s) -> PrioritySet comparable ->
     Dict comparable (Knapsack s)
 knapsackHelper keyFunc successorFunc knapsacks fringe =
@@ -51,16 +53,21 @@ knapsackHelper keyFunc successorFunc knapsacks fringe =
         Just knapsack ->
           let
             ancestors = knapsack.state :: knapsack.ancestors
+            successorsAndRoadblock = successorFunc key
           in let
             successors =
               List.map
                 (toChild ancestors knapsack.cost) <|
-                successorFunc key
+                fst successorsAndRoadblock
+            roadblock = snd successorsAndRoadblock
+          in let
+            knapsacksWithRoadblock =
+              Dict.insert key { knapsack | roadblock = roadblock } knapsacks
           in let
             (newKnapsacks, newFringe) =
               List.foldl
                 (insertKnapsack keyFunc)
-                (knapsacks, PrioritySet.deleteMin fringe)
+                (knapsacksWithRoadblock, PrioritySet.deleteMin fringe)
                 successors
           in
             knapsackHelper keyFunc successorFunc newKnapsacks newFringe
