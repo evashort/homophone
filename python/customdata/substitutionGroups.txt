@@ -36,7 +36,6 @@ TH, DH
 CH, JH
 ZH, SH
 HH,
-AH,
 AA, AH
 AE, AH
 AO, AH
@@ -80,3 +79,5 @@ IH, AA
 UH, IH
 UH, AO
 EY, IY
+3
+AH,
