@@ -79,5 +79,3 @@ IH, AA
 UH, IH
 UH, AO
 EY, IY
-3
-AH,
