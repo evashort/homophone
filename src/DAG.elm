@@ -45,6 +45,9 @@ spaceInRange : Int -> Int -> DAG -> Bool
 spaceInRange start end dag =
   Bisect.bisectLeft start dag.spaces < Bisect.bisectRight end dag.spaces
 
+getSpace : Int -> DAG -> Maybe Int
+getSpace i dag = Array.get i dag.spaces
+
 fromPathLists : List PathList -> DAG
 fromPathLists pathLists =
   List.foldl

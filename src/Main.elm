@@ -23,11 +23,16 @@ type alias Model =
   { dataLoader : DataLoader.Model
   , userText : String
   , genText : String
+  , cache : Respell.Cache
   }
 
 init : (Model, Effects Action)
 init =
-  ( { dataLoader = fst DataLoader.init, userText = "", genText = "" }
+  ( { dataLoader = fst DataLoader.init
+    , userText = ""
+    , genText = ""
+    , cache = Respell.emptyCache
+    }
   , Effects.map DataLoaded <| snd DataLoader.init
   )
 
@@ -77,16 +82,38 @@ update action model =
         , Effects.map DataLoaded <| snd subUpdate
         )
     EditText newUserText ->
-      ( { model | userText = newUserText }, Effects.none )
+      ( case model.dataLoader of
+          DataLoader.NotLoaded _ ->
+            { model | userText = newUserText, genText = "not loaded" }
+          DataLoader.Loaded data ->
+            let
+              result =
+                Respell.respell data model.cache newUserText
+            in
+              { model
+              | userText = newUserText
+              , genText =
+                  Maybe.withDefault
+                    "no solution" <|
+                    Maybe.map fst result.respelling
+              , cache = result.cache
+              }
+      , Effects.none
+      )
     RespellText ->
-      ( { model
-        | genText =
-            case model.dataLoader of
-              DataLoader.NotLoaded _ -> "not loaded"
-              DataLoader.Loaded data ->
-                Maybe.withDefault
-                  "no solution" <|
-                  Maybe.map fst <| Respell.respell data model.userText
-        }
+      ( case model.dataLoader of
+          DataLoader.NotLoaded _ -> { model | genText = "not loaded" }
+          DataLoader.Loaded data ->
+            let
+              result =
+                Respell.respell data Respell.emptyCache model.userText
+            in
+              { model
+              | genText =
+                  Maybe.withDefault
+                    "no solution" <|
+                    Maybe.map fst result.respelling
+              , cache = result.cache
+              }
       , Effects.none
       )

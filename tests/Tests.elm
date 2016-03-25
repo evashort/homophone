@@ -362,7 +362,103 @@ all =
             [("bal", 0.0), ("lad", 0.0), ("tinner", 0.0)]
             [("td", [("dt", 0.0)])]
             []
+    , test
+        "caahe" <|
+        assertEqual
+          [ Just ("bb", 2 * spaceCost)
+          , Just ("bbb", 2 * spaceCost)
+          ] <|
+          cacheExample
+            [ [["b"], ["b"]]
+            , [["b"], ["b"], ["b"]]
+            ]
+            [("b", 0.0), ("bb", 0.0), ("bbb", 0.0)]
+            []
+            []
+    , test
+        "caahe2" <|
+        assertEqual
+          [ Just ("be", 1 * wordCost + 2 * spaceCost)
+          , Just ("bebe", 2 * spaceCost)
+          , Just ("bib ebe", 2 * spaceCost + 0.1)
+          ] <|
+          cacheExample
+            [ [["be"]]
+            , [["be"], ["be"]]
+            , [["be"], ["be"], ["be"]]
+            ]
+            [("be", 0.0), ("bebe", 0.0), ("bib", 0.0), ("ebe", 0.0), ("hub", 0.0), ("up", 0.0)]
+            [("", [("h", 0.1), ("u", 0.1)]), ("b", [("p", 0.1)]), ("e", [("i", 0.1)])]
+            []
+    , test
+        "caahe3" <|
+        assertEqual
+          [ Just ("b", 1 * wordCost + 2 * spaceCost)
+          , Just ("b b", 2 * wordCost + 4 * spaceCost)
+          ] <|
+          cacheExample
+            [ [["b"]]
+            , [["b"], ["b"]]
+            ]
+            [("b", 0.0), ("ub", 0.0)]
+            [("", [("u", 0.1)])]
+            []
     ]
+
+cacheExample :
+  List (List (List String)) -> List (String, Float) ->
+    List (String, List (String, Float)) -> List (String, Float) ->
+    List (Maybe (String, Float))
+cacheExample sentences wordCosts subCosts deletionCosts =
+  let
+    maybeDeletionCosts = CompletionDict.fromSortedPairs deletionCosts
+    maybeSubCosts = CompletionDict.fromSortedPairs subCosts
+    maybeWordCosts =
+      CompletionDict.fromSortedPairs <|
+        List.map2 (,) (List.map fst wordCosts) wordCosts
+  in
+    case
+      (maybeDeletionCosts, maybeSubCosts, maybeWordCosts)
+    of
+      (Just deletionCosts, Just subCosts, Just wordCosts) ->
+        let
+          laundry =
+            List.foldl
+              ( asdf
+                  { pronouncer = CompletionDict.empty
+                  , deletionCosts = deletionCosts
+                  , subCosts = subCosts
+                  , wordCosts = wordCosts
+                  }
+              )
+              ([], Respell.emptyCache)
+              sentences
+        in
+          List.reverse <| fst laundry
+      _ -> []
+
+asdf :
+  Respell.LoadedData -> List (List String) ->
+    (List (Maybe (String, Float)), Respell.Cache) ->
+    (List (Maybe (String, Float)), Respell.Cache)
+asdf data sentence (respellings, cache) =
+  let
+    maybePronouncer = -- does not support more than 10 words
+        CompletionDict.fromSortedPairs <|
+          List.indexedMap ((,) << toString) sentence
+  in
+    case maybePronouncer of
+      Nothing -> (Nothing :: respellings, Respell.emptyCache)
+      Just pronouncer ->
+        let
+          result =
+            Respell.respell
+              { data | pronouncer = pronouncer }
+              cache <|
+              String.join " " <| List.indexedMap (always << toString) sentence
+        in
+          (result.respelling :: respellings, result.cache)
+
 
 respellExample :
   List (List String) -> List (String, Float) ->
@@ -383,13 +479,18 @@ respellExample sentence wordCosts subCosts deletionCosts =
       (maybePronouncer, maybeDeletionCosts, maybeSubCosts, maybeWordCosts)
     of
       (Just pronouncer, Just deletionCosts, Just subCosts, Just wordCosts) ->
-        Respell.respell
-          { pronouncer = pronouncer
-          , deletionCosts = deletionCosts
-          , subCosts = subCosts
-          , wordCosts = wordCosts
-          } <|
-          String.join " " <| List.indexedMap (always << toString) sentence
+        let
+          result =
+            Respell.respell
+              { pronouncer = pronouncer
+              , deletionCosts = deletionCosts
+              , subCosts = subCosts
+              , wordCosts = wordCosts
+              }
+              Respell.emptyCache <|
+              String.join " " <| List.indexedMap (always << toString) sentence
+        in
+          result.respelling
       _ -> Nothing
 
 costlessExample :

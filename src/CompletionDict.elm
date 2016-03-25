@@ -26,6 +26,9 @@ fromSortedPairs sortedPairs =
           }
       else Nothing
 
+empty : CompletionDict valueType
+empty = { keys = Array.empty, values = Array.empty }
+
 get : String -> CompletionDict valueType -> Maybe valueType
 get key d =
   let i = Bisect.bisectLeft key d.keys in

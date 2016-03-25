@@ -16,10 +16,18 @@ type alias LoadedData =
   , wordCosts : WordCosts
   }
 
-respell : LoadedData -> String -> Maybe (String, Float)
-respell data text =
+type alias Cache = Repronounce.Cache
+
+emptyCache : Cache
+emptyCache = Repronounce.emptyCache
+
+type alias Result = Repronounce.Result
+
+respell : LoadedData -> Cache -> String -> Result
+respell data cache text =
   Repronounce.repronounce
-    (getCostData data) <|
+    (getCostData data)
+    cache <|
     pronounce data.pronouncer <| String.toLower text
 
 getCostData : LoadedData -> CostData

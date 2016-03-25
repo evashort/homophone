@@ -20,15 +20,21 @@ type alias Knapsack s =
 -- of a conflict.
 getKnapsacks :
   (s -> comparable) -> (comparable -> (List (Priced s), Int)) ->
-    List (Priced s) -> Dict comparable (Knapsack s)
-getKnapsacks keyFunc successorFunc seed =
+    List (Knapsack s) -> Int -> List (Priced s) ->
+    Dict comparable (Knapsack s)
+getKnapsacks keyFunc successorFunc cache changeStart seed =
   let
-    keys = List.map (keyFunc << .state) seed
+    stateList = List.map (toChild [] 0.0) seed ++ cache
+    seedKeys = List.map (keyFunc << .state) seed
+    cacheKeys =
+      List.map
+        (keyFunc << .state) <|
+        List.filter ((<=) changeStart << .roadblock) cache
   in let
     states =
       Dict.fromList <|
-        List.map2 (,) keys <| List.map (toChild [] 0.0) seed
-    fringe = PrioritySet.fromList keys
+        List.map2 (,) (List.map (keyFunc << .state) stateList) stateList
+    fringe = PrioritySet.fromList (seedKeys ++ cacheKeys)
   in
     knapsackHelper keyFunc successorFunc states fringe
 

@@ -10,7 +10,7 @@ import CompletionDict exposing (CompletionDict)
 import DAG exposing (DAG)
 import DeletionCosts exposing (DeletionCosts)
 import Deletions
-import Knapsack exposing (Priced)
+import Knapsack exposing (Priced, Knapsack)
 import Space exposing (Space)
 import SubCosts exposing (SubCosts)
 import Subs exposing (SubChoice)
@@ -22,6 +22,19 @@ type alias CostData =
   , wordCosts : WordCosts
   }
 
+type alias Cache =
+  { knapsacks : List (Knapsack State)
+  , wordLists : List (List String)
+  }
+
+emptyCache : Cache
+emptyCache = { knapsacks = [], wordLists = [] }
+
+type alias Result =
+  { respelling : Maybe (String, Float)
+  , cache : Cache
+  }
+
 type alias State =
   { spelling : Maybe String
   , i : Int
@@ -30,33 +43,55 @@ type alias State =
   , startSpace : Bool
   }
 
-repronounce : CostData -> List (List String) -> Maybe (String, Float)
-repronounce data wordLists =
+repronounce : CostData -> Cache -> List (List String) -> Result
+repronounce data cache wordLists =
   let
     dag = DAG.fromPathLists wordLists
+    diff = List.map2 (/=) wordLists cache.wordLists
+  in let
+    reusedWords =
+      Maybe.withDefault
+        (List.length diff) <|
+        Maybe.map
+          fst <|
+          List.head <| List.filter snd <| List.indexedMap (,) diff
+    seed = getSeed data.deletionCosts dag
+  in let
+    changeStart = Maybe.withDefault 0 <| DAG.getSpace reusedWords dag
+  in let
+    newSeed =
+      if cache.knapsacks == [] then seed
+      else List.filter ((<) changeStart << .i << .state) seed
+    reusedCache =
+      List.filter ((>=) changeStart << .i << .state) cache.knapsacks
   in let
     knapsacks =
       Knapsack.getKnapsacks
         stateKey
-        (getSuccessors data dag) <|
-        getSeed data.deletionCosts dag
+        (getSuccessors data dag)
+        reusedCache
+        changeStart
+        newSeed
   in
-    case
-      Dict.get
-        (DAG.length dag - 1, "", [], CBool.cFalse, CBool.cTrue)
-        knapsacks
-    of
-      Nothing -> Nothing
-      Just knapsack ->
-        Just
-          ( String.join
-              " " <|
-              List.reverse <|
-                List.filterMap
-                  .spelling <|
-                  knapsack.state :: knapsack.ancestors
-          , knapsack.cost
-          )
+    { respelling =
+        case
+          Dict.get
+            (DAG.length dag - 1, "", [], CBool.cFalse, CBool.cTrue)
+            knapsacks
+        of
+          Nothing -> Nothing
+          Just knapsack ->
+            Just
+              ( String.join
+                  " " <|
+                  List.reverse <|
+                    List.filterMap
+                      .spelling <|
+                      knapsack.state :: knapsack.ancestors
+              , knapsack.cost
+              )
+    , cache = { knapsacks = Dict.values knapsacks, wordLists = wordLists }
+    }
 
 getSeed : DeletionCosts -> DAG -> List (Priced State)
 getSeed deletionCosts dag =

@@ -15,6 +15,8 @@ getDeletions deletionCosts dag i =
       Knapsack.getKnapsacks
         identity
         (deletionChoices deletionCosts dag)
+        []
+        0
         [ { state = i, cost = 0.0 } ]
   in
     ( List.map orphan knapsacks
