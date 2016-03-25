@@ -31,7 +31,7 @@ getSubChoices deletionCosts subCosts dag startSpace i =
   in
     List.foldl
       (subChoicesHelper deletionCosts subCosts dag "" [startSpace])
-      (rabbits, 0) <|
+      (rabbits, i) <|
       DAG.get i dag
 
 toRabbit : Bool -> Int -> CostPair -> SubChoice
