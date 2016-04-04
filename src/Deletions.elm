@@ -15,9 +15,8 @@ getDeletions deletionCosts dag i =
       Knapsack.getKnapsacks
         identity
         (deletionChoices deletionCosts dag)
-        []
+        [ Knapsack.toRoot { state = i, cost = 0.0 } ]
         0
-        [ { state = i, cost = 0.0 } ]
   in
     ( List.map orphan knapsacks
     , Maybe.withDefault 0 <| List.maximum <| List.map .roadblock knapsacks

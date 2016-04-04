@@ -63,9 +63,8 @@ repronounce data cache wordLists =
       Knapsack.getKnapsacks
         stateKey
         (getSuccessors data dag)
-        reusedCache
+        (reusedCache ++ List.map Knapsack.toRoot newSeed)
         changeStart
-        newSeed
   in
     { respelling =
         case

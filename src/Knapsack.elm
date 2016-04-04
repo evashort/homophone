@@ -18,26 +18,30 @@ type alias Knapsack s =
 intfinity : Int
 intfinity = 2147483647
 
+toRoot : Priced s -> Knapsack s
+toRoot pricedState =
+  { state = pricedState.state
+  , ancestors = []
+  , cost = pricedState.cost
+  , roadblock = intfinity
+  }
+
 -- keyFunc should produce a unique result for each state in seed because
 -- there's no guarantee that the lower-cost state will be chosen in the case
 -- of a conflict.
 getKnapsacks :
   (s -> comparable) -> (comparable -> (List (Priced s), Int)) ->
-    List (Knapsack s) -> Int -> List (Priced s) ->
-    Dict comparable (Knapsack s)
-getKnapsacks keyFunc successorFunc cache changeStart seed =
+    List (Knapsack s) -> Int -> Dict comparable (Knapsack s)
+getKnapsacks keyFunc successorFunc cache changeStart =
   let
-    stateList = List.map (toChild [] 0.0) seed ++ cache
-    seedKeys = List.map (keyFunc << .state) seed
-    cacheKeys =
-      List.map
-        (keyFunc << .state) <|
-        List.filter ((<=) changeStart << .roadblock) cache
-  in let
     states =
       Dict.fromList <|
-        List.map2 (,) (List.map (keyFunc << .state) stateList) stateList
-    fringe = PrioritySet.fromList (seedKeys ++ cacheKeys)
+        List.map2 (,) (List.map (keyFunc << .state) cache) cache
+    fringe =
+      PrioritySet.fromList <|
+        List.map
+          (keyFunc << .state) <|
+          List.filter ((<=) changeStart << .roadblock) cache
   in
     knapsackHelper keyFunc successorFunc states fringe
 
