@@ -43,9 +43,6 @@ type alias State =
   , startSpace : Bool
   }
 
-intfinity : Int
-intfinity = 2147483647
-
 repronounce : CostData -> Cache -> List (List String) -> Result
 repronounce data cache wordLists =
   let
@@ -60,7 +57,7 @@ repronounce data cache wordLists =
       if cache.knapsacks == [] then seed
       else List.filter ((<) cutIndex << .i << .state) seed
     reusedCache = List.filter ((>=) cutIndex << .i << .state) cache.knapsacks
-    changeStart = if newWords > 0 then cutIndex else intfinity
+    changeStart = if newWords > 0 then cutIndex else Knapsack.intfinity
   in let
     knapsacks =
       Knapsack.getKnapsacks

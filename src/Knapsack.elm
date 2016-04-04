@@ -15,6 +15,9 @@ type alias Knapsack s =
   , roadblock : Int
   }
 
+intfinity : Int
+intfinity = 2147483647
+
 -- keyFunc should produce a unique result for each state in seed because
 -- there's no guarantee that the lower-cost state will be chosen in the case
 -- of a conflict.
@@ -43,7 +46,7 @@ toChild ancestors parentCost pricedState =
   { state = pricedState.state
   , ancestors = ancestors
   , cost = parentCost + pricedState.cost
-  , roadblock = 0
+  , roadblock = intfinity
   }
 
 knapsackHelper :
