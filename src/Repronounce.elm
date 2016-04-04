@@ -43,27 +43,24 @@ type alias State =
   , startSpace : Bool
   }
 
+intfinity : Int
+intfinity = 2147483647
+
 repronounce : CostData -> Cache -> List (List String) -> Result
 repronounce data cache wordLists =
   let
     dag = DAG.fromPathLists wordLists
-    diff = List.map2 (/=) wordLists cache.wordLists
+    reusedWords = firstTrue <| List.map2 (/=) wordLists cache.wordLists
   in let
-    reusedWords =
-      Maybe.withDefault
-        (List.length diff) <|
-        Maybe.map
-          fst <|
-          List.head <| List.filter snd <| List.indexedMap (,) diff
     seed = getSeed data.deletionCosts dag
-  in let
-    changeStart = Maybe.withDefault 0 <| DAG.getSpace reusedWords dag
+    cutIndex = force <| DAG.getSpace reusedWords dag
+    newWords = List.length wordLists - reusedWords
   in let
     newSeed =
       if cache.knapsacks == [] then seed
-      else List.filter ((<) changeStart << .i << .state) seed
-    reusedCache =
-      List.filter ((>=) changeStart << .i << .state) cache.knapsacks
+      else List.filter ((<) cutIndex << .i << .state) seed
+    reusedCache = List.filter ((>=) cutIndex << .i << .state) cache.knapsacks
+    changeStart = if newWords > 0 then cutIndex else intfinity
   in let
     knapsacks =
       Knapsack.getKnapsacks
@@ -92,6 +89,18 @@ repronounce data cache wordLists =
               )
     , cache = { knapsacks = Dict.values knapsacks, wordLists = wordLists }
     }
+
+firstTrue : List Bool -> Int
+firstTrue a =
+  Maybe.withDefault
+    (List.length a) <|
+    Maybe.map fst <| List.head <| List.filter snd <| List.indexedMap (,) a
+
+force : Maybe a -> a
+force maybeX =
+  case maybeX of
+    Just x -> x
+    Nothing -> Debug.crash "expected Maybe to have a value"
 
 getSeed : DeletionCosts -> DAG -> List (Priced State)
 getSeed deletionCosts dag =
