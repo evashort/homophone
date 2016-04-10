@@ -41,7 +41,7 @@ parseMenu menuString =
       (Just key, Just []) -> Err <| NoValues key
       (Just key, Just menu) ->
         (parseCostPairs menu) `Result.andThen` (addKey key)
-      _ -> Err <| NoValues "this should never happen"
+      _ -> Debug.crash "non-empty line somehow has no tokens"
 
 parseCostPairs : (List String) -> Result ParseError (List CostPair)
 parseCostPairs menu =

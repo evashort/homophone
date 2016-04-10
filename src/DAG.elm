@@ -139,7 +139,7 @@ pathListKey pathList =
 tieUpLooseEnd : LooseEnd -> Array Node -> Array Node
 tieUpLooseEnd looseEnd nodes =
   case Array.get looseEnd.src nodes of
-    Nothing -> nodes -- this should never happen
+    Nothing -> Debug.crash "loose end src out of range"
     Just node ->
       Array.set
         looseEnd.src

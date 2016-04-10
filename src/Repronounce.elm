@@ -1,6 +1,6 @@
 module Repronounce where
 
-import Dict
+import Dict exposing (Dict)
 import List
 import Random
 import String
@@ -25,7 +25,7 @@ type alias CostData =
   }
 
 type alias Cache =
-  { knapsacks : List (Knapsack State)
+  { knapsacks : Dict (Int, String, List Space, CBool, CBool) (Knapsack State)
   , wordLists : List (List String)
   }
 
@@ -33,6 +33,7 @@ emptyCache : Cache
 emptyCache =
   { knapsacks =
       Knapsack.emptyCache
+        stateKey
         { spelling = Nothing
         , i = -1
         , leftovers = ""
@@ -61,11 +62,12 @@ repronounce data cache wordLists =
     dag = DAG.fromPathLists wordLists
     reusedWords = firstTrue <| List.map2 (/=) wordLists cache.wordLists
   in let
-    cutIndex = force <| DAG.getSpace reusedWords dag
+    cutoff = force <| DAG.getSpace reusedWords dag
     newWords = List.length wordLists - reusedWords
   in let
-    reusedCache = List.filter ((>=) cutIndex << .i << .state) cache.knapsacks
-    seaLevel = if newWords > 0 then cutIndex else Random.maxInt
+    reusedCache =
+      Dict.filter (curry <| (>=) cutoff << fst5 << fst) cache.knapsacks
+    seaLevel = if newWords > 0 then cutoff else Random.maxInt
   in let
     knapsacks =
       Knapsack.getKnapsacks
@@ -91,8 +93,11 @@ repronounce data cache wordLists =
                       knapsack.state :: knapsack.ancestors
               , knapsack.cost
               )
-    , cache = { knapsacks = Dict.values knapsacks, wordLists = wordLists }
+    , cache = { knapsacks = knapsacks, wordLists = wordLists }
     }
+
+fst5 : (a, b, c, d, e) -> a
+fst5 (x, _, _, _, _) = x
 
 firstTrue : List Bool -> Int
 firstTrue a =

@@ -18,26 +18,25 @@ type alias Knapsack s =
   , peak : Int
   }
 
-emptyCache : s -> List (Knapsack s)
-emptyCache state =
-  [ { state = state, ancestors = [], cost = 0.0, peak = Random.maxInt } ]
+emptyCache : (s -> comparable) -> s -> Dict comparable (Knapsack s)
+emptyCache keyFunc state =
+  Dict.singleton
+    (keyFunc state)
+    { state = state, ancestors = [], cost = 0.0, peak = Random.maxInt }
 
 -- keyFunc should produce a unique result for each state in seed because
 -- there's no guarantee that the lower-cost state will be chosen in the case
 -- of a conflict.
 getKnapsacks :
   (s -> comparable) -> (comparable -> PeakedList (Priced s)) ->
-    List (Knapsack s) -> Int -> Dict comparable (Knapsack s)
+    Dict comparable (Knapsack s) -> Int -> Dict comparable (Knapsack s)
 getKnapsacks keyFunc successorFunc cache seaLevel =
   let
-    states =
-      Dict.fromList <|
-        List.map2 (,) (List.map (keyFunc << .state) cache) cache
+    states = cache
     fringe =
       PrioritySet.fromList <|
-        List.map
-          (keyFunc << .state) <|
-          List.filter ((<=) seaLevel << .peak) cache
+        Dict.keys <|
+          Dict.filter (curry <| (<=) seaLevel << .peak << snd) cache
   in
     knapsackHelper keyFunc successorFunc states fringe
 
@@ -58,7 +57,7 @@ knapsackHelper keyFunc successorFunc knapsacks fringe =
     Nothing -> knapsacks
     Just key ->
       case Dict.get key knapsacks of
-        Nothing -> Dict.empty -- this should never happen
+        Nothing -> Debug.crash "fringe key not found in knapsacks"
         Just knapsack ->
           let
             ancestors = knapsack.state :: knapsack.ancestors
