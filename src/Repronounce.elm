@@ -2,6 +2,7 @@ module Repronounce where
 
 import Dict
 import List
+import Random
 import String
 
 import BoundaryState exposing (BoundaryState)
@@ -11,6 +12,7 @@ import DAG exposing (DAG)
 import DeletionCosts exposing (DeletionCosts)
 import Deletions
 import Knapsack exposing (Priced, Knapsack)
+import PeakedList exposing (PeakedList)
 import Space exposing (Space)
 import SubCosts exposing (SubCosts)
 import Subs exposing (SubChoice)
@@ -57,14 +59,14 @@ repronounce data cache wordLists =
       if cache.knapsacks == [] then seed
       else List.filter ((<) cutIndex << .i << .state) seed
     reusedCache = List.filter ((>=) cutIndex << .i << .state) cache.knapsacks
-    changeStart = if newWords > 0 then cutIndex else Knapsack.intfinity
+    seaLevel = if newWords > 0 then cutIndex else Random.maxInt
   in let
     knapsacks =
       Knapsack.getKnapsacks
         stateKey
         (getSuccessors data dag)
         (reusedCache ++ List.map Knapsack.toRoot newSeed)
-        changeStart
+        seaLevel
   in
     { respelling =
         case
@@ -102,7 +104,7 @@ getSeed : DeletionCosts -> DAG -> List (Priced State)
 getSeed deletionCosts dag =
   List.map
     deletionToState <|
-    fst <| Deletions.getDeletions deletionCosts dag 0
+    (Deletions.getDeletions deletionCosts dag 0).list
 
 deletionToState : Priced Int -> Priced State
 deletionToState deletion =
@@ -127,7 +129,7 @@ stateKey state =
 
 getSuccessors :
   CostData -> DAG -> (Int, String, List Space, CBool, CBool) ->
-    (List (Priced State), Int)
+    PeakedList (Priced State)
 getSuccessors data dag (i, leftovers, ghostlySpaces, cHasKey, cStartSpace) =
   let
     spaces = if CBool.toBool cHasKey then Just ghostlySpaces else Nothing
@@ -135,28 +137,33 @@ getSuccessors data dag (i, leftovers, ghostlySpaces, cHasKey, cStartSpace) =
     bState = BoundaryState.initial
   in let
     newBState = BoundaryState.update (String.length leftovers) spaces bState
-    successors =
-      List.filterMap
+  in let
+    rest =
+      if CompletionDict.startWith leftovers data.wordCosts then
+        let
+          peakedSubChoices =
+            Subs.getSubChoices
+              data.deletionCosts data.subCosts dag startSpace i
+        in
+          PeakedList.concatMap
+            peakedSubChoices.peak
+            (getWordChoices data dag leftovers newBState i 0.0)
+            peakedSubChoices.list
+      else PeakedList.empty
+  in
+    PeakedList.append
+      ( List.filterMap
         ( toWordChoice
             data.wordCosts dag "" leftovers spaces startSpace bState i 0.0
         )
         [1..String.length leftovers]
-  in
-    if CompletionDict.startWith leftovers data.wordCosts then
-      let
-        subChoicesWithRoadblock =
-          Subs.getSubChoices data.deletionCosts data.subCosts dag startSpace i
-      in
-        List.foldl
-          (getWordChoices data dag leftovers newBState i 0.0)
-          (successors, snd subChoicesWithRoadblock) <|
-          fst subChoicesWithRoadblock
-    else (successors, 0)
+      )
+      rest
 
 getWordChoices :
   CostData -> DAG -> String -> BoundaryState -> Int -> Float -> SubChoice ->
-    (List (Priced State), Int) -> (List (Priced State), Int)
-getWordChoices data dag word bState i cost subChoice (successors, roadblock) =
+    PeakedList (Priced State)
+getWordChoices data dag word bState i cost subChoice =
   let
     value = subChoice.value
     spaces = subChoice.spaces
@@ -167,26 +174,28 @@ getWordChoices data dag word bState i cost subChoice (successors, roadblock) =
     newI = subChoice.i
     newCost = cost + subChoice.cost
   in let
-    newSuccessors =
-      List.filterMap
-        ( toWordChoice
-            data.wordCosts dag word value spaces startSpace bState newI
-              newCost
-        )
-        [1..String.length value]
-      ++ successors
+    rest =
+      if CompletionDict.startWith newWord data.wordCosts then
+        let
+          peakedSubChoices =
+            Subs.getSubChoices
+              data.deletionCosts data.subCosts dag startSpace newI
+        in
+          PeakedList.concatMap
+            peakedSubChoices.peak
+            (getWordChoices data dag newWord newBState newI newCost)
+            peakedSubChoices.list
+      else PeakedList.empty
   in
-    if CompletionDict.startWith newWord data.wordCosts then
-      let
-        subChoicesWithRoadblock =
-          Subs.getSubChoices
-            data.deletionCosts data.subCosts dag startSpace newI
-      in
-        List.foldl
-          (getWordChoices data dag newWord newBState newI newCost)
-          (newSuccessors, max roadblock <| snd subChoicesWithRoadblock) <|
-          fst subChoicesWithRoadblock
-    else (newSuccessors, roadblock)
+    PeakedList.append
+      ( List.filterMap
+          ( toWordChoice
+              data.wordCosts dag word value spaces startSpace bState newI
+                newCost
+          )
+          [1..String.length value]
+      )
+      rest
 
 toWordChoice :
   WordCosts -> DAG -> String -> String -> Maybe (List Space) -> Bool ->

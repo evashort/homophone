@@ -1,6 +1,9 @@
 module Knapsack where
 
 import Dict exposing (Dict)
+import Random
+
+import PeakedList exposing (PeakedList)
 import PrioritySet exposing (PrioritySet)
 
 type alias Priced s =
@@ -12,27 +15,24 @@ type alias Knapsack s =
   { state : s
   , ancestors : List s
   , cost : Float
-  , roadblock : Int
+  , peak : Int
   }
-
-intfinity : Int
-intfinity = 2147483647
 
 toRoot : Priced s -> Knapsack s
 toRoot pricedState =
   { state = pricedState.state
   , ancestors = []
   , cost = pricedState.cost
-  , roadblock = intfinity
+  , peak = Random.maxInt
   }
 
 -- keyFunc should produce a unique result for each state in seed because
 -- there's no guarantee that the lower-cost state will be chosen in the case
 -- of a conflict.
 getKnapsacks :
-  (s -> comparable) -> (comparable -> (List (Priced s), Int)) ->
+  (s -> comparable) -> (comparable -> PeakedList (Priced s)) ->
     List (Knapsack s) -> Int -> Dict comparable (Knapsack s)
-getKnapsacks keyFunc successorFunc cache changeStart =
+getKnapsacks keyFunc successorFunc cache seaLevel =
   let
     states =
       Dict.fromList <|
@@ -41,7 +41,7 @@ getKnapsacks keyFunc successorFunc cache changeStart =
       PrioritySet.fromList <|
         List.map
           (keyFunc << .state) <|
-          List.filter ((<=) changeStart << .roadblock) cache
+          List.filter ((<=) seaLevel << .peak) cache
   in
     knapsackHelper keyFunc successorFunc states fringe
 
@@ -50,11 +50,11 @@ toChild ancestors parentCost pricedState =
   { state = pricedState.state
   , ancestors = ancestors
   , cost = parentCost + pricedState.cost
-  , roadblock = intfinity
+  , peak = Random.maxInt
   }
 
 knapsackHelper :
-  (s -> comparable) -> (comparable -> (List (Priced s), Int)) ->
+  (s -> comparable) -> (comparable -> PeakedList (Priced s)) ->
     Dict comparable (Knapsack s) -> PrioritySet comparable ->
     Dict comparable (Knapsack s)
 knapsackHelper keyFunc successorFunc knapsacks fringe =
@@ -66,21 +66,20 @@ knapsackHelper keyFunc successorFunc knapsacks fringe =
         Just knapsack ->
           let
             ancestors = knapsack.state :: knapsack.ancestors
-            successorsAndRoadblock = successorFunc key
+            peakedSuccessors = successorFunc key
           in let
             successors =
-              List.map
-                (toChild ancestors knapsack.cost) <|
-                fst successorsAndRoadblock
-            roadblock = snd successorsAndRoadblock
-          in let
-            knapsacksWithRoadblock =
-              Dict.insert key { knapsack | roadblock = roadblock } knapsacks
+              List.map (toChild ancestors knapsack.cost) peakedSuccessors.list
+            raisedKnapsacks =
+              Dict.insert
+                key
+                { knapsack | peak = peakedSuccessors.peak }
+                knapsacks
           in let
             (newKnapsacks, newFringe) =
               List.foldl
                 (insertKnapsack keyFunc)
-                (knapsacksWithRoadblock, PrioritySet.deleteMin fringe)
+                (raisedKnapsacks, PrioritySet.deleteMin fringe)
                 successors
           in
             knapsackHelper keyFunc successorFunc newKnapsacks newFringe

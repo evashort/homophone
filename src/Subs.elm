@@ -9,6 +9,7 @@ import DAG exposing (DAG, Edge)
 import DeletionCosts exposing (DeletionCosts)
 import Deletions
 import Knapsack exposing (Priced)
+import PeakedList exposing (PeakedList)
 import Space exposing (Space)
 import SubCosts exposing (SubCosts)
 
@@ -21,18 +22,21 @@ type alias SubChoice =
   }
 
 getSubChoices :
-  DeletionCosts -> SubCosts -> DAG -> Bool -> Int -> (List SubChoice, Int)
+  DeletionCosts -> SubCosts -> DAG -> Bool -> Int -> PeakedList SubChoice
 getSubChoices deletionCosts subCosts dag startSpace i =
   let
-    rabbits =
-      List.map
-        (toRabbit startSpace i) <|
-        Maybe.withDefault [] <| CompletionDict.get "" subCosts
+    rest =
+      PeakedList.concatMap
+        i
+        (subChoicesHelper deletionCosts subCosts dag "" [startSpace]) <|
+        DAG.get i dag
   in
-    List.foldl
-      (subChoicesHelper deletionCosts subCosts dag "" [startSpace])
-      (rabbits, i) <|
-      DAG.get i dag
+    PeakedList.append
+      ( List.map
+          (toRabbit startSpace i) <|
+          Maybe.withDefault [] <| CompletionDict.get "" subCosts
+      )
+      rest
 
 toRabbit : Bool -> Int -> CostPair -> SubChoice
 toRabbit startSpace i (value, cost) =
@@ -45,36 +49,37 @@ toRabbit startSpace i (value, cost) =
 
 subChoicesHelper :
   DeletionCosts -> SubCosts -> DAG -> String -> List Bool -> Edge ->
-    (List SubChoice, Int) -> (List SubChoice, Int)
+    PeakedList SubChoice
 subChoicesHelper
-  deletionCosts subCosts dag key rPins edge (choices, roadblock) =
+  deletionCosts subCosts dag key rPins edge =
   let
     newKey = key ++ String.fromChar edge.phoneme
     newRPins = DAG.isSpace edge.dst dag :: rPins
   in let
-    newChoicesAndRoadblock =
-      case getValueChoices newKey subCosts of
-        Nothing -> (choices, roadblock)
-        Just valueChoices ->
-          let
-            deletionsAndRoadblock = Deletions.getDeletions deletionCosts dag edge.dst
-          in
-            ( List.concatMap
-                (toSubChoices dag rPins (fst deletionsAndRoadblock) edge.dst)
-                valueChoices
-              ++ choices
-            , max roadblock <| snd deletionsAndRoadblock
-            )
+    rest =
+      -- we don't have to modify startWith to account for identity subs because
+      -- newKey != ""
+      if CompletionDict.startWith newKey subCosts then
+        PeakedList.concatMap
+          edge.dst
+          (subChoicesHelper deletionCosts subCosts dag newKey newRPins) <|
+          DAG.get edge.dst dag
+      else PeakedList.empty
   in
-    -- we don't have to modify startWith to account for identity subs because
-    -- newKey != ""
-    if CompletionDict.startWith newKey subCosts then
-      List.foldl
-        (subChoicesHelper deletionCosts subCosts dag newKey newRPins)
-        newChoicesAndRoadblock <|
-        DAG.get edge.dst dag
-    else
-      (fst newChoicesAndRoadblock, max edge.dst <| snd newChoicesAndRoadblock)
+    case getValueChoices newKey subCosts of
+      Nothing -> rest
+      Just valueChoices ->
+        let
+          peakedDeletions = Deletions.getDeletions deletionCosts dag edge.dst
+        in
+          PeakedList.raise
+            peakedDeletions.peak <|
+            PeakedList.append
+              ( List.concatMap
+                  (toSubChoices dag rPins peakedDeletions.list edge.dst)
+                  valueChoices
+              )
+              rest
 
 getValueChoices : String -> SubCosts -> Maybe (List CostPair)
 getValueChoices key subCosts =

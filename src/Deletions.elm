@@ -7,8 +7,9 @@ import CompletionDict exposing (CompletionDict)
 import DAG exposing (DAG, Edge)
 import DeletionCosts exposing (DeletionCosts)
 import Knapsack exposing (Priced, Knapsack)
+import PeakedList exposing (PeakedList)
 
-getDeletions : DeletionCosts -> DAG -> Int -> (List (Priced Int), Int)
+getDeletions : DeletionCosts -> DAG -> Int -> PeakedList (Priced Int)
 getDeletions deletionCosts dag i =
   let knapsacks =
     Dict.values <|
@@ -18,10 +19,15 @@ getDeletions deletionCosts dag i =
         [ Knapsack.toRoot { state = i, cost = 0.0 } ]
         0
   in
-    ( List.map orphan knapsacks
-    , Maybe.withDefault 0 <| List.maximum <| List.map .roadblock knapsacks
-    )
+    { list = List.map orphan knapsacks
+    , peak = force <| List.maximum <| List.map .peak knapsacks
+    }
 
+force : Maybe a -> a
+force maybeX =
+  case maybeX of
+    Just x -> x
+    Nothing -> Debug.crash "expected Maybe to have a value"
 
 orphan : Knapsack Int -> Priced Int
 orphan knapsack =
@@ -29,29 +35,27 @@ orphan knapsack =
   , cost = knapsack.cost
   }
 
-deletionChoices :
-  DeletionCosts -> DAG -> Int -> (List (Priced Int), Int)
+deletionChoices : DeletionCosts -> DAG -> Int -> PeakedList (Priced Int)
 deletionChoices deletionCosts dag i =
-  List.foldl
-    (deletionChoicesHelper deletionCosts dag "")
-    ([], 0) <|
+  PeakedList.concatMap
+    i
+    (deletionChoicesHelper deletionCosts dag "") <|
     DAG.get i dag
 
 deletionChoicesHelper :
-  DeletionCosts -> DAG -> String -> Edge -> (List (Priced Int), Int) ->
-    (List (Priced Int), Int)
-deletionChoicesHelper deletionCosts dag key edge (choices, roadblock) =
+  DeletionCosts -> DAG -> String -> Edge -> PeakedList (Priced Int)
+deletionChoicesHelper deletionCosts dag key edge =
   let
     newKey = key ++ String.fromChar edge.phoneme
   in let
-    newChoices =
-      case CompletionDict.get newKey deletionCosts of
-        Nothing -> choices
-        Just cost -> { state = edge.dst, cost = cost } :: choices
+    rest =
+      if CompletionDict.startWith newKey deletionCosts then
+        PeakedList.concatMap
+          edge.dst
+          (deletionChoicesHelper deletionCosts dag newKey) <|
+          DAG.get edge.dst dag
+      else PeakedList.empty
   in
-    if CompletionDict.startWith newKey deletionCosts then
-      List.foldl
-        (deletionChoicesHelper deletionCosts dag newKey)
-        (newChoices, roadblock) <|
-        DAG.get edge.dst dag
-    else (newChoices, max roadblock edge.dst)
+    case CompletionDict.get newKey deletionCosts of
+      Nothing -> rest
+      Just cost -> PeakedList.cons { state = edge.dst, cost = cost } rest
