@@ -25,5 +25,8 @@ concat p ls =
   , peak = max p <| Maybe.withDefault p <| List.maximum <| List.map .peak ls
   }
 
+map : (a -> b) -> PeakedList a -> PeakedList b
+map f l = { l | list = List.map f l.list }
+
 concatMap : Int -> (a -> PeakedList b) -> List a -> PeakedList b
 concatMap p f l = concat p <| List.map f l

@@ -30,7 +30,17 @@ type alias Cache =
   }
 
 emptyCache : Cache
-emptyCache = { knapsacks = [], wordLists = [] }
+emptyCache =
+  { knapsacks =
+      Knapsack.emptyCache
+        { spelling = Nothing
+        , i = -1
+        , leftovers = ""
+        , spaces = Nothing
+        , startSpace = False
+        }
+  , wordLists = []
+  }
 
 type alias Result =
   { respelling : Maybe (String, Float)
@@ -51,13 +61,9 @@ repronounce data cache wordLists =
     dag = DAG.fromPathLists wordLists
     reusedWords = firstTrue <| List.map2 (/=) wordLists cache.wordLists
   in let
-    seed = getSeed data.deletionCosts dag
     cutIndex = force <| DAG.getSpace reusedWords dag
     newWords = List.length wordLists - reusedWords
   in let
-    newSeed =
-      if cache.knapsacks == [] then seed
-      else List.filter ((<) cutIndex << .i << .state) seed
     reusedCache = List.filter ((>=) cutIndex << .i << .state) cache.knapsacks
     seaLevel = if newWords > 0 then cutIndex else Random.maxInt
   in let
@@ -65,7 +71,7 @@ repronounce data cache wordLists =
       Knapsack.getKnapsacks
         stateKey
         (getSuccessors data dag)
-        (reusedCache ++ List.map Knapsack.toRoot newSeed)
+        reusedCache
         seaLevel
   in
     { respelling =
@@ -100,11 +106,9 @@ force maybeX =
     Just x -> x
     Nothing -> Debug.crash "expected Maybe to have a value"
 
-getSeed : DeletionCosts -> DAG -> List (Priced State)
-getSeed deletionCosts dag =
-  List.map
-    deletionToState <|
-    (Deletions.getDeletions deletionCosts dag 0).list
+initialDeletions : DeletionCosts -> DAG -> PeakedList (Priced State)
+initialDeletions deletionCosts dag =
+  PeakedList.map deletionToState <| Deletions.getDeletions deletionCosts dag 0
 
 deletionToState : Priced Int -> Priced State
 deletionToState deletion =
@@ -131,34 +135,36 @@ getSuccessors :
   CostData -> DAG -> (Int, String, List Space, CBool, CBool) ->
     PeakedList (Priced State)
 getSuccessors data dag (i, leftovers, ghostlySpaces, cHasKey, cStartSpace) =
-  let
-    spaces = if CBool.toBool cHasKey then Just ghostlySpaces else Nothing
-    startSpace = CBool.toBool cStartSpace
-    bState = BoundaryState.initial
-  in let
-    newBState = BoundaryState.update (String.length leftovers) spaces bState
-  in let
-    rest =
-      if CompletionDict.startWith leftovers data.wordCosts then
-        let
-          peakedSubChoices =
-            Subs.getSubChoices
-              data.deletionCosts data.subCosts dag startSpace i
-        in
-          PeakedList.concatMap
-            peakedSubChoices.peak
-            (getWordChoices data dag leftovers newBState i 0.0)
-            peakedSubChoices.list
-      else PeakedList.empty
-  in
-    PeakedList.append
-      ( List.filterMap
-        ( toWordChoice
-            data.wordCosts dag "" leftovers spaces startSpace bState i 0.0
+  if i == -1 then initialDeletions data.deletionCosts dag
+  else
+    let
+      spaces = if CBool.toBool cHasKey then Just ghostlySpaces else Nothing
+      startSpace = CBool.toBool cStartSpace
+      bState = BoundaryState.initial
+    in let
+      newBState = BoundaryState.update (String.length leftovers) spaces bState
+    in let
+      rest =
+        if CompletionDict.startWith leftovers data.wordCosts then
+          let
+            peakedSubChoices =
+              Subs.getSubChoices
+                data.deletionCosts data.subCosts dag startSpace i
+          in
+            PeakedList.concatMap
+              peakedSubChoices.peak
+              (getWordChoices data dag leftovers newBState i 0.0)
+              peakedSubChoices.list
+        else PeakedList.empty
+    in
+      PeakedList.append
+        ( List.filterMap
+          ( toWordChoice
+              data.wordCosts dag "" leftovers spaces startSpace bState i 0.0
+          )
+          [1..String.length leftovers]
         )
-        [1..String.length leftovers]
-      )
-      rest
+        rest
 
 getWordChoices :
   CostData -> DAG -> String -> BoundaryState -> Int -> Float -> SubChoice ->

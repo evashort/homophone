@@ -18,13 +18,9 @@ type alias Knapsack s =
   , peak : Int
   }
 
-toRoot : Priced s -> Knapsack s
-toRoot pricedState =
-  { state = pricedState.state
-  , ancestors = []
-  , cost = pricedState.cost
-  , peak = Random.maxInt
-  }
+emptyCache : s -> List (Knapsack s)
+emptyCache state =
+  [ { state = state, ancestors = [], cost = 0.0, peak = Random.maxInt } ]
 
 -- keyFunc should produce a unique result for each state in seed because
 -- there's no guarantee that the lower-cost state will be chosen in the case
