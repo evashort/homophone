@@ -5,6 +5,7 @@ import Html.Attributes as Attributes
 import Http
 import Random
 import Signal
+import String
 import Task
 
 import DataLoader
@@ -68,7 +69,7 @@ view address model =
             [ Html.text "->" ]
         ]
     , Html.div []
-        [ Html.text <| model.genText ++ if model.modified then "..." else "" ]
+        [ Html.text model.genText ]
     , Html.div []
         [ DataLoader.view model.dataLoader ]
     ]
@@ -87,7 +88,11 @@ update action model =
         , Effects.map DataLoaded <| snd subUpdate
         )
     EditText newUserText ->
-      ( { model | userText = newUserText, modified = True }
+      ( { model
+        | userText = newUserText
+        , genText = model.genText ++ if model.modified then "..." else ""
+        , modified = True
+        }
       , if model.modified then Effects.none
         else Effects.task <| Task.succeed RespellText
       )
@@ -104,14 +109,18 @@ update action model =
             ( { model
               | genText =
                   case result.respelling of
-                    InProgress -> model.genText
+                    InProgress (text, remainingPhonemes) ->
+                      text ++ String.repeat (dotCount remainingPhonemes) "​."
                     Done (text, _) -> text
                     NoSolution -> "no solution"
               , cache = result.cache
-              , modified = result.respelling == InProgress
+              , modified =
+                  case result.respelling of
+                    InProgress _ -> True
+                    _ -> False
               }
             , case result.respelling of
-                InProgress -> Effects.task <| Task.succeed RespellText
+                InProgress _ -> Effects.task <| Task.succeed RespellText
                 _ -> Effects.none
             )
     RefreshText ->
@@ -126,7 +135,7 @@ update action model =
               { model
               | genText =
                   case result.respelling of
-                    InProgress ->
+                    InProgress _ ->
                       Debug.crash "still in progress after maxInt iterations"
                     Done (text, _) -> text
                     NoSolution -> "no solution"
@@ -135,3 +144,7 @@ update action model =
               }
       , Effects.none
       )
+
+dotCount : Int -> Int
+dotCount remainingPhonemes =
+  max 3 <| round <| 2.37 * toFloat remainingPhonemes

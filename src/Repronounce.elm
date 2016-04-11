@@ -1,5 +1,6 @@
 module Repronounce where
 
+import Array exposing (Array)
 import Dict exposing (Dict)
 import List
 import Random
@@ -44,7 +45,7 @@ emptyCache =
   }
 
 type Respelling
-  = InProgress
+  = InProgress (String, Int)
   | Done (String, Float)
   | NoSolution
 
@@ -80,28 +81,36 @@ repronounce data cache wordLists maxIterations =
         (getSuccessors data dag)
         (Knapsack.mapPeaks (growPlants seaLevel) reusedCache)
         maxIterations
+  in let
+    finalKey =
+      force <|
+        arrayLast <|
+          Array.filter
+            (flip Dict.member <| fst knapsacksAndDone) <|
+            Array.map toFinalKey dag.spaces
+  in let
+    remainingPhonemes = (Debug.log "length" <| DAG.length dag - 1) - fst5 finalKey
+    knapsack = force <| Dict.get finalKey <| fst knapsacksAndDone
+  in let
+    respelledText =
+      String.join
+        " " <|
+        List.reverse <|
+          List.filterMap .spelling <| knapsack.state :: knapsack.ancestors
   in
     { respelling =
-        if snd knapsacksAndDone then
-          case
-            Dict.get
-              (DAG.length dag - 1, "", [], CBool.cFalse, CBool.cTrue) <|
-              fst knapsacksAndDone
-          of
-            Nothing -> NoSolution
-            Just knapsack ->
-              Done
-                ( String.join
-                    " " <|
-                    List.reverse <|
-                      List.filterMap
-                        .spelling <|
-                        knapsack.state :: knapsack.ancestors
-                , knapsack.cost
-                )
-        else InProgress
+        case (snd knapsacksAndDone, remainingPhonemes) of
+          (True, 0) -> Done (respelledText, knapsack.cost)
+          (True, _) -> NoSolution
+          (False, _) -> InProgress (respelledText, remainingPhonemes)
     , cache = { knapsacks = fst knapsacksAndDone, wordLists = wordLists }
     }
+
+arrayLast : Array a -> Maybe a
+arrayLast a = Array.get (Array.length a - 1) a
+
+toFinalKey : Int -> (Int, String, List Space, CBool, CBool)
+toFinalKey i = (i, "", [], CBool.cFalse, CBool.cTrue)
 
 growPlants : Int -> Int -> Int
 growPlants seaLevel peak = if peak >= seaLevel then Random.maxInt else peak
