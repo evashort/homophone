@@ -1,6 +1,7 @@
 module Deletions where
 
 import Dict
+import Random
 import String
 
 import CompletionDict exposing (CompletionDict)
@@ -13,11 +14,12 @@ getDeletions : DeletionCosts -> DAG -> Int -> PeakedList (Priced Int)
 getDeletions deletionCosts dag i =
   let knapsacks =
     Dict.values <|
-      Knapsack.getKnapsacks
-        identity
-        (deletionChoices deletionCosts dag)
-        (Knapsack.emptyCache identity i)
-        0
+      fst <|
+        Knapsack.getKnapsacks
+          identity
+          (deletionChoices deletionCosts dag)
+          (Knapsack.emptyCache identity i)
+          Random.maxInt
   in
     { list = List.map orphan knapsacks
     , peak = force <| List.maximum <| List.map .peak knapsacks

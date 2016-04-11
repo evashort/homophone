@@ -3,10 +3,12 @@ import Html exposing (Html)
 import Html.Events as Events
 import Html.Attributes as Attributes
 import Http
+import Random
 import Signal
 import Task
 
 import DataLoader
+import Repronounce exposing (Respelling(..))
 import Respell
 import StartApp
 
@@ -88,14 +90,15 @@ update action model =
           DataLoader.Loaded data ->
             let
               result =
-                Respell.respell data model.cache newUserText
+                Respell.respell data model.cache newUserText Random.maxInt
             in
               { model
               | userText = newUserText
               , genText =
-                  Maybe.withDefault
-                    "no solution" <|
-                    Maybe.map fst result.respelling
+                  case result.respelling of
+                    InProgress -> model.genText
+                    Done (text, _) -> text
+                    NoSolution -> "no solution"
               , cache = result.cache
               }
       , Effects.none
@@ -106,13 +109,15 @@ update action model =
           DataLoader.Loaded data ->
             let
               result =
-                Respell.respell data Respell.emptyCache model.userText
+                Respell.respell
+                  data Respell.emptyCache model.userText Random.maxInt
             in
               { model
               | genText =
-                  Maybe.withDefault
-                    "no solution" <|
-                    Maybe.map fst result.respelling
+                  case result.respelling of
+                    InProgress -> model.genText
+                    Done (text, _) -> text
+                    NoSolution -> "no solution"
               , cache = result.cache
               }
       , Effects.none

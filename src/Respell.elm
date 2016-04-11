@@ -23,12 +23,13 @@ emptyCache = Repronounce.emptyCache
 
 type alias Result = Repronounce.Result
 
-respell : LoadedData -> Cache -> String -> Result
-respell data cache text =
+respell : LoadedData -> Cache -> String -> Int -> Result
+respell data cache text maxIterations =
   Repronounce.repronounce
     (getCostData data)
-    cache <|
-    pronounce data.pronouncer <| String.toLower text
+    cache
+    (pronounce data.pronouncer <| String.toLower text)
+    maxIterations
 
 getCostData : LoadedData -> CostData
 getCostData data =

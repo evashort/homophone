@@ -43,8 +43,13 @@ emptyCache =
   , wordLists = []
   }
 
+type Respelling
+  = InProgress
+  | Done (String, Float)
+  | NoSolution
+
 type alias Result =
-  { respelling : Maybe (String, Float)
+  { respelling : Respelling
   , cache : Cache
   }
 
@@ -56,8 +61,8 @@ type alias State =
   , startSpace : Bool
   }
 
-repronounce : CostData -> Cache -> List (List String) -> Result
-repronounce data cache wordLists =
+repronounce : CostData -> Cache -> List (List String) -> Int -> Result
+repronounce data cache wordLists maxIterations =
   let
     dag = DAG.fromPathLists wordLists
     reusedWords = firstTrue <| List.map2 (/=) wordLists cache.wordLists
@@ -69,32 +74,37 @@ repronounce data cache wordLists =
       Dict.filter (curry <| (>=) cutoff << fst5 << fst) cache.knapsacks
     seaLevel = if newWords > 0 then cutoff else Random.maxInt
   in let
-    knapsacks =
+    knapsacksAndDone =
       Knapsack.getKnapsacks
         stateKey
         (getSuccessors data dag)
-        reusedCache
-        seaLevel
+        (Knapsack.mapPeaks (growPlants seaLevel) reusedCache)
+        maxIterations
   in
     { respelling =
-        case
-          Dict.get
-            (DAG.length dag - 1, "", [], CBool.cFalse, CBool.cTrue)
-            knapsacks
-        of
-          Nothing -> Nothing
-          Just knapsack ->
-            Just
-              ( String.join
-                  " " <|
-                  List.reverse <|
-                    List.filterMap
-                      .spelling <|
-                      knapsack.state :: knapsack.ancestors
-              , knapsack.cost
-              )
-    , cache = { knapsacks = knapsacks, wordLists = wordLists }
+        if snd knapsacksAndDone then
+          case
+            Dict.get
+              (DAG.length dag - 1, "", [], CBool.cFalse, CBool.cTrue) <|
+              fst knapsacksAndDone
+          of
+            Nothing -> NoSolution
+            Just knapsack ->
+              Done
+                ( String.join
+                    " " <|
+                    List.reverse <|
+                      List.filterMap
+                        .spelling <|
+                        knapsack.state :: knapsack.ancestors
+                , knapsack.cost
+                )
+        else InProgress
+    , cache = { knapsacks = fst knapsacksAndDone, wordLists = wordLists }
     }
+
+growPlants : Int -> Int -> Int
+growPlants seaLevel peak = if peak >= seaLevel then Random.maxInt else peak
 
 fst5 : (a, b, c, d, e) -> a
 fst5 (x, _, _, _, _) = x
