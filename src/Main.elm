@@ -19,8 +19,10 @@ app =
 main = app.html
 
 port tasks : Signal (Task.Task Effects.Never ())
-port tasks =
-    app.tasks
+port tasks = app.tasks
+
+port title : String
+port title = "Homophone Generator"
 
 type alias Model =
   { dataLoader : DataLoader.Model
@@ -49,7 +51,17 @@ view address model =
         , ("width", "1%")
         ]
     ]
-    [ Html.textarea
+    [ Html.div
+        [ Attributes.style
+            [ ("margin", "10pt")
+            , ("margin-bottom", "0pt")
+            , ("font-size", "20pt")
+            , ("font-family", "serif")
+            , ("line-height", "1.25em")
+            ]
+        ]
+        [ Html.text "Homophone Generator" ]
+    , Html.textarea
         [ Events.on "input" Events.targetValue <|
             \x -> Signal.message address (EditText x)
         , Attributes.style
@@ -65,6 +77,7 @@ view address model =
             , ("min-height", "1.25em")
             ]
         , Attributes.autofocus True
+        , Attributes.placeholder "Type some words..."
         ]
         []
     , Html.div [ Attributes.hidden True ]
