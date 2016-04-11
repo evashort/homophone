@@ -62,6 +62,7 @@ view address model =
             , ("margin", "10pt")
             , ("margin-bottom", "0pt")
             , ("line-height", "1.25em")
+            , ("min-height", "1.25em")
             ]
         , Attributes.autofocus True
         ]
