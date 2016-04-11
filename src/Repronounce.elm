@@ -89,7 +89,7 @@ repronounce data cache wordLists maxIterations =
             (flip Dict.member <| fst knapsacksAndDone) <|
             Array.map toFinalKey dag.spaces
   in let
-    remainingPhonemes = (Debug.log "length" <| DAG.length dag - 1) - fst5 finalKey
+    remainingPhonemes = DAG.length dag - 1 - fst5 finalKey
     knapsack = force <| Dict.get finalKey <| fst knapsacksAndDone
   in let
     respelledText =

@@ -43,24 +43,30 @@ init =
 
 view : Signal.Address Action -> Model -> Html
 view address model =
-  Html.div []
-    [ Html.div []
-        [ Html.a
-            [ Attributes.href
-                "https://github.com/evanshort73/homophone/blob/master/LICENSE"
-            ]
-            [ Html.text "License" ]
+  Html.div
+    [ Attributes.style
+        [ ("display", "table")
+        , ("width", "1%")
         ]
-    , Html.div []
-        [ Html.textarea
-            [ Events.on "input" Events.targetValue <|
-                \x -> Signal.message address (EditText x)
-            , Attributes.style
-                [ ("width", "400px"), ("height", "200px") ]
+    ]
+    [ Html.textarea
+        [ Events.on "input" Events.targetValue <|
+            \x -> Signal.message address (EditText x)
+        , Attributes.style
+            [ ("width", "20em")
+            , ("height", "5em")
+            , ("font-size", "20pt")
+            , ("font-family", "serif")
+            , ("border", "1pt solid")
+            , ("padding", "10pt")
+            , ("margin", "10pt")
+            , ("margin-bottom", "0pt")
+            , ("line-height", "1.25em")
             ]
-            []
+        , Attributes.autofocus True
         ]
-    , Html.div []
+        []
+    , Html.div [ Attributes.hidden True ]
         [ Html.button
             [ Events.onClick address RefreshText
             , Attributes.style
@@ -68,10 +74,25 @@ view address model =
             ]
             [ Html.text "->" ]
         ]
-    , Html.div []
+    , Html.div
+        [ Attributes.style
+            [ ("font-size", "20pt")
+            , ("font-family", "serif")
+            , ("border", "1pt solid")
+            , ("padding", "10pt")
+            , ("margin", "10pt")
+            , ("line-height", "1.25em")
+            , ("min-height", "5em")
+            ]
+        ]
         [ Html.text model.genText ]
-    , Html.div []
-        [ DataLoader.view model.dataLoader ]
+     , Html.a
+         [ Attributes.href
+             "https://github.com/evanshort73/homophone/blob/master/LICENSE"
+         , Attributes.style [ ("margin", "10pt") ]
+         ]
+         [ Html.text "License" ]
+    , DataLoader.view model.dataLoader
     ]
 
 type Action
