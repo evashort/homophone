@@ -26,6 +26,7 @@ type alias Model =
   , userText : String
   , genText : String
   , cache : Respell.Cache
+  , modified : Bool
   }
 
 init : (Model, Effects Action)
@@ -34,6 +35,7 @@ init =
     , userText = ""
     , genText = ""
     , cache = Respell.emptyCache
+    , modified = False
     }
   , Effects.map DataLoaded <| snd DataLoader.init
   )
@@ -59,14 +61,14 @@ view address model =
         ]
     , Html.div []
         [ Html.button
-            [ Events.onClick address RespellText
+            [ Events.onClick address RefreshText
             , Attributes.style
                 [ ("padding", "10px 20px 10px 20px") ]
             ]
             [ Html.text "->" ]
         ]
     , Html.div []
-        [ Html.text model.genText ]
+        [ Html.text <| model.genText ++ if model.modified then "..." else "" ]
     , Html.div []
         [ DataLoader.view model.dataLoader ]
     ]
@@ -74,6 +76,7 @@ view address model =
 type Action
   = EditText String
   | RespellText
+  | RefreshText
   | DataLoaded DataLoader.Action
 update: Action -> Model -> (Model, Effects Action)
 update action model =
@@ -84,26 +87,34 @@ update action model =
         , Effects.map DataLoaded <| snd subUpdate
         )
     EditText newUserText ->
-      ( case model.dataLoader of
-          DataLoader.NotLoaded _ ->
-            { model | userText = newUserText, genText = "not loaded" }
-          DataLoader.Loaded data ->
-            let
-              result =
-                Respell.respell data model.cache newUserText Random.maxInt
-            in
-              { model
-              | userText = newUserText
-              , genText =
+      ( { model | userText = newUserText, modified = True }
+      , if model.modified then Effects.none
+        else Effects.task <| Task.succeed RespellText
+      )
+    RespellText ->
+      case model.dataLoader of
+        DataLoader.NotLoaded _ ->
+          ( { model | genText = "not loaded" }
+          , Effects.none
+          )
+        DataLoader.Loaded data ->
+          let
+            result = Respell.respell data model.cache model.userText 1
+          in
+            ( { model
+              | genText =
                   case result.respelling of
                     InProgress -> model.genText
                     Done (text, _) -> text
                     NoSolution -> "no solution"
               , cache = result.cache
+              , modified = result.respelling == InProgress
               }
-      , Effects.none
-      )
-    RespellText ->
+            , case result.respelling of
+                InProgress -> Effects.task <| Task.succeed RespellText
+                _ -> Effects.none
+            )
+    RefreshText ->
       ( case model.dataLoader of
           DataLoader.NotLoaded _ -> { model | genText = "not loaded" }
           DataLoader.Loaded data ->
@@ -115,10 +126,12 @@ update action model =
               { model
               | genText =
                   case result.respelling of
-                    InProgress -> model.genText
+                    InProgress ->
+                      Debug.crash "still in progress after maxInt iterations"
                     Done (text, _) -> text
                     NoSolution -> "no solution"
               , cache = result.cache
+              , modified = False
               }
       , Effects.none
       )
