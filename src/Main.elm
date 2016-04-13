@@ -3,6 +3,7 @@ import Html exposing (Html)
 import Html.Events as Events
 import Html.Attributes as Attributes
 import Http
+import Json.Decode as Json
 import Random
 import Signal
 import String
@@ -45,61 +46,62 @@ init =
 
 view : Signal.Address Action -> Model -> Html
 view address model =
-  Html.div
-    [ Attributes.style
-        [ ("display", "table")
-        , ("width", "1%")
-        ]
-    ]
+  Html.div []
     [ Html.div
         [ Attributes.style
             [ ("margin", "10pt")
             , ("margin-bottom", "0pt")
             , ("font-size", "20pt")
-            , ("font-family", "serif")
             , ("line-height", "1.25em")
             ]
         ]
         [ Html.text "Homophone Generator" ]
-    , Html.textarea
-        [ Events.on "input" Events.targetValue <|
-            \x -> Signal.message address (EditText x)
-        , Attributes.style
-            [ ("width", "20em")
-            , ("height", "5em")
-            , ("font-size", "20pt")
-            , ("font-family", "serif")
-            , ("border", "1pt solid")
-            , ("padding", "10pt")
-            , ("margin", "10pt")
-            , ("margin-bottom", "0pt")
-            , ("line-height", "1.25em")
-            , ("min-height", "1.25em")
-            ]
-        , Attributes.autofocus True
-        , Attributes.placeholder "Type some words..."
-        ]
-        []
-    , Html.div [ Attributes.hidden True ]
-        [ Html.button
-            [ Events.onClick address RefreshText
-            , Attributes.style
-                [ ("padding", "10px 20px 10px 20px") ]
-            ]
-            [ Html.text "->" ]
-        ]
     , Html.div
         [ Attributes.style
-            [ ("font-size", "20pt")
-            , ("font-family", "serif")
-            , ("border", "1pt solid")
-            , ("padding", "10pt")
-            , ("margin", "10pt")
-            , ("line-height", "1.25em")
-            , ("min-height", "5em")
+            [ ("display", "table")
+            , ("width", "1%")
             ]
         ]
-        [ Html.text model.genText ]
+        [ Html.div
+            [ Events.on "input" targetInnerText <|
+                \x -> Signal.message address (EditText x)
+            , Attributes.style
+                [ ("font-size", "20pt")
+                , ("border", "1pt solid")
+                , ("padding", "10pt")
+                , ("margin", "10pt")
+                , ("line-height", "1.25em")
+                , ("min-height", "1.25em")
+                , ("overflow", "auto")
+                , ("width", "20em")
+                , ("resize", "horizontal")
+                ]
+            , Attributes.autofocus True
+            , Attributes.placeholder "Type some words..."
+            , Attributes.contenteditable True
+            ]
+            []
+        , Html.div [ Attributes.hidden True ]
+            [ Html.button
+                [ Events.onClick address RefreshText
+                , Attributes.style
+                    [ ("padding", "10px 20px 10px 20px") ]
+                ]
+                [ Html.text "->" ]
+            ]
+        , Html.div
+            [ Attributes.style
+                [ ("font-size", "20pt")
+                , ("border", "1pt solid")
+                , ("padding", "10pt")
+                , ("margin", "10pt")
+                , ("line-height", "1.25em")
+                , ("min-height", "1.25em")
+                , ("overflow", "auto")
+                ]
+            ]
+            [ Html.text model.genText ]
+        ]
      , Html.a
          [ Attributes.href
              "https://github.com/evanshort73/homophone/blob/master/LICENSE"
@@ -109,11 +111,16 @@ view address model =
     , DataLoader.view model.dataLoader
     ]
 
+targetInnerText : Json.Decoder String
+targetInnerText =
+  Json.at ["target", "innerText"] Json.string
+
 type Action
   = EditText String
   | RespellText
   | RefreshText
   | DataLoaded DataLoader.Action
+
 update: Action -> Model -> (Model, Effects Action)
 update action model =
   case action of
@@ -182,4 +189,4 @@ update action model =
 
 dotCount : Int -> Int
 dotCount remainingPhonemes =
-  max 3 <| round <| 2.37 * toFloat remainingPhonemes
+  max 3 <| round <| 2.33 * toFloat remainingPhonemes
