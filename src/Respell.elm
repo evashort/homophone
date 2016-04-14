@@ -23,12 +23,20 @@ emptyCache = Repronounce.emptyCache
 
 type alias Result = Repronounce.Result
 
+type alias TextUnit =
+  { spelling : String
+  , pathLists : List (List String)
+  }
+
 respell : LoadedData -> Cache -> String -> Int -> Result
 respell data cache text maxIterations =
   Repronounce.repronounce
     (getCostData data)
     cache
-    (pronounce data.pronouncer <| String.toLower text)
+    ( List.concatMap
+        .pathLists <|
+        getTextUnits data.pronouncer <| tokenize <| String.toLower text
+    )
     maxIterations
 
 getCostData : LoadedData -> CostData
@@ -38,62 +46,60 @@ getCostData data =
   , wordCosts = data.wordCosts
   }
 
-pronounce : Pronouncer -> String -> List (List String)
-pronounce pronouncer text =
-  case getWordList pronouncer "" text of
-    Nothing -> []
-    Just ([], rest) -> pronounce pronouncer rest
-    Just (wordList, rest) -> wordList :: pronounce pronouncer rest
-
-getWordList : Pronouncer -> String -> String -> Maybe (List String, String)
-getWordList pronouncer subSpelling text =
-  case getToken text of
-    Nothing -> Nothing
-    Just (token, rest) ->
-      Just <|
-        let spelling = subSpelling ++ token in
-          let subResult =
-            if CompletionDict.startWith spelling pronouncer then
-              getWordList pronouncer spelling rest
-            else Nothing
-          in
-            Maybe.withDefault
-              ( Maybe.withDefault
-                  [] <|
-                  CompletionDict.get spelling pronouncer
-              , rest
-              ) <|
-              case subResult of
-                Just ([], _) -> Nothing
-                _ -> subResult
-
-getToken : String -> Maybe (String, String)
-getToken s =
+tokenize : String -> List String
+tokenize s =
   case String.uncons s of
-    Nothing -> Nothing
+    Nothing -> []
     Just (c, afterC) ->
-      Just <|
-        let subResult =
-          if startsWithClassOf c afterC then getToken afterC else Nothing
-        in
-          case subResult of
-            Nothing -> (String.fromChar c, afterC)
-            Just (subToken, aftenToken) ->
-              (String.cons c subToken, aftenToken)
+      let rest = tokenize afterC in
+        case (List.head rest, List.tail rest) of
+          (Just nextToken, Just afterNext) ->
+            if charsStick c <| firstChar nextToken then
+              String.cons c nextToken :: afterNext
+            else String.fromChar c :: rest
+          _ -> [ String.fromChar c ]
 
-type CharClass = Letter | Digit
+firstChar : String -> Char
+firstChar s =
+  case String.uncons s of
+    Nothing -> Debug.crash "expected string to be non-empty"
+    Just (c, _) -> c
 
-startsWithClassOf : Char -> String -> Bool
-startsWithClassOf c s =
-  Maybe.withDefault
-    False <|
-    Maybe.map2
-      (==)
-      (classOfChar c)
-      (String.uncons s `Maybe.andThen` (classOfChar << fst))
+charsStick : Char -> Char -> Bool
+charsStick c1 c2 =
+  (Char.isLower c1 && Char.isLower c2) || (Char.isDigit c1 && Char.isDigit c2)
 
-classOfChar : Char -> Maybe CharClass
-classOfChar c =
-  if Char.isLower c then Just Letter
-  else if Char.isDigit c then Just Digit
-  else Nothing
+getTextUnits : Pronouncer -> List String -> List TextUnit
+getTextUnits pronouncer tokens =
+  let unitSizes = List.reverse [ 1 .. maxUnitSize pronouncer tokens ] in
+    case Maybe.oneOf <| List.map (toTextUnit pronouncer tokens) unitSizes of
+      Just (unit, rest) -> unit :: getTextUnits pronouncer rest
+      Nothing ->
+        case (List.head tokens, List.tail tokens) of
+          (Just first, Just rest) ->
+            { spelling = first, pathLists = [] } ::
+              getTextUnits pronouncer rest
+          _ -> []
+
+toTextUnit : Pronouncer -> List String -> Int -> Maybe (TextUnit, List String)
+toTextUnit pronouncer tokens n =
+  let spelling = String.concat <| List.take n tokens in
+    case CompletionDict.get spelling pronouncer of
+      Nothing -> Nothing
+      Just pathList ->
+        Just
+          ( { spelling = spelling, pathLists = [ pathList ] }
+          , List.drop n tokens
+          )
+
+maxUnitSize : Pronouncer -> List String -> Int
+maxUnitSize = maxUnitSizeHelper 0
+
+maxUnitSizeHelper : Int -> Pronouncer -> List String -> Int
+maxUnitSizeHelper knownGood pronouncer tokens =
+  if knownGood < List.length tokens &&
+    CompletionDict.startWith
+      (String.concat <| List.take knownGood tokens)
+      pronouncer
+  then maxUnitSizeHelper (knownGood + 1) pronouncer tokens
+  else knownGood
