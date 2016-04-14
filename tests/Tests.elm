@@ -507,6 +507,6 @@ costlessExample :
     Maybe String
 costlessExample sentence wordCosts subCosts deletionCosts =
   case respellExample sentence wordCosts subCosts deletionCosts of
-    InProgress -> Debug.crash "ran out of iterations"
+    InProgress _ -> Debug.crash "ran out of iterations"
     Done (text, _) -> Just text
     NoSolution -> Nothing

@@ -64,7 +64,7 @@ view address model =
         ]
         [ Html.div
             [ Events.on "input" targetInnerText <|
-                \x -> Signal.message address (EditText x)
+                Signal.message address << EditText
             , Attributes.style
                 [ ("font-size", "20pt")
                 , ("border", "1pt solid")
@@ -76,7 +76,6 @@ view address model =
                 , ("width", "20em")
                 , ("resize", "horizontal")
                 ]
-            , Attributes.autofocus True
             , Attributes.placeholder "Type some words..."
             , Attributes.contenteditable True
             ]
