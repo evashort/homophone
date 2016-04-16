@@ -66,13 +66,10 @@ view address model =
           [ Attributes.style
               [ ("font-size", "20pt")
               , ("line-height", "1.25em")
-              , ("width", "20em")
               , ("border", "1pt solid")
               , ("border-radius", "3pt")
               , ("margin", "10pt")
               , ("position", "relative")
-              , ("resize", "horizontal")
-              , ("overflow", "auto")
               ]
           ]
           [ Html.textarea
@@ -123,10 +120,13 @@ view address model =
                 [ ("font-size", "20pt")
                 , ("line-height", "1.25em")
                 , ("min-height", "1.25em")
+                , ("width", "20em")
                 , ("padding", "10pt")
                 , ("border", "1pt solid")
                 , ("border-radius", "3pt")
                 , ("margin", "10pt")
+                , ("resize", "horizontal")
+                , ("overflow", "auto")
                 ]
             ]
             [ Html.text model.genText ]
