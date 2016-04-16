@@ -452,13 +452,17 @@ asdf data sentence (respellings, cache) =
       Nothing -> Debug.crash "test sentence had more than 10 words"
       Just pronouncer ->
         let
+          newData = { data | pronouncer = pronouncer }
+        in let
           result =
             Respell.respell
-              { data | pronouncer = pronouncer }
+              newData
               cache
-              ( String.join
-                  " " <|
-                  List.indexedMap (always << toString) sentence
+              ( Respell.getTextUnits
+                  newData <|
+                  String.join
+                    " " <|
+                    List.indexedMap (always << toString) sentence
               )
               100
         in
@@ -484,17 +488,22 @@ respellExample sentence wordCosts subCosts deletionCosts =
     of
       (Just pronouncer, Just deletionCosts, Just subCosts, Just wordCosts) ->
         let
+          data =
+            { pronouncer = pronouncer
+            , deletionCosts = deletionCosts
+            , subCosts = subCosts
+            , wordCosts = wordCosts
+            }
+        in let
           result =
             Respell.respell
-              { pronouncer = pronouncer
-              , deletionCosts = deletionCosts
-              , subCosts = subCosts
-              , wordCosts = wordCosts
-              }
+              data
               Respell.emptyCache
-              ( String.join
-                  " " <|
-                  List.indexedMap (always << toString) sentence
+              ( Respell.getTextUnits
+                  data <|
+                  String.join
+                    " " <|
+                    List.indexedMap (always << toString) sentence
               )
               100
         in

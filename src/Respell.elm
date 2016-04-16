@@ -28,16 +28,17 @@ type alias TextUnit =
   , pathLists : List (List String)
   }
 
-respell : LoadedData -> Cache -> String -> Int -> Result
-respell data cache text maxIterations =
+respell : LoadedData -> Cache -> List TextUnit -> Int -> Result
+respell data cache textUnits maxIterations =
   Repronounce.repronounce
     (getCostData data)
     cache
-    ( List.concatMap
-        .pathLists <|
-        getTextUnits data.pronouncer <| tokenize <| String.toLower text
-    )
+    (List.concatMap .pathLists textUnits)
     maxIterations
+
+getTextUnits : LoadedData -> String -> List TextUnit
+getTextUnits data text =
+  tokensToTextUnits data.pronouncer <| tokenize text
 
 getCostData : LoadedData -> CostData
 getCostData data =
@@ -67,24 +68,27 @@ firstChar s =
 
 charsStick : Char -> Char -> Bool
 charsStick c1 c2 =
-  (Char.isLower c1 && Char.isLower c2) || (Char.isDigit c1 && Char.isDigit c2)
+  (isLetter c1 && isLetter c2) || (Char.isDigit c1 && Char.isDigit c2)
 
-getTextUnits : Pronouncer -> List String -> List TextUnit
-getTextUnits pronouncer tokens =
+isLetter : Char -> Bool
+isLetter c = Char.isLower c || Char.isUpper c
+
+tokensToTextUnits : Pronouncer -> List String -> List TextUnit
+tokensToTextUnits pronouncer tokens =
   let unitSizes = List.reverse [ 1 .. maxUnitSize pronouncer tokens ] in
     case Maybe.oneOf <| List.map (toTextUnit pronouncer tokens) unitSizes of
-      Just (unit, rest) -> unit :: getTextUnits pronouncer rest
+      Just (unit, rest) -> unit :: tokensToTextUnits pronouncer rest
       Nothing ->
         case (List.head tokens, List.tail tokens) of
           (Just first, Just rest) ->
             { spelling = first, pathLists = [] } ::
-              getTextUnits pronouncer rest
+              tokensToTextUnits pronouncer rest
           _ -> []
 
 toTextUnit : Pronouncer -> List String -> Int -> Maybe (TextUnit, List String)
 toTextUnit pronouncer tokens n =
   let spelling = String.concat <| List.take n tokens in
-    case CompletionDict.get spelling pronouncer of
+    case CompletionDict.get (String.toLower spelling) pronouncer of
       Nothing -> Nothing
       Just pathList ->
         Just

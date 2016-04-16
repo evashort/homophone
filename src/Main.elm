@@ -1,9 +1,9 @@
+import Char
 import Effects exposing (Effects)
 import Html exposing (Html)
 import Html.Events as Events
 import Html.Attributes as Attributes
 import Http
-import Json.Decode as Json
 import Random
 import Signal
 import String
@@ -11,7 +11,7 @@ import Task
 
 import DataLoader
 import Repronounce exposing (Respelling(..))
-import Respell
+import Respell exposing (TextUnit)
 import StartApp
 
 app =
@@ -27,7 +27,7 @@ port title = "Homophone Generator"
 
 type alias Model =
   { dataLoader : DataLoader.Model
-  , userText : String
+  , userText : List TextUnit
   , genText : String
   , cache : Respell.Cache
   , modified : Bool
@@ -36,7 +36,7 @@ type alias Model =
 init : (Model, Effects Action)
 init =
   ( { dataLoader = fst DataLoader.init
-    , userText = ""
+    , userText = []
     , genText = ""
     , cache = Respell.emptyCache
     , modified = False
@@ -49,10 +49,10 @@ view address model =
   Html.div []
     [ Html.div
         [ Attributes.style
-            [ ("margin", "10pt")
-            , ("margin-bottom", "0pt")
-            , ("font-size", "20pt")
+            [ ("font-size", "20pt")
             , ("line-height", "1.25em")
+            , ("margin", "10pt")
+            , ("margin-bottom", "0pt")
             ]
         ]
         [ Html.text "Homophone Generator" ]
@@ -63,23 +63,53 @@ view address model =
             ]
         ]
         [ Html.div
-            [ Events.on "input" targetInnerText <|
-                Signal.message address << EditText
-            , Attributes.style
-                [ ("font-size", "20pt")
-                , ("border", "1pt solid")
-                , ("padding", "10pt")
-                , ("margin", "10pt")
-                , ("line-height", "1.25em")
-                , ("min-height", "1.25em")
-                , ("overflow", "auto")
-                , ("width", "20em")
-                , ("resize", "horizontal")
-                ]
-            , Attributes.placeholder "Type some words..."
-            , Attributes.contenteditable True
-            ]
-            []
+          [ Attributes.style
+              [ ("font-size", "20pt")
+              , ("line-height", "1.25em")
+              , ("width", "20em")
+              , ("border", "1pt solid")
+              , ("border-radius", "3pt")
+              , ("margin", "10pt")
+              , ("position", "relative")
+              , ("resize", "horizontal")
+              , ("overflow", "auto")
+              ]
+          ]
+          [ Html.textarea
+              [ Events.on "input" Events.targetValue <|
+                  Signal.message address << EditText
+              , Attributes.style
+                  [ ("font-size", "inherit")
+                  , ("font-family", "inherit")
+                  , ("line-height", "inherit")
+                  , ("width", "100%")
+                  , ("height", "100%")
+                  , ("padding", "10pt")
+                  , ("border", "none")
+                  , ("margin", "0")
+                  , ("position", "absolute")
+                  , ("resize", "none")
+                  , ("overflow", "hidden")
+                  , ("-webkit-box-sizing", "border-box") -- Safari/Chrome, other WebKit
+                  , ("-moz-box-sizing", "border-box")    -- Firefox, other Gecko
+                  , ("box-sizing", "border-box")         -- Opera/IE 8+
+                  , ("background-color", "transparent")
+                  ]
+              , Attributes.placeholder "Type some words..."
+              , Attributes.autofocus True
+              ]
+              []
+          , Html.div
+              [ Attributes.style
+                  [ ("min-height", "1.25em")
+                  , ("padding", "10pt")
+                  , ("white-space", "pre-wrap")
+                  , ("word-wrap", "break-word")
+                  , ("color", "transparent")
+                  ]
+              ] <|
+              List.map viewTextUnit model.userText ++ [ Html.text "\n" ]
+          ]
         , Html.div [ Attributes.hidden True ]
             [ Html.button
                 [ Events.onClick address RefreshText
@@ -91,12 +121,12 @@ view address model =
         , Html.div
             [ Attributes.style
                 [ ("font-size", "20pt")
-                , ("border", "1pt solid")
-                , ("padding", "10pt")
-                , ("margin", "10pt")
                 , ("line-height", "1.25em")
                 , ("min-height", "1.25em")
-                , ("overflow", "auto")
+                , ("padding", "10pt")
+                , ("border", "1pt solid")
+                , ("border-radius", "3pt")
+                , ("margin", "10pt")
                 ]
             ]
             [ Html.text model.genText ]
@@ -110,9 +140,22 @@ view address model =
     , DataLoader.view model.dataLoader
     ]
 
-targetInnerText : Json.Decoder String
-targetInnerText =
-  Json.at ["target", "innerText"] Json.string
+viewTextUnit : TextUnit -> Html
+viewTextUnit textUnit =
+  if List.isEmpty textUnit.pathLists &&
+    isPronounced (Respell.firstChar textUnit.spelling) then
+    Html.mark
+      [ Attributes.style
+          [ ("border-radius", "3pt")
+          , ("color", "transparent")
+          , ("background-color", "#ffdddd")
+          ]
+      ]
+      [ Html.text textUnit.spelling ]
+    else Html.text textUnit.spelling
+
+isPronounced : Char -> Bool
+isPronounced c = Char.isLower c || Char.isUpper c || Char.isDigit c
 
 type Action
   = EditText String
@@ -130,7 +173,10 @@ update action model =
         )
     EditText newUserText ->
       ( { model
-        | userText = newUserText
+        | userText =
+            case model.dataLoader of
+              DataLoader.NotLoaded _ -> []
+              DataLoader.Loaded data -> Respell.getTextUnits data newUserText
         , genText = model.genText ++ if model.modified then "..." else ""
         , modified = True
         }
