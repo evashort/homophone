@@ -5,6 +5,7 @@ import String
 
 import CompletionDict
 import DeletionCosts exposing (DeletionCosts)
+import NumParser
 import Repronounce exposing (CostData)
 import SubCosts exposing (SubCosts)
 import WordCosts exposing (Pronouncer, WordCosts)
@@ -23,10 +24,7 @@ emptyCache = Repronounce.emptyCache
 
 type alias Result = Repronounce.Result
 
-type alias TextUnit =
-  { spelling : String
-  , pathLists : List (List String)
-  }
+type alias TextUnit = NumParser.TextUnit
 
 respell : LoadedData -> Cache -> List TextUnit -> Int -> Result
 respell data cache textUnits maxIterations =
@@ -75,15 +73,20 @@ isLetter c = Char.isLower c || Char.isUpper c
 
 tokensToTextUnits : Pronouncer -> List String -> List TextUnit
 tokensToTextUnits pronouncer tokens =
-  let unitSizes = List.reverse [ 1 .. maxUnitSize pronouncer tokens ] in
-    case Maybe.oneOf <| List.map (toTextUnit pronouncer tokens) unitSizes of
-      Just (unit, rest) -> unit :: tokensToTextUnits pronouncer rest
-      Nothing ->
-        case (List.head tokens, List.tail tokens) of
-          (Just first, Just rest) ->
-            { spelling = first, pathLists = [] } ::
-              tokensToTextUnits pronouncer rest
-          _ -> []
+  case NumParser.parse tokens of
+    Just (unit, rest) -> unit :: tokensToTextUnits pronouncer rest
+    Nothing ->
+      let unitSizes = List.reverse [ 1 .. maxUnitSize pronouncer tokens ] in
+        case
+          Maybe.oneOf <| List.map (toTextUnit pronouncer tokens) unitSizes
+        of
+          Just (unit, rest) -> unit :: tokensToTextUnits pronouncer rest
+          Nothing ->
+            case (List.head tokens, List.tail tokens) of
+              (Just first, Just rest) ->
+                { spelling = first, pathLists = [] } ::
+                  tokensToTextUnits pronouncer rest
+              _ -> []
 
 toTextUnit : Pronouncer -> List String -> Int -> Maybe (TextUnit, List String)
 toTextUnit pronouncer tokens n =

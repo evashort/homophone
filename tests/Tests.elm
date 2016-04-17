@@ -446,7 +446,7 @@ asdf data sentence (respellings, cache) =
   let
     maybePronouncer = -- does not support more than 10 words
         CompletionDict.fromSortedPairs <|
-          List.indexedMap ((,) << toString) sentence
+          List.indexedMap ((,) << inventSpelling) sentence
   in
     case maybePronouncer of
       Nothing -> Debug.crash "test sentence had more than 10 words"
@@ -462,7 +462,7 @@ asdf data sentence (respellings, cache) =
                   newData <|
                   String.join
                     " " <|
-                    List.indexedMap (always << toString) sentence
+                    List.indexedMap (always << inventSpelling) sentence
               )
               100
         in
@@ -476,7 +476,7 @@ respellExample sentence wordCosts subCosts deletionCosts =
   let
     maybePronouncer = -- does not support more than 10 words
         CompletionDict.fromSortedPairs <|
-          List.indexedMap ((,) << toString) sentence
+          List.indexedMap ((,) << inventSpelling) sentence
     maybeDeletionCosts = CompletionDict.fromSortedPairs deletionCosts
     maybeSubCosts = CompletionDict.fromSortedPairs subCosts
     maybeWordCosts =
@@ -503,7 +503,7 @@ respellExample sentence wordCosts subCosts deletionCosts =
                   data <|
                   String.join
                     " " <|
-                    List.indexedMap (always << toString) sentence
+                    List.indexedMap (always << inventSpelling) sentence
               )
               100
         in
@@ -519,3 +519,18 @@ costlessExample sentence wordCosts subCosts deletionCosts =
     InProgress _ -> Debug.crash "ran out of iterations"
     Done (text, _) -> Just text
     NoSolution -> Nothing
+
+inventSpelling : Int -> String
+inventSpelling i =
+  case i of
+    0 -> "a"
+    1 -> "b"
+    2 -> "c"
+    3 -> "d"
+    4 -> "e"
+    5 -> "f"
+    6 -> "g"
+    7 -> "h"
+    8 -> "i"
+    9 -> "j"
+    _ -> "k"
