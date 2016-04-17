@@ -31,6 +31,7 @@ type alias Model =
   , genText : String
   , cache : Respell.Cache
   , modified : Bool
+  , hidden : Bool
   }
 
 init : (Model, Effects Action)
@@ -40,6 +41,7 @@ init =
     , genText = ""
     , cache = Respell.emptyCache
     , modified = False
+    , hidden = False
     }
   , Effects.map DataLoaded <| snd DataLoader.init
   )
@@ -52,10 +54,17 @@ view address model =
             [ ("font-size", "20pt")
             , ("line-height", "1.25em")
             , ("margin", "10pt")
-            , ("margin-bottom", "0pt")
             ]
         ]
         [ Html.text "Homophone Generator" ]
+     , Html.a
+         [ Attributes.href "#"
+         , Events.onClick
+             address <|
+             if model.hidden then ShowInput else HideInput
+         , Attributes.style [ ("margin", "10pt") ]
+         ]
+         [ Html.text <| if model.hidden then "Show input" else "Hide input" ]
     , Html.div
         [ Attributes.style
             [ ("display", "table")
@@ -66,6 +75,7 @@ view address model =
           [ Attributes.style
               [ ("font-size", "20pt")
               , ("line-height", "1.25em")
+              , ("min-height", "20pt")
               , ("border", "1pt solid")
               , ("border-radius", "3pt")
               , ("margin", "10pt")
@@ -75,7 +85,7 @@ view address model =
           [ Html.textarea
               [ Events.on "input" Events.targetValue <|
                   Signal.message address << EditText
-              , Attributes.style
+              , Attributes.style <|
                   [ ("font-size", "inherit")
                   , ("font-family", "inherit")
                   , ("line-height", "inherit")
@@ -91,19 +101,21 @@ view address model =
                   , ("-moz-box-sizing", "border-box")    -- Firefox, other Gecko
                   , ("box-sizing", "border-box")         -- Opera/IE 8+
                   , ("background-color", "transparent")
-                  ]
+                  ] ++
+                    if model.hidden then [("display", "none")] else []
               , Attributes.placeholder "Type some words..."
               , Attributes.autofocus True
               ]
               []
           , Html.div
-              [ Attributes.style
+              [ Attributes.style <|
                   [ ("min-height", "1.25em")
                   , ("padding", "10pt")
                   , ("white-space", "pre-wrap")
                   , ("word-wrap", "break-word")
                   , ("color", "transparent")
-                  ]
+                  ] ++
+                    if model.hidden then [("display", "none")] else []
               ] <|
               List.map viewTextUnit model.userText ++ [ Html.text "\n" ]
           ]
@@ -162,6 +174,8 @@ type Action
   | RespellText
   | RefreshText
   | DataLoaded DataLoader.Action
+  | HideInput
+  | ShowInput
 
 update: Action -> Model -> (Model, Effects Action)
 update action model =
@@ -210,6 +224,8 @@ update action model =
                 InProgress _ -> Effects.task <| Task.succeed RespellText
                 _ -> Effects.none
             )
+    HideInput -> ({ model | hidden = True }, Effects.none)
+    ShowInput -> ({ model | hidden = False }, Effects.none)
     RefreshText ->
       ( case model.dataLoader of
           DataLoader.NotLoaded _ -> { model | genText = "not loaded" }
