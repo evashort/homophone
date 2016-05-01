@@ -3,34 +3,32 @@ module DeletionCosts where
 import List
 
 import CompletionDict exposing (CompletionDict)
-import CostPair exposing (CostPair)
 import Parser
+import PricedString exposing (PricedString)
 
 type alias DeletionCosts = CompletionDict Float
 
 type ParseError
-  = InvalidCostPair String
+  = InvalidPricedString String
   | NotSorted
 
 parseErrorToString : ParseError -> String
 parseErrorToString err =
   case err of
-    InvalidCostPair p -> "\"" ++ p ++ "\" is not of the form \"key=cost\""
+    InvalidPricedString p -> "\"" ++ p ++ "\" is not of the form \"key=cost\""
     NotSorted -> "keys are not in sorted order"
 
 parse : String -> Result ParseError DeletionCosts
 parse fileContents =
-  parseSortedPairs fileContents
+  parsePricedDeletions fileContents
   `Result.andThen`
   (Result.fromMaybe NotSorted << CompletionDict.fromSortedPairs)
 
-parseSortedPairs : String -> Result ParseError (List CostPair)
-parseSortedPairs fileContents =
+parsePricedDeletions : String -> Result ParseError (List PricedString)
+parsePricedDeletions fileContents =
   Parser.foldResults <|
-    List.map parseDeletionCost <| Parser.nonEmptyLines fileContents
+    List.map parsePricedDeletion <| Parser.nonEmptyLines fileContents
 
-parseDeletionCost : String -> Result ParseError CostPair
-parseDeletionCost costPairString =
-  Result.fromMaybe
-    (InvalidCostPair costPairString) <|
-    CostPair.parse costPairString
+parsePricedDeletion : String -> Result ParseError PricedString
+parsePricedDeletion text =
+  Result.fromMaybe (InvalidPricedString text) <| PricedString.parse text

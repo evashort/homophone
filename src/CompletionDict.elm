@@ -37,6 +37,9 @@ get key d =
     in
       if found then Array.get i d.values else Nothing
 
+map : (a -> b) -> CompletionDict a -> CompletionDict b
+map f d = { keys = d.keys, values = Array.map f d.values }
+
 startWith : String -> CompletionDict valueType -> Bool
 startWith key d =
   let i = Bisect.bisectRight key d.keys in

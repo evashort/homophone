@@ -4,13 +4,13 @@ import List
 import String
 
 import CompletionDict exposing (CompletionDict)
-import CostPair exposing (CostPair)
 import Parser
+import PricedString exposing (PricedString)
 
-type alias SubCosts = CompletionDict (List CostPair)
+type alias SubCosts = CompletionDict (List PricedString)
 
 type ParseError
-  = InvalidCostPair String
+  = InvalidPricedString String
   | NoValues String
   | KeyEqualsValue String
   | NotSorted
@@ -18,43 +18,42 @@ type ParseError
 parseErrorToString : ParseError -> String
 parseErrorToString err =
   case err of
-    InvalidCostPair p -> "\"" ++ p ++ "\" is not of the form \"value=cost\""
+    InvalidPricedString p ->
+      "\"" ++ p ++ "\" is not of the form \"value=cost\""
     NoValues k -> "no values for key \"" ++ k ++ "\""
     KeyEqualsValue k -> "key \"" ++ k ++ "\" has identical value"
     NotSorted -> "keys are not in sorted order"
 
 parse : String -> Result ParseError SubCosts
 parse fileContents =
-  parseSortedMenus fileContents
-  `Result.andThen`
-  (Result.fromMaybe NotSorted << CompletionDict.fromSortedPairs)
+  Result.andThen
+    (parseMenus fileContents) <|
+    Result.fromMaybe NotSorted << CompletionDict.fromSortedPairs
 
-parseSortedMenus : String -> Result ParseError (List (String, List CostPair))
-parseSortedMenus fileContents =
+parseMenus : String -> Result ParseError (List (String, List PricedString))
+parseMenus fileContents =
   Parser.foldResults <|
     List.map parseMenu <| Parser.nonEmptyLines fileContents
 
-parseMenu : String -> Result ParseError (String, List CostPair)
-parseMenu menuString =
-  let tokens = String.split " " menuString in
+parseMenu : String -> Result ParseError (String, List PricedString)
+parseMenu text =
+  let tokens = String.split " " text in
     case (List.head tokens, List.tail tokens) of
       (Just key, Just []) -> Err <| NoValues key
       (Just key, Just menu) ->
-        (parseCostPairs menu) `Result.andThen` (addKey key)
+        Result.andThen (parseMenuItems menu) <| addKey key
       _ -> Debug.crash "non-empty line somehow has no tokens"
 
-parseCostPairs : (List String) -> Result ParseError (List CostPair)
-parseCostPairs menu =
-  Parser.foldResults <| List.map parseSubCost menu
+parseMenuItems : (List String) -> Result ParseError (List PricedString)
+parseMenuItems menu = Parser.foldResults <| List.map parseMenuItem menu
 
-parseSubCost : String -> Result ParseError CostPair
-parseSubCost costPairString =
-  Result.fromMaybe
-    (InvalidCostPair costPairString) <|
-    CostPair.parse costPairString
+parseMenuItem : String -> Result ParseError PricedString
+parseMenuItem text =
+  Result.fromMaybe (InvalidPricedString text) <| PricedString.parse text
 
 addKey :
-  String -> List CostPair -> Result ParseError (String, (List CostPair))
-addKey key costPairs =
-  if List.member key <| List.map fst costPairs then Err <| KeyEqualsValue key
-  else Ok (key, costPairs)
+  String -> List PricedString ->
+    Result ParseError (String, (List PricedString))
+addKey key menuItems =
+  if List.member key <| List.map fst menuItems then Err <| KeyEqualsValue key
+  else Ok (key, menuItems)

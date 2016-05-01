@@ -8,7 +8,7 @@ import Task
 import DeletionCosts exposing (DeletionCosts)
 import Respell
 import SubCosts exposing (SubCosts)
-import WordCosts exposing (Pronouncer, WordCosts)
+import WordCosts exposing (Pronouncer, Speller, WordCosts)
 
 deletionCostsURL = "data/deletions.txt"
 subCostsURL = "data/substitutions.txt"
@@ -21,7 +21,8 @@ type Model
 type alias LoadingState =
   { deletionCostsState : Maybe (Result DeletionCostsError DeletionCosts)
   , subCostsState : Maybe (Result SubCostsError SubCosts)
-  , wordCostsState : Maybe (Result WordCostsError (Pronouncer, WordCosts))
+  , wordCostsState :
+      Maybe (Result WordCostsError (Pronouncer, Speller, WordCosts))
   }
 
 init : (Model, Effects Action)
@@ -139,12 +140,13 @@ loadedCheck s =
   case (s.deletionCostsState, s.subCostsState, s.wordCostsState) of
     ( Just (Ok deletionCosts)
     , Just (Ok subCosts)
-    , Just (Ok (pronouncer, wordCosts))
+    , Just (Ok (pronouncer, speller, wordCosts))
     ) ->
       Loaded
-        { pronouncer = pronouncer
-        , deletionCosts = deletionCosts
+        { deletionCosts = deletionCosts
         , subCosts = subCosts
+        , pronouncer = pronouncer
+        , speller = speller
         , wordCosts = wordCosts
         }
     _ -> NotLoaded s

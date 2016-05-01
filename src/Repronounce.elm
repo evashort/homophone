@@ -35,7 +35,7 @@ emptyCache =
   { knapsacks =
       Knapsack.emptyCache
         stateKey
-        { spelling = Nothing
+        { word = Nothing
         , i = -1
         , leftovers = ""
         , spaces = Nothing
@@ -44,18 +44,18 @@ emptyCache =
   , wordLists = []
   }
 
-type Respelling
-  = InProgress (String, Int)
-  | Done (String, Float)
+type Status
+  = InProgress (List String, Int)
+  | Done (List String, Float)
   | NoSolution
 
 type alias Result =
-  { respelling : Respelling
+  { status : Status
   , cache : Cache
   }
 
 type alias State =
-  { spelling : Maybe String
+  { word : Maybe String
   , i : Int
   , leftovers : String
   , spaces : Maybe (List Space)
@@ -92,17 +92,15 @@ repronounce data cache wordLists maxIterations =
     remainingPhonemes = DAG.length dag - 1 - fst5 finalKey
     knapsack = force <| Dict.get finalKey <| fst knapsacksAndDone
   in let
-    respelledText =
-      String.join
-        " " <|
-        List.reverse <|
-          List.filterMap .spelling <| knapsack.state :: knapsack.ancestors
+    repronunciation =
+      List.reverse <|
+        List.filterMap .word <| knapsack.state :: knapsack.ancestors
   in
-    { respelling =
+    { status =
         case (snd knapsacksAndDone, remainingPhonemes) of
-          (True, 0) -> Done (respelledText, knapsack.cost)
+          (True, 0) -> Done (repronunciation, knapsack.cost)
           (True, _) -> NoSolution
-          (False, _) -> InProgress (respelledText, remainingPhonemes)
+          (False, _) -> InProgress (repronunciation, remainingPhonemes)
     , cache = { knapsacks = fst knapsacksAndDone, wordLists = wordLists }
     }
 
@@ -137,7 +135,7 @@ initialDeletions deletionCosts dag =
 deletionToState : Priced Int -> Priced State
 deletionToState deletion =
   { state =
-      { spelling = Nothing
+      { word = Nothing
       , i = deletion.state
       , leftovers = ""
       , spaces = Nothing
@@ -232,27 +230,28 @@ toWordChoice :
     BoundaryState -> Int -> Float -> Int -> Maybe (Priced State)
 toWordChoice
   wordCosts dag word value spaces startSpace bState i cost usedLen =
-  case CompletionDict.get (word ++ String.left usedLen value) wordCosts of
-    Nothing -> Nothing
-    Just (spelling, wordCost) ->
-      let
-        leftovers = String.dropLeft usedLen value
-        newBState = BoundaryState.update usedLen spaces bState
-      in let
-        newSpaces =
-          case (spaces, leftovers) of
-            (_, "") -> Nothing
-            (Just ss, _) -> Just <| List.filterMap (Space.minus usedLen) ss
-            (Nothing, _) -> Nothing
-        boundaryCost = BoundaryState.cost newBState
-      in
-        Just
-          { state =
-              { spelling = Just spelling
-              , i = i
-              , leftovers = leftovers
-              , spaces = newSpaces
-              , startSpace = startSpace
-              }
-          , cost = cost + boundaryCost + wordCost
-          }
+  let newWord = word ++ String.left usedLen value in
+    case CompletionDict.get newWord wordCosts of
+      Nothing -> Nothing
+      Just wordCost ->
+        let
+          leftovers = String.dropLeft usedLen value
+          newBState = BoundaryState.update usedLen spaces bState
+        in let
+          newSpaces =
+            case (spaces, leftovers) of
+              (_, "") -> Nothing
+              (Just ss, _) -> Just <| List.filterMap (Space.minus usedLen) ss
+              (Nothing, _) -> Nothing
+          boundaryCost = BoundaryState.cost newBState
+        in
+          Just
+            { state =
+                { word = Just newWord
+                , i = i
+                , leftovers = leftovers
+                , spaces = newSpaces
+                , startSpace = startSpace
+                }
+            , cost = cost + boundaryCost + wordCost
+            }

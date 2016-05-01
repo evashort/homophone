@@ -8,12 +8,13 @@ import DeletionCosts exposing (DeletionCosts)
 import NumParser
 import Repronounce exposing (CostData)
 import SubCosts exposing (SubCosts)
-import WordCosts exposing (Pronouncer, WordCosts)
+import WordCosts exposing (Pronouncer, Speller, WordCosts)
 
 type alias LoadedData =
-  { pronouncer : Pronouncer
-  , deletionCosts : DeletionCosts
+  { deletionCosts : DeletionCosts
   , subCosts : SubCosts
+  , pronouncer : Pronouncer
+  , speller : Speller
   , wordCosts : WordCosts
   }
 
@@ -22,17 +23,49 @@ type alias Cache = Repronounce.Cache
 emptyCache : Cache
 emptyCache = Repronounce.emptyCache
 
-type alias Result = Repronounce.Result
+type Status
+  = InProgress (String, Int)
+  | Done (String, Float)
+  | NoSolution
+
+type alias Result =
+  { status : Status
+  , cache : Cache
+  }
 
 type alias TextUnit = NumParser.TextUnit
 
 respell : LoadedData -> Cache -> List TextUnit -> Int -> Result
 respell data cache textUnits maxIterations =
-  Repronounce.repronounce
-    (getCostData data)
-    cache
-    (List.concatMap .pathLists textUnits)
-    maxIterations
+  let
+    repronounceResult =
+      Repronounce.repronounce
+        (getCostData data)
+        cache
+        (List.concatMap .pathLists textUnits)
+        maxIterations
+  in
+    { status =
+        case repronounceResult.status of
+          Repronounce.InProgress (words, remainingPhonemes) ->
+            InProgress (spell data.speller words, remainingPhonemes)
+          Repronounce.Done (words, cost) ->
+            Done (spell data.speller words, cost)
+          Repronounce.NoSolution -> NoSolution
+    , cache = repronounceResult.cache
+    }
+
+spell : Speller -> List String -> String
+spell speller words =
+  String.join
+    " " <|
+    List.map (force << (flip CompletionDict.get) speller) words
+
+force : Maybe a -> a
+force maybeX =
+  case maybeX of
+    Just x -> x
+    Nothing -> Debug.crash "expected Maybe to have a value"
 
 getTextUnits : LoadedData -> String -> List TextUnit
 getTextUnits data text =

@@ -10,8 +10,7 @@ import String
 import Task
 
 import DataLoader
-import Repronounce exposing (Respelling(..))
-import Respell exposing (TextUnit)
+import Respell exposing (TextUnit, Status(..))
 import StartApp
 
 app =
@@ -209,18 +208,18 @@ update action model =
           in
             ( { model
               | genText =
-                  case result.respelling of
+                  case result.status of
                     InProgress (text, remainingPhonemes) ->
                       text ++ String.repeat (dotCount remainingPhonemes) "​."
                     Done (text, _) -> text
                     NoSolution -> "no solution"
               , cache = result.cache
               , modified =
-                  case result.respelling of
+                  case result.status of
                     InProgress _ -> True
                     _ -> False
               }
-            , case result.respelling of
+            , case result.status of
                 InProgress _ -> Effects.task <| Task.succeed RespellText
                 _ -> Effects.none
             )
@@ -237,7 +236,7 @@ update action model =
             in
               { model
               | genText =
-                  case result.respelling of
+                  case result.status of
                     InProgress _ ->
                       Debug.crash "still in progress after maxInt iterations"
                     Done (text, _) -> text

@@ -4,14 +4,15 @@ import List
 import String
 
 import CompletionDict exposing (CompletionDict)
-import CostPair exposing (CostPair)
 import Parser
+import PricedString exposing (PricedString)
 
 costMultiplier : Float
 costMultiplier = 3.0 / 25784.0
 
 type alias Pronouncer = CompletionDict (List String)
-type alias WordCosts = CompletionDict CostPair
+type alias Speller = CompletionDict String
+type alias WordCosts = CompletionDict Float
 
 type ParseError
   = InvalidTriplet String
@@ -24,19 +25,24 @@ parseErrorToString err =
       "\"" ++ t ++ "\" is not of the form \"spelling\tcost\tphonemes\""
     NotSorted -> "spellings are not in sorted order"
 
-parse : String -> Result ParseError (Pronouncer, WordCosts)
+parse : String -> Result ParseError (Pronouncer, Speller, WordCosts)
 parse fileContents =
-  let triplets = parseTriplets fileContents in
-    Result.map2
-      (,)
-      ( (Result.map toPronouncerPairs triplets)
-        `Result.andThen`
-        (Result.fromMaybe NotSorted << CompletionDict.fromSortedPairs)
-      )
-      ( (Result.map toWordCostPairs triplets)
-        `Result.andThen`
-        (Result.fromMaybe NotSorted << CompletionDict.fromSortedPairs)
-      )
+  let
+    triplets = parseTriplets fileContents
+  in let
+    pronouncerResult =
+      Result.andThen
+        (Result.map toPronouncerPairs triplets) <|
+        Result.fromMaybe NotSorted << CompletionDict.fromSortedPairs
+    pricedSpellingResult =
+      Result.andThen
+        (Result.map toPricedSpellingPairs triplets) <|
+        Result.fromMaybe NotSorted << CompletionDict.fromSortedPairs
+  in let
+    spellerResult = Result.map (CompletionDict.map fst) pricedSpellingResult
+    wordCostsResult = Result.map (CompletionDict.map snd) pricedSpellingResult
+  in
+    Result.map3 (,,) pronouncerResult spellerResult wordCostsResult
 
 parseTriplets : String -> Result ParseError (List (String, Float, String))
 parseTriplets fileContents =
@@ -44,10 +50,10 @@ parseTriplets fileContents =
     List.map parseTriplet <| Parser.nonEmptyLines fileContents
 
 parseTriplet : String -> Result ParseError (String, Float, String)
-parseTriplet tripletString =
+parseTriplet text =
   Result.fromMaybe
-    (InvalidTriplet tripletString) <|
-    case Parser.split3 "\t" tripletString of
+    (InvalidTriplet text) <|
+    case Parser.split3 "\t" text of
       Nothing -> Nothing
       Just ("", costString, word) -> Nothing
       Just (spelling, costString, "") -> Nothing
@@ -62,39 +68,43 @@ sandwich x z y = (x, y, z)
 toPronouncerPairs :
   List (String, Float, String) -> List (String, (List String))
 toPronouncerPairs triplets =
-  List.foldr collapseBySpelling [] <| List.map toSpellingPair triplets
+  List.foldr collapseBySpelling [] <| List.map toPronouncerPair triplets
 
-toSpellingPair : (String, Float, String) -> (String, String)
-toSpellingPair (spelling, cost, word) = (String.toLower spelling, word)
+toPronouncerPair : (String, Float, String) -> (String, String)
+toPronouncerPair (spelling, cost, word) = (String.toLower spelling, word)
 
 collapseBySpelling :
   (String, String) -> List (String, (List String)) ->
     List (String, (List String))
-collapseBySpelling (spelling, word) pronouncerPairs =
-  case (List.head pronouncerPairs, List.tail pronouncerPairs) of
+collapseBySpelling (spelling, word) pairs =
+  case (List.head pairs, List.tail pairs) of
     (Just (prevSpelling, words), Just rest) ->
       if prevSpelling == spelling then (prevSpelling, word :: words) :: rest
-      else (spelling, [word]) :: pronouncerPairs
-    _ -> (spelling, [word]) :: pronouncerPairs
+      else (spelling, [word]) :: pairs
+    _ -> (spelling, [word]) :: pairs
 
-toWordCostPairs : List (String, Float, String) -> List (String, CostPair)
-toWordCostPairs triplets =
+toPricedSpellingPairs :
+  List (String, Float, String) -> List (String, PricedString)
+toPricedSpellingPairs triplets =
   List.foldr
     collapseByWord
     [] <|
-    List.sortBy wordCostPairKey <| List.map toWordCostPair triplets
+    List.sortBy
+      pricedSpellingPairKey <|
+      List.map toPricedSpellingPair triplets
 
-toWordCostPair : (String, Float, String) -> (String, CostPair)
-toWordCostPair (spelling, cost, word) = (word, (spelling, cost))
+toPricedSpellingPair : (String, Float, String) -> (String, PricedString)
+toPricedSpellingPair (spelling, cost, word) = (word, (spelling, cost))
 
-wordCostPairKey : (String, CostPair) -> (String, Float)
-wordCostPairKey (word, (spelling, cost)) = (word, cost)
+pricedSpellingPairKey : (String, PricedString) -> (String, Float)
+pricedSpellingPairKey (word, (spelling, cost)) = (word, cost)
 
 collapseByWord :
-  (String, CostPair) -> List (String, CostPair) -> List (String, CostPair)
-collapseByWord wordCostPair wordCostPairs =
-  case (List.head wordCostPairs, List.tail wordCostPairs) of
+  (String, PricedString) -> List (String, PricedString) ->
+    List (String, PricedString)
+collapseByWord pair pairs =
+  case (List.head pairs, List.tail pairs) of
     (Just (prevWord, (prevSpelling, prevCost)), Just rest) ->
-      if prevWord == fst wordCostPair then wordCostPair :: rest
-      else wordCostPair :: wordCostPairs
-    _ -> wordCostPair :: wordCostPairs
+      if prevWord == fst pair then pair :: rest
+      else pair :: pairs
+    _ -> pair :: pairs

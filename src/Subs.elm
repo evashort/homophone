@@ -4,12 +4,12 @@ import List
 import String
 
 import CompletionDict exposing (CompletionDict)
-import CostPair exposing (CostPair)
 import DAG exposing (DAG, Edge)
 import DeletionCosts exposing (DeletionCosts)
 import Deletions
 import Knapsack exposing (Priced)
 import PeakedList exposing (PeakedList)
+import PricedString exposing (PricedString)
 import Space exposing (Space)
 import SubCosts exposing (SubCosts)
 
@@ -38,7 +38,7 @@ getSubChoices deletionCosts subCosts dag startSpace i =
       )
       rest
 
-toRabbit : Bool -> Int -> CostPair -> SubChoice
+toRabbit : Bool -> Int -> PricedString -> SubChoice
 toRabbit startSpace i (value, cost) =
   { value = value
   , spaces = Nothing
@@ -81,7 +81,7 @@ subChoicesHelper
               )
               rest
 
-getValueChoices : String -> SubCosts -> Maybe (List CostPair)
+getValueChoices : String -> SubCosts -> Maybe (List PricedString)
 getValueChoices key subCosts =
   if String.length key == 1 then
     Just <|
@@ -89,11 +89,13 @@ getValueChoices key subCosts =
   else CompletionDict.get key subCosts
 
 toSubChoices :
-  DAG -> List Bool -> List (Priced Int) -> Int -> CostPair -> List SubChoice
+  DAG -> List Bool -> List (Priced Int) -> Int -> PricedString ->
+    List SubChoice
 toSubChoices dag rPins deletions keyEnd pricedValue =
   List.map (toSubChoice dag rPins pricedValue keyEnd) deletions
 
-toSubChoice : DAG -> List Bool -> CostPair -> Int -> Priced Int -> SubChoice
+toSubChoice :
+  DAG -> List Bool -> PricedString -> Int -> Priced Int -> SubChoice
 toSubChoice dag rPins (value, cost) keyEnd deletion =
   let startSpace = DAG.spaceInRange keyEnd deletion.state dag in
     { value = value
