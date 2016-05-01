@@ -28,6 +28,7 @@ type alias CostData =
 type alias Cache =
   { knapsacks : Dict (Int, String, List Space, CBool, CBool) (Knapsack State)
   , wordLists : List (List String)
+  , dag : DAG
   }
 
 emptyCache : Cache
@@ -42,16 +43,7 @@ emptyCache =
         , startSpace = False
         }
   , wordLists = []
-  }
-
-type Status
-  = InProgress (List String, Int)
-  | Done (List String, Float)
-  | NoSolution
-
-type alias Result =
-  { status : Status
-  , cache : Cache
+  , dag = DAG.fromPathLists []
   }
 
 type alias State =
@@ -62,8 +54,8 @@ type alias State =
   , startSpace : Bool
   }
 
-repronounce : CostData -> Cache -> List (List String) -> Int -> Result
-repronounce data cache wordLists maxIterations =
+updateCache : CostData -> Int -> List (List String) -> Cache -> Cache
+updateCache data maxIterations wordLists cache =
   let
     dag = DAG.fromPathLists wordLists
     reusedWords = firstTrue <| List.map2 (/=) wordLists cache.wordLists
@@ -71,47 +63,54 @@ repronounce data cache wordLists maxIterations =
     cutoff = force <| DAG.getSpace reusedWords dag
     newWords = List.length wordLists - reusedWords
   in let
-    reusedCache =
+    reusedKnapsacks =
       Dict.filter (curry <| (>=) cutoff << fst5 << fst) cache.knapsacks
     seaLevel = if newWords > 0 then cutoff else Random.maxInt
-  in let
-    knapsacksAndDone =
-      Knapsack.getKnapsacks
-        stateKey
-        (getSuccessors data dag)
-        (Knapsack.mapPeaks (growPlants seaLevel) reusedCache)
-        maxIterations
-  in let
-    finalKey =
-      force <|
-        arrayLast <|
-          Array.filter
-            (flip Dict.member <| fst knapsacksAndDone) <|
-            Array.map toFinalKey dag.spaces
-  in let
-    remainingPhonemes = DAG.length dag - 1 - fst5 finalKey
-    knapsack = force <| Dict.get finalKey <| fst knapsacksAndDone
-  in let
-    repronunciation =
-      List.reverse <|
-        List.filterMap .word <| knapsack.state :: knapsack.ancestors
   in
-    { status =
-        case (snd knapsacksAndDone, remainingPhonemes) of
-          (True, 0) -> Done (repronunciation, knapsack.cost)
-          (True, _) -> NoSolution
-          (False, _) -> InProgress (repronunciation, remainingPhonemes)
-    , cache = { knapsacks = fst knapsacksAndDone, wordLists = wordLists }
+    { knapsacks =
+        Knapsack.getKnapsacks
+          stateKey
+          (getSuccessors data dag)
+          maxIterations
+          (Knapsack.mapPeaks (growPlants seaLevel) reusedKnapsacks)
+    , wordLists = wordLists
+    , dag = dag
     }
 
-arrayLast : Array a -> Maybe a
-arrayLast a = Array.get (Array.length a - 1) a
+done : Cache -> Bool
+done = Knapsack.done << .knapsacks
+
+complete : Cache -> Bool
+complete cache =
+  Dict.member (toFinalKey <| DAG.length cache.dag - 1) cache.knapsacks
+
+remainingPhonemes : Cache -> Int
+remainingPhonemes cache = DAG.length cache.dag - 1 - fst5 (finalKey cache)
+
+pronunciation : Cache -> List String
+pronunciation cache =
+  let knapsack = finalKnapsack cache in
+    List.reverse <|
+      List.filterMap .word <| knapsack.state :: knapsack.ancestors
+
+cost : Cache -> Float
+cost = .cost << finalKnapsack
+
+finalKnapsack : Cache -> Knapsack State
+finalKnapsack cache = force <| Dict.get (finalKey cache) cache.knapsacks
+
+finalKey : Cache -> (Int, String, List Space, CBool, CBool)
+finalKey cache =
+  let
+    wordEndKeys =
+      Array.filter
+        (flip Dict.member cache.knapsacks) <|
+        Array.map toFinalKey cache.dag.spaces
+  in
+    force <| Array.get (Array.length wordEndKeys - 1) wordEndKeys
 
 toFinalKey : Int -> (Int, String, List Space, CBool, CBool)
 toFinalKey i = (i, "", [], CBool.cFalse, CBool.cTrue)
-
-growPlants : Int -> Int -> Int
-growPlants seaLevel peak = if peak >= seaLevel then Random.maxInt else peak
 
 fst5 : (a, b, c, d, e) -> a
 fst5 (x, _, _, _, _) = x
@@ -127,6 +126,9 @@ force maybeX =
   case maybeX of
     Just x -> x
     Nothing -> Debug.crash "expected Maybe to have a value"
+
+growPlants : Int -> Int -> Int
+growPlants seaLevel peak = if peak >= seaLevel then Random.maxInt else peak
 
 initialDeletions : DeletionCosts -> DAG -> PeakedList (Priced State)
 initialDeletions deletionCosts dag =

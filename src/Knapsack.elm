@@ -31,21 +31,24 @@ mapPeaks f cache = Dict.map (curry <| mapPeak f << snd) cache
 mapPeak : (Int -> Int) -> Knapsack s -> Knapsack s
 mapPeak f knapsack = { knapsack | peak = f knapsack.peak }
 
--- keyFunc should produce a unique result for each state in seed because
--- there's no guarantee that the lower-cost state will be chosen in the case
--- of a conflict.
 getKnapsacks :
-  (s -> comparable) -> (comparable -> PeakedList (Priced s)) ->
-    Dict comparable (Knapsack s) -> Int ->
-    (Dict comparable (Knapsack s), Bool)
-getKnapsacks keyFunc successorFunc cache maxIterations =
+  (s -> comparable) -> (comparable -> PeakedList (Priced s)) -> Int ->
+    Dict comparable (Knapsack s) -> Dict comparable (Knapsack s)
+getKnapsacks keyFunc successorFunc maxIterations cache =
   let
     fringe =
       PrioritySet.fromList <|
         Dict.keys <|
           Dict.filter (curry <| (==) Random.maxInt << .peak << snd) cache
   in
-    knapsackHelper keyFunc successorFunc cache fringe maxIterations
+    knapsackHelper keyFunc successorFunc maxIterations fringe cache
+
+done : Dict comparable (Knapsack s) -> Bool
+done = Dict.foldl alsoNotOnFringe True
+
+alsoNotOnFringe : comparable -> Knapsack s -> Bool -> Bool
+alsoNotOnFringe _ knapsack noneOnFringe =
+  noneOnFringe && knapsack.peak /= Random.maxInt
 
 toChild : List s -> Float -> Priced s -> Knapsack s
 toChild ancestors parentCost pricedState =
@@ -56,14 +59,14 @@ toChild ancestors parentCost pricedState =
   }
 
 knapsackHelper :
-  (s -> comparable) -> (comparable -> PeakedList (Priced s)) ->
-    Dict comparable (Knapsack s) -> PrioritySet comparable -> Int ->
-    (Dict comparable (Knapsack s), Bool)
-knapsackHelper keyFunc successorFunc knapsacks fringe iterations =
-  if iterations <= 0 then (knapsacks, False)
+  (s -> comparable) -> (comparable -> PeakedList (Priced s)) -> Int ->
+    PrioritySet comparable -> Dict comparable (Knapsack s) ->
+    Dict comparable (Knapsack s)
+knapsackHelper keyFunc successorFunc iterations fringe knapsacks =
+  if iterations <= 0 then knapsacks
   else
     case PrioritySet.findMin fringe of
-      Nothing -> (knapsacks, True)
+      Nothing -> knapsacks
       Just key ->
         case Dict.get key knapsacks of
           Nothing -> Debug.crash "fringe key not found in knapsacks"
@@ -82,20 +85,20 @@ knapsackHelper keyFunc successorFunc knapsacks fringe iterations =
                   { knapsack | peak = peakedSuccessors.peak }
                   knapsacks
             in let
-              (newKnapsacks, newFringe) =
+              (newFringe, newKnapsacks) =
                 List.foldl
                   (insertKnapsack keyFunc)
-                  (raisedKnapsacks, PrioritySet.deleteMin fringe)
+                  (PrioritySet.deleteMin fringe, raisedKnapsacks)
                   successors
             in
               knapsackHelper
-                keyFunc successorFunc newKnapsacks newFringe (iterations - 1)
+                keyFunc successorFunc (iterations - 1) newFringe newKnapsacks
 
 insertKnapsack :
   (s -> comparable) -> Knapsack s ->
-    (Dict comparable (Knapsack s), PrioritySet comparable) ->
-    (Dict comparable (Knapsack s), PrioritySet comparable)
-insertKnapsack keyFunc knapsack (knapsacks, fringe) =
+    (PrioritySet comparable, Dict comparable (Knapsack s)) ->
+    (PrioritySet comparable, Dict comparable (Knapsack s))
+insertKnapsack keyFunc knapsack (fringe, knapsacks) =
   let
     key = keyFunc knapsack.state
   in let
@@ -105,5 +108,5 @@ insertKnapsack keyFunc knapsack (knapsacks, fringe) =
         Maybe.map ((<) knapsack.cost << .cost) <| Dict.get key knapsacks
   in
     if shouldInsert then
-      ( Dict.insert key knapsack knapsacks, PrioritySet.insert key fringe )
-    else (knapsacks, fringe)
+      ( PrioritySet.insert key fringe, Dict.insert key knapsack knapsacks )
+    else (fringe, knapsacks)

@@ -38,21 +38,26 @@ type alias TextUnit = NumParser.TextUnit
 respell : LoadedData -> Cache -> List TextUnit -> Int -> Result
 respell data cache textUnits maxIterations =
   let
-    repronounceResult =
-      Repronounce.repronounce
+    newCache =
+      Repronounce.updateCache
         (getCostData data)
-        cache
-        (List.concatMap .pathLists textUnits)
         maxIterations
+        (List.concatMap .pathLists textUnits)
+        cache
   in
     { status =
-        case repronounceResult.status of
-          Repronounce.InProgress (words, remainingPhonemes) ->
-            InProgress (spell data.speller words, remainingPhonemes)
-          Repronounce.Done (words, cost) ->
-            Done (spell data.speller words, cost)
-          Repronounce.NoSolution -> NoSolution
-    , cache = repronounceResult.cache
+        if Repronounce.done newCache then
+          Done
+            ( spell data.speller <| Repronounce.pronunciation newCache
+            , Repronounce.cost newCache
+            )
+        else if Repronounce.complete newCache then
+          InProgress
+            ( spell data.speller <| Repronounce.pronunciation newCache
+            , Repronounce.remainingPhonemes newCache
+            )
+        else NoSolution
+    , cache = newCache
     }
 
 spell : Speller -> List String -> String

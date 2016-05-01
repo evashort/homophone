@@ -14,12 +14,11 @@ getDeletions : DeletionCosts -> DAG -> Int -> PeakedList (Priced Int)
 getDeletions deletionCosts dag i =
   let knapsacks =
     Dict.values <|
-      fst <|
-        Knapsack.getKnapsacks
-          identity
-          (deletionChoices deletionCosts dag)
-          (Knapsack.emptyCache identity i)
-          Random.maxInt
+      Knapsack.getKnapsacks
+        identity
+        (deletionChoices deletionCosts dag)
+        Random.maxInt
+        (Knapsack.emptyCache identity i)
   in
     { list = List.map orphan knapsacks
     , peak = force <| List.maximum <| List.map .peak knapsacks
