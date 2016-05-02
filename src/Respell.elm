@@ -6,82 +6,69 @@ import String
 import CompletionDict
 import DeletionCosts exposing (DeletionCosts)
 import NumParser
-import Repronounce exposing (CostData)
+import Repronounce
 import SubCosts exposing (SubCosts)
 import WordCosts exposing (Pronouncer, Speller, WordCosts)
 
-type alias LoadedData =
-  { deletionCosts : DeletionCosts
-  , subCosts : SubCosts
-  , pronouncer : Pronouncer
-  , speller : Speller
-  , wordCosts : WordCosts
-  }
-
-type alias Cache = Repronounce.Cache
-
-emptyCache : Cache
-emptyCache = Repronounce.emptyCache
-
-type Status
-  = InProgress (String, Int)
-  | Done (String, Float)
-  | NoSolution
-
-type alias Result =
-  { status : Status
-  , cache : Cache
-  }
-
 type alias TextUnit = NumParser.TextUnit
 
-respell : LoadedData -> Cache -> List TextUnit -> Int -> Result
-respell data cache textUnits maxIterations =
-  let
-    newCache =
-      Repronounce.updateCache
-        (getCostData data)
-        maxIterations
-        (List.concatMap .pathLists textUnits)
-        cache
-  in
-    { status =
-        if Repronounce.done newCache then
-          Done
-            ( spell data.speller <| Repronounce.pronunciation newCache
-            , Repronounce.cost newCache
-            )
-        else if Repronounce.complete newCache then
-          InProgress
-            ( spell data.speller <| Repronounce.pronunciation newCache
-            , Repronounce.remainingPhonemes newCache
-            )
-        else NoSolution
-    , cache = newCache
+type alias Cache =
+  { pronouncer : Pronouncer
+  , speller : Speller
+  , cache : Repronounce.Cache
+  , textUnits : List TextUnit
+  }
+
+init :
+  Pronouncer -> Speller -> DeletionCosts -> SubCosts -> WordCosts -> Cache
+init pronouncer speller dCosts sCosts wCosts =
+  { pronouncer = pronouncer
+  , speller = speller
+  , cache = Repronounce.init dCosts sCosts wCosts
+  , textUnits = []
+  }
+
+setGoal : String -> Cache -> Cache
+setGoal text cache =
+  let textUnits = tokensToTextUnits cache.pronouncer <| tokenize text in
+    { cache
+    | cache =
+        Repronounce.setGoal (List.concatMap .pathLists textUnits) cache.cache
+    , textUnits = textUnits
     }
 
-spell : Speller -> List String -> String
-spell speller words =
+goal : Cache -> String
+goal cache = String.concat <| List.map .spelling cache.textUnits
+
+update : Int -> Cache -> Cache
+update maxIterations cache =
+  { cache | cache = Repronounce.update maxIterations cache.cache }
+
+done : Cache -> Bool
+done cache = Repronounce.done cache.cache
+
+complete : Cache -> Bool
+complete cache = Repronounce.complete cache.cache
+
+remainingPhonemes : Cache -> Int
+remainingPhonemes cache = Repronounce.remainingPhonemes cache.cache
+
+cost : Cache -> Float
+cost cache = Repronounce.cost cache.cache
+
+spelling : Cache -> String
+spelling cache =
   String.join
     " " <|
-    List.map (force << (flip CompletionDict.get) speller) words
+    List.map
+      (force << (flip CompletionDict.get) cache.speller) <|
+      Repronounce.pronunciation cache.cache
 
 force : Maybe a -> a
 force maybeX =
   case maybeX of
     Just x -> x
     Nothing -> Debug.crash "expected Maybe to have a value"
-
-getTextUnits : LoadedData -> String -> List TextUnit
-getTextUnits data text =
-  tokensToTextUnits data.pronouncer <| tokenize text
-
-getCostData : LoadedData -> CostData
-getCostData data =
-  { deletionCosts = data.deletionCosts
-  , subCosts = data.subCosts
-  , wordCosts = data.wordCosts
-  }
 
 tokenize : String -> List String
 tokenize s =

@@ -10,7 +10,7 @@ import String
 import Task
 
 import DataLoader
-import Respell exposing (TextUnit, Status(..))
+import Respell exposing (TextUnit, Cache)
 import StartApp
 
 app =
@@ -24,22 +24,18 @@ port tasks = app.tasks
 port title : String
 port title = "Homophone Generator"
 
+type UserText = RawText String | Respelled Cache
+
 type alias Model =
   { dataLoader : DataLoader.Model
-  , userText : List TextUnit
-  , genText : String
-  , cache : Respell.Cache
-  , modified : Bool
+  , userText : UserText
   , hidden : Bool
   }
 
 init : (Model, Effects Action)
 init =
   ( { dataLoader = fst DataLoader.init
-    , userText = []
-    , genText = ""
-    , cache = Respell.emptyCache
-    , modified = False
+    , userText = RawText ""
     , hidden = False
     }
   , Effects.map DataLoaded <| snd DataLoader.init
@@ -116,7 +112,10 @@ view address model =
                   ] ++
                     if model.hidden then [("display", "none")] else []
               ] <|
-              List.map viewTextUnit model.userText ++ [ Html.text "\n" ]
+              case model.userText of
+                RawText text -> [ Html.text <| text ++ "\n" ]
+                Respelled cache ->
+                  List.map viewTextUnit cache.textUnits ++ [ Html.text "\n" ]
           ]
         , Html.div [ Attributes.hidden True ]
             [ Html.button
@@ -127,7 +126,7 @@ view address model =
                 [ Html.text "->" ]
             ]
         , Html.div
-            [ Attributes.style
+            [ Attributes.style <|
                 [ ("font-size", "20pt")
                 , ("line-height", "1.25em")
                 , ("min-height", "1.25em")
@@ -138,9 +137,22 @@ view address model =
                 , ("margin", "10pt")
                 , ("resize", "horizontal")
                 , ("overflow", "auto")
+                ] ++
+                  case model.userText of
+                    RawText _ -> [ ("color", "#767676") ]
+                    Respelled _ -> []
+            ] <|
+            case model.userText of
+              RawText _ -> [ Html.text "Loading data..." ]
+              Respelled cache ->
+                [ Html.text <|
+                    Respell.spelling cache ++
+                      if Respell.done cache then ""
+                      else
+                        String.repeat
+                          (dotCount <| Respell.remainingPhonemes cache)
+                          "​."
                 ]
-            ]
-            [ Html.text model.genText ]
         ]
      , Html.a
          [ Attributes.href
@@ -180,72 +192,78 @@ update: Action -> Model -> (Model, Effects Action)
 update action model =
   case action of
     DataLoaded subAction ->
-      let subUpdate = DataLoader.update subAction model.dataLoader in
-        ( { model | dataLoader = fst subUpdate }
-        , Effects.map DataLoaded <| snd subUpdate
-        )
+      case DataLoader.update subAction model.dataLoader of
+        ( newDataLoader, subEffect ) ->
+          let mappedSubEffect = Effects.map DataLoaded subEffect in
+            case (DataLoader.data newDataLoader, model.userText) of
+              ( Just (pronouncer, speller, dCosts, sCosts, wCosts)
+              , RawText text
+              ) ->
+                let
+                  cache =
+                    Respell.setGoal
+                      text <|
+                      Respell.init pronouncer speller dCosts sCosts wCosts
+                in
+                  ( { model
+                    | dataLoader = newDataLoader
+                    , userText = Respelled cache
+                    }
+                  , if Respell.done cache then mappedSubEffect
+                    else
+                      Effects.batch
+                        [ mappedSubEffect
+                        , Effects.task <| Task.succeed RespellText
+                        ]
+                  )
+              _ -> ({ model | dataLoader = newDataLoader }, mappedSubEffect)
     EditText newUserText ->
-      ( { model
-        | userText =
-            case model.dataLoader of
-              DataLoader.NotLoaded _ -> []
-              DataLoader.Loaded data -> Respell.getTextUnits data newUserText
-        , genText = model.genText ++ if model.modified then "..." else ""
-        , modified = True
-        }
-      , if model.modified then Effects.none
-        else Effects.task <| Task.succeed RespellText
-      )
-    RespellText ->
-      case model.dataLoader of
-        DataLoader.NotLoaded _ ->
-          ( { model | genText = "not loaded" }
-          , Effects.none
+      case model.userText of
+        RawText _ ->
+          ( { model | userText = RawText newUserText }, Effects.none )
+        Respelled cache ->
+          ( { model
+            | userText = Respelled <| Respell.setGoal newUserText cache
+            }
+          , if Respell.done cache then
+              Effects.task <| Task.succeed RespellText
+            else Effects.none
           )
-        DataLoader.Loaded data ->
-          let
-            result = Respell.respell data model.cache model.userText 1
-          in
-            ( { model
-              | genText =
-                  case result.status of
-                    InProgress (text, remainingPhonemes) ->
-                      text ++ String.repeat (dotCount remainingPhonemes) "​."
-                    Done (text, _) -> text
-                    NoSolution -> "no solution"
-              , cache = result.cache
-              , modified =
-                  case result.status of
-                    InProgress _ -> True
-                    _ -> False
-              }
-            , case result.status of
-                InProgress _ -> Effects.task <| Task.succeed RespellText
-                _ -> Effects.none
+    RespellText ->
+      case model.userText of
+        Respelled cache ->
+          let newCache = Respell.update 1 cache in
+            ( { model | userText = Respelled newCache }
+            , if Respell.done newCache then
+                if Respell.complete newCache then Effects.none
+                else
+                  Debug.crash <|
+                    "no solution for \"" ++ Respell.goal newCache ++ "\""
+              else Effects.task <| Task.succeed RespellText
             )
+        RawText _ -> Debug.crash "RespellText action before data loaded"
     HideInput -> ({ model | hidden = True }, Effects.none)
     ShowInput -> ({ model | hidden = False }, Effects.none)
     RefreshText ->
-      ( case model.dataLoader of
-          DataLoader.NotLoaded _ -> { model | genText = "not loaded" }
-          DataLoader.Loaded data ->
-            let
-              result =
-                Respell.respell
-                  data Respell.emptyCache model.userText Random.maxInt
-            in
-              { model
-              | genText =
-                  case result.status of
-                    InProgress _ ->
-                      Debug.crash "still in progress after maxInt iterations"
-                    Done (text, _) -> text
-                    NoSolution -> "no solution"
-              , cache = result.cache
-              , modified = False
-              }
-      , Effects.none
-      )
+      case (DataLoader.data model.dataLoader, model.userText) of
+        ( Just (pronouncer, speller, dCosts, sCosts, wCosts)
+        , Respelled cache
+        ) ->
+          let
+            newCache =
+              Respell.update Random.maxInt <|
+                Respell.setGoal
+                  (Respell.goal cache) <|
+                  Respell.init pronouncer speller dCosts sCosts wCosts
+          in
+            if Respell.done newCache then
+              if Respell.complete newCache then
+                ( { model | userText = Respelled newCache }, Effects.none )
+              else
+                Debug.crash <|
+                  "no solution for \"" ++ Respell.goal newCache ++ "\""
+            else Debug.crash "still in progress after maxInt iterations"
+        _ -> Debug.crash "RefreshText action before data loaded"
 
 dotCount : Int -> Int
 dotCount remainingPhonemes =

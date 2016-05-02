@@ -23,18 +23,18 @@ type alias SubChoice =
 
 getSubChoices :
   DeletionCosts -> SubCosts -> DAG -> Bool -> Int -> PeakedList SubChoice
-getSubChoices deletionCosts subCosts dag startSpace i =
+getSubChoices dCosts sCosts dag startSpace i =
   let
     rest =
       PeakedList.concatMap
         i
-        (subChoicesHelper deletionCosts subCosts dag "" [startSpace]) <|
+        (subChoicesHelper dCosts sCosts dag "" [startSpace]) <|
         DAG.get i dag
   in
     PeakedList.append
       ( List.map
           (toRabbit startSpace i) <|
-          Maybe.withDefault [] <| CompletionDict.get "" subCosts
+          Maybe.withDefault [] <| CompletionDict.get "" sCosts
       )
       rest
 
@@ -50,8 +50,7 @@ toRabbit startSpace i (value, cost) =
 subChoicesHelper :
   DeletionCosts -> SubCosts -> DAG -> String -> List Bool -> Edge ->
     PeakedList SubChoice
-subChoicesHelper
-  deletionCosts subCosts dag key rPins edge =
+subChoicesHelper dCosts sCosts dag key rPins edge =
   let
     newKey = key ++ String.fromChar edge.phoneme
     newRPins = DAG.isSpace edge.dst dag :: rPins
@@ -59,18 +58,18 @@ subChoicesHelper
     rest =
       -- we don't have to modify startWith to account for identity subs because
       -- newKey != ""
-      if CompletionDict.startWith newKey subCosts then
+      if CompletionDict.startWith newKey sCosts then
         PeakedList.concatMap
           edge.dst
-          (subChoicesHelper deletionCosts subCosts dag newKey newRPins) <|
+          (subChoicesHelper dCosts sCosts dag newKey newRPins) <|
           DAG.get edge.dst dag
       else PeakedList.empty
   in
-    case getValueChoices newKey subCosts of
+    case getValueChoices newKey sCosts of
       Nothing -> rest
       Just valueChoices ->
         let
-          peakedDeletions = Deletions.getDeletions deletionCosts dag edge.dst
+          peakedDeletions = Deletions.getDeletions dCosts dag edge.dst
         in
           PeakedList.raise
             peakedDeletions.peak <|
@@ -82,11 +81,11 @@ subChoicesHelper
               rest
 
 getValueChoices : String -> SubCosts -> Maybe (List PricedString)
-getValueChoices key subCosts =
+getValueChoices key sCosts =
   if String.length key == 1 then
     Just <|
-      (key, 0.0) :: (Maybe.withDefault [] <| CompletionDict.get key subCosts)
-  else CompletionDict.get key subCosts
+      (key, 0.0) :: (Maybe.withDefault [] <| CompletionDict.get key sCosts)
+  else CompletionDict.get key sCosts
 
 toSubChoices :
   DAG -> List Bool -> List (Priced Int) -> Int -> PricedString ->

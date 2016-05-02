@@ -6,7 +6,7 @@ import String
 
 import CompletionDict
 import BoundaryState exposing (spaceCost, wordCost)
-import Repronounce exposing (Cache, CostData)
+import Repronounce exposing (Cache)
 
 all : Test
 all =
@@ -409,35 +409,29 @@ cacheExample :
   List (List (List String)) -> List (String, Float) ->
     List (String, List (String, Float)) -> List (String, Float) ->
     List (Maybe (List String, Float))
-cacheExample sentences wordCosts subCosts deletionCosts =
+cacheExample sentences wCosts sCosts dCosts =
   let
-    maybeDeletionCosts = CompletionDict.fromSortedPairs deletionCosts
-    maybeSubCosts = CompletionDict.fromSortedPairs subCosts
-    maybeWordCosts = CompletionDict.fromSortedPairs wordCosts
+    maybeDCosts = CompletionDict.fromSortedPairs dCosts
+    maybeSCosts = CompletionDict.fromSortedPairs sCosts
+    maybeWCosts = CompletionDict.fromSortedPairs wCosts
   in
-    case (maybeDeletionCosts, maybeSubCosts, maybeWordCosts) of
-      (Just deletionCosts, Just subCosts, Just wordCosts) ->
-        let
-          laundry =
+    case (maybeDCosts, maybeSCosts, maybeWCosts) of
+      (Just dCosts, Just sCosts, Just wCosts) ->
+        List.reverse <|
+          fst <|
             List.foldl
-              ( asdf
-                  { deletionCosts = deletionCosts
-                  , subCosts = subCosts
-                  , wordCosts = wordCosts
-                  }
-              )
-              ([], Repronounce.emptyCache)
+              asdf
+              ([], Repronounce.init dCosts sCosts wCosts)
               sentences
-        in
-          List.reverse <| fst laundry
       _ -> []
 
 asdf :
-  CostData -> List (List String) ->
-    (List (Maybe (List String, Float)), Cache) ->
+  List (List String) -> (List (Maybe (List String, Float)), Cache) ->
     (List (Maybe (List String, Float)), Cache)
-asdf data sentence (statuses, cache) =
-  let newCache = Repronounce.updateCache data 100 sentence cache in
+asdf sentence (statuses, cache) =
+  let
+    newCache = Repronounce.update 100 <| Repronounce.setGoal sentence cache
+  in
     (interpretCache newCache :: statuses, newCache)
 
 
@@ -445,31 +439,35 @@ respellExample :
   List (List String) -> List (String, Float) ->
     List (String, List (String, Float)) -> List (String, Float) ->
       Maybe (List String, Float)
-respellExample sentence wordCosts subCosts deletionCosts =
+respellExample sentence wCosts sCosts dCosts =
   let
-    maybeDeletionCosts = CompletionDict.fromSortedPairs deletionCosts
-    maybeSubCosts = CompletionDict.fromSortedPairs subCosts
-    maybeWordCosts = CompletionDict.fromSortedPairs wordCosts
+    maybeDCosts = CompletionDict.fromSortedPairs dCosts
+    maybeSCosts = CompletionDict.fromSortedPairs sCosts
+    maybeWCosts = CompletionDict.fromSortedPairs wCosts
   in
-    case (maybeDeletionCosts, maybeSubCosts, maybeWordCosts) of
-      (Just deletionCosts, Just subCosts, Just wordCosts) ->
+    case (maybeDCosts, maybeSCosts, maybeWCosts) of
+      (Just dCosts, Just sCosts, Just wCosts) ->
         let
           data =
-            { deletionCosts = deletionCosts
-            , subCosts = subCosts
-            , wordCosts = wordCosts
+            { dCosts = dCosts
+            , sCosts = sCosts
+            , wCosts = wCosts
             }
         in
           interpretCache <|
-            Repronounce.updateCache data 100 sentence Repronounce.emptyCache
+            Repronounce.update
+              100 <|
+              Repronounce.setGoal
+                sentence <|
+                Repronounce.init dCosts sCosts wCosts
       _ -> Debug.crash "test data not sorted"
 
 costlessExample :
   List (List String) -> List (String, Float) ->
     List (String, List (String, Float)) -> List (String, Float) ->
     Maybe (List String)
-costlessExample sentence wordCosts subCosts deletionCosts =
-  Maybe.map fst <| respellExample sentence wordCosts subCosts deletionCosts
+costlessExample sentence wCosts sCosts dCosts =
+  Maybe.map fst <| respellExample sentence wCosts sCosts dCosts
 
 interpretCache : Cache -> Maybe (List String, Float)
 interpretCache cache =

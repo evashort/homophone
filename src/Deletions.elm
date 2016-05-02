@@ -11,12 +11,12 @@ import Knapsack exposing (Priced, Knapsack)
 import PeakedList exposing (PeakedList)
 
 getDeletions : DeletionCosts -> DAG -> Int -> PeakedList (Priced Int)
-getDeletions deletionCosts dag i =
+getDeletions dCosts dag i =
   let knapsacks =
     Dict.values <|
       Knapsack.getKnapsacks
         identity
-        (deletionChoices deletionCosts dag)
+        (deletionChoices dCosts dag)
         Random.maxInt
         (Knapsack.emptyCache identity i)
   in
@@ -37,26 +37,25 @@ orphan knapsack =
   }
 
 deletionChoices : DeletionCosts -> DAG -> Int -> PeakedList (Priced Int)
-deletionChoices deletionCosts dag i =
+deletionChoices dCosts dag i =
   PeakedList.concatMap
-    i
-    (deletionChoicesHelper deletionCosts dag "") <|
+    i (deletionChoicesHelper dCosts dag "") <|
     DAG.get i dag
 
 deletionChoicesHelper :
   DeletionCosts -> DAG -> String -> Edge -> PeakedList (Priced Int)
-deletionChoicesHelper deletionCosts dag key edge =
+deletionChoicesHelper dCosts dag key edge =
   let
     newKey = key ++ String.fromChar edge.phoneme
   in let
     rest =
-      if CompletionDict.startWith newKey deletionCosts then
+      if CompletionDict.startWith newKey dCosts then
         PeakedList.concatMap
           edge.dst
-          (deletionChoicesHelper deletionCosts dag newKey) <|
+          (deletionChoicesHelper dCosts dag newKey) <|
           DAG.get edge.dst dag
       else PeakedList.empty
   in
-    case CompletionDict.get newKey deletionCosts of
+    case CompletionDict.get newKey dCosts of
       Nothing -> rest
       Just cost -> PeakedList.cons { state = edge.dst, cost = cost } rest
