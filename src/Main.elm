@@ -10,7 +10,7 @@ import String
 import Task
 
 import DataLoader
-import Respell exposing (TextUnit, Cache)
+import Rack exposing (Rack)
 import StartApp
 
 app =
@@ -24,7 +24,7 @@ port tasks = app.tasks
 port title : String
 port title = "Homophone Generator"
 
-type UserText = RawText String | Respelled Cache
+type UserText = RawText String | Respelled Rack
 
 type alias Model =
   { dataLoader : DataLoader.Model
@@ -114,8 +114,7 @@ view address model =
               ] <|
               case model.userText of
                 RawText text -> [ Html.text <| text ++ "\n" ]
-                Respelled cache ->
-                  List.map viewTextUnit cache.textUnits ++ [ Html.text "\n" ]
+                Respelled rack -> Rack.view rack
           ]
         , Html.div [ Attributes.hidden True ]
             [ Html.button
@@ -137,22 +136,18 @@ view address model =
                 , ("margin", "10pt")
                 , ("resize", "horizontal")
                 , ("overflow", "auto")
+                , ("white-space", "pre-wrap")
+                , ("word-wrap", "break-word")
                 ] ++
                   case model.userText of
                     RawText _ -> [ ("color", "#767676") ]
                     Respelled _ -> []
-            ] <|
-            case model.userText of
-              RawText _ -> [ Html.text "Loading data..." ]
-              Respelled cache ->
-                [ Html.text <|
-                    Respell.spelling cache ++
-                      if Respell.done cache then ""
-                      else
-                        String.repeat
-                          (dotCount <| Respell.remainingPhonemes cache)
-                          "​."
-                ]
+            ]
+            [ Html.text <|
+                case model.userText of
+                  RawText _ ->  "Loading data..."
+                  Respelled rack -> Rack.spelling rack
+            ]
         ]
      , Html.a
          [ Attributes.href
@@ -162,23 +157,6 @@ view address model =
          [ Html.text "License" ]
     , DataLoader.view model.dataLoader
     ]
-
-viewTextUnit : TextUnit -> Html
-viewTextUnit textUnit =
-  if List.isEmpty textUnit.pathLists &&
-    isPronounced (Respell.firstChar textUnit.spelling) then
-    Html.mark
-      [ Attributes.style
-          [ ("border-radius", "3pt")
-          , ("color", "transparent")
-          , ("background-color", "#ffdddd")
-          ]
-      ]
-      [ Html.text textUnit.spelling ]
-    else Html.text textUnit.spelling
-
-isPronounced : Char -> Bool
-isPronounced c = Char.isLower c || Char.isUpper c || Char.isDigit c
 
 type Action
   = EditText String
@@ -200,16 +178,16 @@ update action model =
               , RawText text
               ) ->
                 let
-                  cache =
-                    Respell.setGoal
+                  rack =
+                    Rack.setGoal
                       text <|
-                      Respell.init pronouncer speller dCosts sCosts wCosts
+                      Rack.init pronouncer speller dCosts sCosts wCosts
                 in
                   ( { model
                     | dataLoader = newDataLoader
-                    , userText = Respelled cache
+                    , userText = Respelled rack
                     }
-                  , if Respell.done cache then mappedSubEffect
+                  , if Rack.done rack then mappedSubEffect
                     else
                       Effects.batch
                         [ mappedSubEffect
@@ -221,24 +199,23 @@ update action model =
       case model.userText of
         RawText _ ->
           ( { model | userText = RawText newUserText }, Effects.none )
-        Respelled cache ->
+        Respelled rack ->
           ( { model
-            | userText = Respelled <| Respell.setGoal newUserText cache
+            | userText = Respelled <| Rack.setGoal newUserText rack
             }
-          , if Respell.done cache then
-              Effects.task <| Task.succeed RespellText
+          , if Rack.done rack then Effects.task <| Task.succeed RespellText
             else Effects.none
           )
     RespellText ->
       case model.userText of
-        Respelled cache ->
-          let newCache = Respell.update 1 cache in
-            ( { model | userText = Respelled newCache }
-            , if Respell.done newCache then
-                if Respell.complete newCache then Effects.none
+        Respelled rack ->
+          let (newRack, _) = Rack.update 1 rack in
+            ( { model | userText = Respelled newRack }
+            , if Rack.done newRack then
+                if Rack.complete newRack then Effects.none
                 else
                   Debug.crash <|
-                    "no solution for \"" ++ Respell.goal newCache ++ "\""
+                    "no solution for \"" ++ Rack.goal newRack ++ "\""
               else Effects.task <| Task.succeed RespellText
             )
         RawText _ -> Debug.crash "RespellText action before data loaded"
@@ -247,24 +224,20 @@ update action model =
     RefreshText ->
       case (DataLoader.data model.dataLoader, model.userText) of
         ( Just (pronouncer, speller, dCosts, sCosts, wCosts)
-        , Respelled cache
+        , Respelled rack
         ) ->
           let
-            newCache =
-              Respell.update Random.maxInt <|
-                Respell.setGoal
-                  (Respell.goal cache) <|
-                  Respell.init pronouncer speller dCosts sCosts wCosts
+            (newRack, _) =
+              Rack.update Random.maxInt <|
+                Rack.setGoal
+                  (Rack.goal rack) <|
+                  Rack.init pronouncer speller dCosts sCosts wCosts
           in
-            if Respell.done newCache then
-              if Respell.complete newCache then
-                ( { model | userText = Respelled newCache }, Effects.none )
+            if Rack.done newRack then
+              if Rack.complete newRack then
+                ( { model | userText = Respelled newRack }, Effects.none )
               else
                 Debug.crash <|
-                  "no solution for \"" ++ Respell.goal newCache ++ "\""
+                  "no solution for \"" ++ Rack.goal newRack ++ "\""
             else Debug.crash "still in progress after maxInt iterations"
         _ -> Debug.crash "RefreshText action before data loaded"
-
-dotCount : Int -> Int
-dotCount remainingPhonemes =
-  max 3 <| round <| 2.33 * toFloat remainingPhonemes

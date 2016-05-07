@@ -432,7 +432,7 @@ asdf sentence (statuses, cache) =
   let
     newCache = Repronounce.update 100 <| Repronounce.setGoal sentence cache
   in
-    (interpretCache newCache :: statuses, newCache)
+    (interpretCache newCache :: statuses, fst newCache)
 
 
 respellExample :
@@ -469,8 +469,8 @@ costlessExample :
 costlessExample sentence wCosts sCosts dCosts =
   Maybe.map fst <| respellExample sentence wCosts sCosts dCosts
 
-interpretCache : Cache -> Maybe (List String, Float)
-interpretCache cache =
+interpretCache : (Cache, Int) -> Maybe (List String, Float)
+interpretCache (cache, _) =
   if Repronounce.done cache then
     if Repronounce.complete cache then
       Just (Repronounce.pronunciation cache, Repronounce.cost cache)

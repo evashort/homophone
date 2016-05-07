@@ -31,24 +31,25 @@ type alias Cache =
 
 init : DeletionCosts -> SubCosts -> WordCosts -> Cache
 init dCosts sCosts wCosts =
-  update -- to start off as done, we need one interation to get the i=0 state
-    2 <| -- and another to determine that it has no successors
-    { dCosts = dCosts
-    , sCosts = sCosts
-    , wCosts = wCosts
-    , knapsacks =
-        Knapsack.emptyCache
-          stateKey
-          { word = Nothing
-          , i = -1
-          , leftovers = ""
-          , spaces = Nothing
-          , startSpace = False
-          }
-    , wordLists = []
-    , dag = DAG.fromPathLists []
-    , newWordLists = []
-    }
+  fst <|
+    update -- to start off as done, we need one interation to get the
+      2 <| -- i=0 state, and another to determine that it has no successors
+      { dCosts = dCosts
+      , sCosts = sCosts
+      , wCosts = wCosts
+      , knapsacks =
+          Knapsack.emptyCache
+            stateKey
+            { word = Nothing
+            , i = -1
+            , leftovers = ""
+            , spaces = Nothing
+            , startSpace = False
+            }
+      , wordLists = []
+      , dag = DAG.fromPathLists []
+      , newWordLists = []
+      }
 
 type alias State =
   { word : Maybe String
@@ -61,8 +62,8 @@ type alias State =
 setGoal : List (List String) -> Cache -> Cache
 setGoal wordLists cache = { cache | newWordLists = wordLists }
 
-update : Int -> Cache -> Cache
-update maxIterations cache =
+update : Int -> Cache -> (Cache, Int)
+update iterations cache =
   let
     dag = DAG.fromPathLists cache.newWordLists
     reusedWords =
@@ -74,17 +75,21 @@ update maxIterations cache =
     reusedKnapsacks =
       Dict.filter (curry <| (>=) cutoff << fst5 << fst) cache.knapsacks
     seaLevel = if newWords > 0 then cutoff else Random.maxInt
+  in let
+    (knapsacks, remainingIterations) =
+      Knapsack.getKnapsacks
+        stateKey
+        (getSuccessors cache.dCosts cache.sCosts cache.wCosts dag)
+        iterations <|
+        Knapsack.mapPeaks (growPlants seaLevel) reusedKnapsacks
   in
-    { cache
-    | knapsacks =
-        Knapsack.getKnapsacks
-          stateKey
-          (getSuccessors cache.dCosts cache.sCosts cache.wCosts dag)
-          maxIterations
-          (Knapsack.mapPeaks (growPlants seaLevel) reusedKnapsacks)
-    , wordLists = cache.newWordLists
-    , dag = dag
-    }
+    ( { cache
+      | knapsacks = knapsacks
+      , wordLists = cache.newWordLists
+      , dag = dag
+      }
+    , remainingIterations
+    )
 
 done : Cache -> Bool
 done cache =

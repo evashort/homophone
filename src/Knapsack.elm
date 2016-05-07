@@ -33,15 +33,15 @@ mapPeak f knapsack = { knapsack | peak = f knapsack.peak }
 
 getKnapsacks :
   (s -> comparable) -> (comparable -> PeakedList (Priced s)) -> Int ->
-    Dict comparable (Knapsack s) -> Dict comparable (Knapsack s)
-getKnapsacks keyFunc successorFunc maxIterations cache =
+    Dict comparable (Knapsack s) -> (Dict comparable (Knapsack s), Int)
+getKnapsacks keyFunc successorFunc iterations cache =
   let
     fringe =
       PrioritySet.fromList <|
         Dict.keys <|
           Dict.filter (curry <| (==) Random.maxInt << .peak << snd) cache
   in
-    knapsackHelper keyFunc successorFunc maxIterations fringe cache
+    knapsackHelper keyFunc successorFunc iterations fringe cache
 
 done : Dict comparable (Knapsack s) -> Bool
 done = Dict.foldl alsoNotOnFringe True
@@ -61,12 +61,12 @@ toChild ancestors parentCost pricedState =
 knapsackHelper :
   (s -> comparable) -> (comparable -> PeakedList (Priced s)) -> Int ->
     PrioritySet comparable -> Dict comparable (Knapsack s) ->
-    Dict comparable (Knapsack s)
+    (Dict comparable (Knapsack s), Int)
 knapsackHelper keyFunc successorFunc iterations fringe knapsacks =
-  if iterations <= 0 then knapsacks
+  if iterations <= 0 then (knapsacks, iterations)
   else
     case PrioritySet.findMin fringe of
-      Nothing -> knapsacks
+      Nothing -> (knapsacks, iterations)
       Just key ->
         case Dict.get key knapsacks of
           Nothing -> Debug.crash "fringe key not found in knapsacks"

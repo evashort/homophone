@@ -1,6 +1,8 @@
 module Respell where
 
 import Char
+import Html exposing (Html)
+import Html.Attributes as Attributes
 import String
 
 import CompletionDict
@@ -40,9 +42,13 @@ setGoal text cache =
 goal : Cache -> String
 goal cache = String.concat <| List.map .spelling cache.textUnits
 
-update : Int -> Cache -> Cache
-update maxIterations cache =
-  { cache | cache = Repronounce.update maxIterations cache.cache }
+update : Int -> Cache -> (Cache, Int)
+update iterations cache =
+  let
+    (newCache, remainingIterations) =
+      Repronounce.update iterations cache.cache
+  in
+   ({ cache | cache = newCache }, remainingIterations)
 
 done : Cache -> Bool
 done cache = Repronounce.done cache.cache
@@ -50,19 +56,47 @@ done cache = Repronounce.done cache.cache
 complete : Cache -> Bool
 complete cache = Repronounce.complete cache.cache
 
-remainingPhonemes : Cache -> Int
-remainingPhonemes cache = Repronounce.remainingPhonemes cache.cache
-
 cost : Cache -> Float
 cost cache = Repronounce.cost cache.cache
 
 spelling : Cache -> String
 spelling cache =
-  String.join
-    " " <|
-    List.map
-      (force << (flip CompletionDict.get) cache.speller) <|
-      Repronounce.pronunciation cache.cache
+  ( String.join
+      " " <|
+      List.map
+        (force << (flip CompletionDict.get) cache.speller) <|
+        Repronounce.pronunciation cache.cache
+  ) ++
+    if Repronounce.done cache.cache then "\n"
+    else
+      String.repeat
+        (dotCount <| Repronounce.remainingPhonemes cache.cache)
+        "​."
+      ++ "\n"
+
+dotCount : Int -> Int
+dotCount remainingPhonemes =
+  max 3 <| round <| 2.33 * toFloat remainingPhonemes
+
+view : Cache -> List Html
+view cache = List.map viewTextUnit cache.textUnits ++ [ Html.text "\n" ]
+
+viewTextUnit : TextUnit -> Html
+viewTextUnit textUnit =
+  if List.isEmpty textUnit.pathLists &&
+    isPronounced (firstChar textUnit.spelling) then
+    Html.mark
+      [ Attributes.style
+          [ ("border-radius", "3pt")
+          , ("color", "transparent")
+          , ("background-color", "#ffdddd")
+          ]
+      ]
+      [ Html.text textUnit.spelling ]
+    else Html.text textUnit.spelling
+
+isPronounced : Char -> Bool
+isPronounced c = Char.isLower c || Char.isUpper c || Char.isDigit c
 
 force : Maybe a -> a
 force maybeX =
