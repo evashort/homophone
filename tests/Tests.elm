@@ -371,6 +371,33 @@ all =
             [("td", [("dt", 0.0)])]
             []
     , test
+        "word cost is multiplied by initial deletions" <|
+        assertEqual
+          (Just (["c"], sameWordCost + 2 * sameSpaceCost + 3 * extraWordCost + 30)) <|
+          respellExample
+            [["abc"]]
+            [("c", 10.0)]
+            []
+            [("ab", 0.0)]
+    , test
+        "non-initial deletions multiply the earlier word cost" <|
+        assertEqual
+          (Just (["c", "d"], 2 * sameWordCost + 4 * sameSpaceCost + 4 * extraWordCost + 130)) <|
+          respellExample
+            [["c"], ["abd"]]
+            [("c", 10.0), ("d", 100.0)]
+            []
+            [("ab", 0.0)]
+    , test
+        "key phonemes are distributed between words proportionally to value phonemes" <|
+        assertEqual
+          (Just (["cwx", "yzd"], sameWordCost + 3 * sameSpaceCost + 3 * extraWordCost + 220)) <|
+          respellExample
+            [["c"], ["abd"]]
+            [("cwx", 10.0), ("yzd", 100.0)]
+            [("a", [("wxyz", 0.0)])]
+            [("b", 0.0)]
+    , test
         "caahe" <|
         assertEqual
           [ Just (["bb"], 2 * sameSpaceCost + extraWordCost)
