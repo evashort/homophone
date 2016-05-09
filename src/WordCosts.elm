@@ -8,7 +8,7 @@ import Parser
 import PricedString exposing (PricedString)
 
 costMultiplier : Float
-costMultiplier = 3.0 / 25784.0
+costMultiplier = 1.5 / 25784.0
 
 type alias Pronouncer = CompletionDict (List String)
 type alias Speller = CompletionDict String

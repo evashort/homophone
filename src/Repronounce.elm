@@ -263,7 +263,7 @@ toWordChoice wCosts dag word value spaces startSpace bState i cost usedLen =
               (_, "") -> Nothing
               (Just ss, _) -> Just <| List.filterMap (Space.minus usedLen) ss
               (Nothing, _) -> Nothing
-          boundaryCost = BoundaryState.cost newBState
+          boundaryCost = BoundaryState.cost (String.length newWord) newBState
         in
           Just
             { state =
@@ -273,5 +273,7 @@ toWordChoice wCosts dag word value spaces startSpace bState i cost usedLen =
                 , spaces = newSpaces
                 , startSpace = startSpace
                 }
-            , cost = cost + boundaryCost + wordCost
+            , cost =
+                cost + boundaryCost + BoundaryState.extraWordCost +
+                  wordCost * (toFloat <| String.length newWord)
             }

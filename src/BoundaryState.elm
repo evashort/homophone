@@ -11,11 +11,14 @@ type alias BoundaryState =
     , endSpace : Bool
     }
 
-spaceCost : Float
-spaceCost = 1.0
+sameSpaceCost : Float
+sameSpaceCost = 1.0
 
-wordCost : Float
-wordCost = 3.0
+sameWordCost : Float
+sameWordCost = 3.0
+
+extraWordCost : Float
+extraWordCost = 1.0
 
 initial : BoundaryState
 initial = Nothing
@@ -51,13 +54,14 @@ update vLen spaces state =
             }
     Nothing -> state
 
-cost : BoundaryState -> Float
-cost state =
+cost : Int -> BoundaryState -> Float
+cost wordLength state =
   case state of
     Just b ->
-      (if b.startSpace then spaceCost else 0.0) +
-        (if b.endSpace then spaceCost else 0.0) +
-        ( if b.startSpace && b.endSpace && not b.midSpace then wordCost
+      (if b.startSpace then sameSpaceCost else 0.0) +
+        (if b.endSpace then sameSpaceCost else 0.0) +
+        ( if b.startSpace && b.endSpace && not b.midSpace then
+            sameWordCost + extraWordCost * toFloat (wordLength - 1)
           else 0.0
         )
     Nothing -> 0.0
