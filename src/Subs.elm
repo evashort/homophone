@@ -6,7 +6,7 @@ import String
 import CompletionDict exposing (CompletionDict)
 import DAG exposing (DAG, Edge)
 import DeletionCosts exposing (DeletionCosts)
-import Deletions
+import Deletions exposing (DeletionChoice)
 import Knapsack exposing (Priced)
 import PeakedList exposing (PeakedList)
 import PricedString exposing (PricedString)
@@ -15,6 +15,7 @@ import SubCosts exposing (SubCosts)
 
 type alias SubChoice =
   { value : String
+  , kLen : Int
   , spaces : Maybe (List Space)
   , startSpace : Bool
   , i : Int
@@ -41,6 +42,7 @@ getSubChoices dCosts sCosts dag startSpace i =
 toRabbit : Bool -> Int -> PricedString -> SubChoice
 toRabbit startSpace i (value, cost) =
   { value = value
+  , kLen = 0
   , spaces = Nothing
   , startSpace = startSpace
   , i = i
@@ -70,12 +72,13 @@ subChoicesHelper dCosts sCosts dag key rPins edge =
       Just valueChoices ->
         let
           peakedDeletions = Deletions.getDeletions dCosts dag edge.dst
+          kLen = String.length newKey
         in
           PeakedList.raise
             peakedDeletions.peak <|
             PeakedList.append
               ( List.concatMap
-                  (toSubChoices dag rPins peakedDeletions.list edge.dst)
+                  (toSubChoices dag rPins peakedDeletions.list edge.dst kLen)
                   valueChoices
               )
               rest
@@ -88,23 +91,25 @@ getValueChoices key sCosts =
   else CompletionDict.get key sCosts
 
 toSubChoices :
-  DAG -> List Bool -> List (Priced Int) -> Int -> PricedString ->
+  DAG -> List Bool -> List DeletionChoice -> Int -> Int -> PricedString ->
     List SubChoice
-toSubChoices dag rPins deletions keyEnd pricedValue =
-  List.map (toSubChoice dag rPins pricedValue keyEnd) deletions
+toSubChoices dag rPins deletions kEnd kLen pricedValue =
+  List.map (toSubChoice dag rPins pricedValue kEnd kLen) deletions
 
 toSubChoice :
-  DAG -> List Bool -> PricedString -> Int -> Priced Int -> SubChoice
-toSubChoice dag rPins (value, cost) keyEnd deletion =
-  let startSpace = DAG.spaceInRange keyEnd deletion.state dag in
+  DAG -> List Bool -> PricedString -> Int -> Int -> DeletionChoice ->
+    SubChoice
+toSubChoice dag rPins (value, cost) kEnd kLen deletion =
+  let startSpace = DAG.spaceInRange kEnd deletion.i dag in
     { value = value
+    , kLen = kLen + deletion.kLen
     , spaces =
         Just <|
           convertSpaces
             (List.reverse <| startSpace :: rPins) <|
             String.length value
     , startSpace = startSpace
-    , i = deletion.state
+    , i = deletion.i
     , cost = cost + deletion.cost
     }
 

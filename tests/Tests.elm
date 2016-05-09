@@ -50,7 +50,7 @@ all =
     , test
         "double sameSpaceCost applies in the space left by entire deleted words" <|
         assertEqual
-          (Just (["ah", "ha"], 4 * sameSpaceCost + 2 * sameWordCost + 4 * extraWordCost)) <|
+          (Just (["ah", "ha"], 4 * sameSpaceCost + 2 * sameWordCost + 7 * extraWordCost)) <|
           respellExample
             [["a"], ["uu"], ["u"], ["uu"], ["a"]]
             [("ah", 0.0), ("ha", 0.0)]
@@ -122,7 +122,7 @@ all =
     , test
         "It stops accumulating reward when there are no more matching words" <|
         assertEqual
-          (Just (["hhot"], sameWordCost + 2 * sameSpaceCost - 1999.0 + 4 * extraWordCost)) <|
+          (Just (["hhot"], sameWordCost + 2 * sameSpaceCost - 1999.0 + 2 * extraWordCost)) <|
           respellExample
             [["at"]]
             [("hhot", 0.0)]
@@ -175,7 +175,7 @@ all =
     , test
         "It can choose words that increase the length of the leftovers" <|
         assertEqual
-          (Just (["p", "ii", "zza"], 2 * sameSpaceCost + sameWordCost + 5 * extraWordCost)) <|
+          (Just (["p", "ii", "zza"], 2 * sameSpaceCost + sameWordCost + 3 * extraWordCost)) <|
           respellExample
             [["a"]]
             [("ii", 0.0), ("p", 0.0), ("zza", 0.0)]

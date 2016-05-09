@@ -11,7 +11,7 @@ import CBool exposing (CBool)
 import CompletionDict exposing (CompletionDict)
 import DAG exposing (DAG)
 import DeletionCosts exposing (DeletionCosts)
-import Deletions
+import Deletions exposing (DeletionChoice)
 import Knapsack exposing (Priced, Knapsack)
 import PeakedList exposing (PeakedList)
 import Space exposing (Space)
@@ -23,7 +23,8 @@ type alias Cache =
   { dCosts : DeletionCosts
   , sCosts : SubCosts
   , wCosts : WordCosts
-  , knapsacks : Dict (Int, String, List Space, CBool, CBool) (Knapsack State)
+  , knapsacks :
+      Dict (Int, String, Int, List Space, CBool, CBool) (Knapsack State)
   , wordLists : List (List String)
   , dag : DAG
   , newWordLists : List (List String)
@@ -43,6 +44,7 @@ init dCosts sCosts wCosts =
             { word = Nothing
             , i = -1
             , leftovers = ""
+            , kLen = 0
             , spaces = Nothing
             , startSpace = False
             }
@@ -55,6 +57,7 @@ type alias State =
   { word : Maybe String
   , i : Int
   , leftovers : String
+  , kLen : Int
   , spaces : Maybe (List Space)
   , startSpace : Bool
   }
@@ -73,7 +76,7 @@ update iterations cache =
     newWords = List.length cache.newWordLists - reusedWords
   in let
     reusedKnapsacks =
-      Dict.filter (curry <| (>=) cutoff << fst5 << fst) cache.knapsacks
+      Dict.filter (curry <| (>=) cutoff << fst6 << fst) cache.knapsacks
     seaLevel = if newWords > 0 then cutoff else Random.maxInt
   in let
     (knapsacks, remainingIterations) =
@@ -101,7 +104,7 @@ complete cache =
     Dict.member (toFinalKey <| DAG.length cache.dag - 1) cache.knapsacks
 
 remainingPhonemes : Cache -> Int
-remainingPhonemes cache = DAG.length cache.dag - 1 - fst5 (finalKey cache)
+remainingPhonemes cache = DAG.length cache.dag - 1 - fst6 (finalKey cache)
 
 pronunciation : Cache -> List String
 pronunciation cache =
@@ -115,7 +118,7 @@ cost = .cost << finalKnapsack
 finalKnapsack : Cache -> Knapsack State
 finalKnapsack cache = force <| Dict.get (finalKey cache) cache.knapsacks
 
-finalKey : Cache -> (Int, String, List Space, CBool, CBool)
+finalKey : Cache -> (Int, String, Int, List Space, CBool, CBool)
 finalKey cache =
   let
     wordEndKeys =
@@ -125,11 +128,11 @@ finalKey cache =
   in
     force <| Array.get (Array.length wordEndKeys - 1) wordEndKeys
 
-toFinalKey : Int -> (Int, String, List Space, CBool, CBool)
-toFinalKey i = (i, "", [], CBool.cFalse, CBool.cTrue)
+toFinalKey : Int -> (Int, String, Int, List Space, CBool, CBool)
+toFinalKey i = (i, "", 0, [], CBool.cFalse, CBool.cTrue)
 
-fst5 : (a, b, c, d, e) -> a
-fst5 (x, _, _, _, _) = x
+fst6 : (a, b, c, d, e, f) -> a
+fst6 (x, _, _, _, _, _) = x
 
 firstTrue : List Bool -> Int
 firstTrue a =
@@ -150,22 +153,24 @@ initialDeletions : DeletionCosts -> DAG -> PeakedList (Priced State)
 initialDeletions dCosts dag =
   PeakedList.map deletionToState <| Deletions.getDeletions dCosts dag 0
 
-deletionToState : Priced Int -> Priced State
+deletionToState : DeletionChoice -> Priced State
 deletionToState deletion =
   { state =
       { word = Nothing
-      , i = deletion.state
+      , i = deletion.i
       , leftovers = ""
+      , kLen = deletion.kLen
       , spaces = Nothing
       , startSpace = True
       }
   , cost = deletion.cost
   }
 
-stateKey : State -> (Int, String, List Space, CBool, CBool)
+stateKey : State -> (Int, String, Int, List Space, CBool, CBool)
 stateKey state =
   ( state.i
   , state.leftovers
+  , state.kLen
   , Maybe.withDefault [] state.spaces
   , CBool.cBool <| state.spaces /= Nothing
   , CBool.cBool state.startSpace
@@ -173,10 +178,10 @@ stateKey state =
 
 getSuccessors :
   DeletionCosts -> SubCosts -> WordCosts -> DAG ->
-    (Int, String, List Space, CBool, CBool) -> PeakedList (Priced State)
+    (Int, String, Int, List Space, CBool, CBool) -> PeakedList (Priced State)
 getSuccessors
   dCosts sCosts wCosts dag
-    (i, leftovers, ghostlySpaces, cHasKey, cStartSpace) =
+    (i, leftovers, kLen, ghostlySpaces, cHasKey, cStartSpace) =
   if i == -1 then initialDeletions dCosts dag
   else
     let
@@ -195,7 +200,7 @@ getSuccessors
             PeakedList.concatMap
               peakedSubChoices.peak
               ( getWordChoices
-                  dCosts sCosts wCosts dag leftovers newBState i 0.0
+                  dCosts sCosts wCosts dag leftovers newBState kLen i 0.0
               )
               peakedSubChoices.list
         else PeakedList.empty
@@ -203,7 +208,7 @@ getSuccessors
       PeakedList.append
         ( List.filterMap
           ( toWordChoice
-              wCosts dag "" leftovers spaces startSpace bState i 0.0
+              wCosts dag "" leftovers kLen spaces startSpace bState 0 i 0.0
           )
           [1..String.length leftovers]
         )
@@ -211,15 +216,17 @@ getSuccessors
 
 getWordChoices :
   DeletionCosts -> SubCosts -> WordCosts -> DAG -> String -> BoundaryState ->
-    Int -> Float -> SubChoice -> PeakedList (Priced State)
-getWordChoices dCosts sCosts wCosts dag word bState i cost subChoice =
+    Int -> Int -> Float -> SubChoice -> PeakedList (Priced State)
+getWordChoices dCosts sCosts wCosts dag word bState tKLen i cost subChoice =
   let
     value = subChoice.value
+    kLen = subChoice.kLen
     spaces = subChoice.spaces
     startSpace = subChoice.startSpace
   in let
     newWord = word ++ value
     newBState = BoundaryState.update (String.length value) spaces bState
+    newTKLen = tKLen + kLen
     newI = subChoice.i
     newCost = cost + subChoice.cost
   in let
@@ -232,7 +239,8 @@ getWordChoices dCosts sCosts wCosts dag word bState i cost subChoice =
           PeakedList.concatMap
             peakedSubChoices.peak
             ( getWordChoices
-                dCosts sCosts wCosts dag newWord newBState newI newCost
+                dCosts sCosts wCosts dag newWord newBState newTKLen newI
+                  newCost
             )
             peakedSubChoices.list
       else PeakedList.empty
@@ -240,16 +248,18 @@ getWordChoices dCosts sCosts wCosts dag word bState i cost subChoice =
     PeakedList.append
       ( List.filterMap
           ( toWordChoice
-              wCosts dag word value spaces startSpace bState newI newCost
+              wCosts dag word value kLen spaces startSpace bState tKLen newI
+                newCost
           )
           [1..String.length value]
       )
       rest
 
 toWordChoice :
-  WordCosts -> DAG -> String -> String -> Maybe (List Space) -> Bool ->
-    BoundaryState -> Int -> Float -> Int -> Maybe (Priced State)
-toWordChoice wCosts dag word value spaces startSpace bState i cost usedLen =
+  WordCosts -> DAG -> String -> String -> Int -> Maybe (List Space) -> Bool ->
+    BoundaryState -> Int -> Int -> Float -> Int -> Maybe (Priced State)
+toWordChoice
+  wCosts dag word value kLen spaces startSpace bState tKLen i cost usedLen =
   let newWord = word ++ String.left usedLen value in
     case CompletionDict.get newWord wCosts of
       Nothing -> Nothing
@@ -257,23 +267,27 @@ toWordChoice wCosts dag word value spaces startSpace bState i cost usedLen =
         let
           leftovers = String.dropLeft usedLen value
           newBState = BoundaryState.update usedLen spaces bState
+          usedKLen =
+            round <| toFloat (usedLen * kLen) / toFloat (String.length value)
         in let
           newSpaces =
             case (spaces, leftovers) of
               (_, "") -> Nothing
               (Just ss, _) -> Just <| List.filterMap (Space.minus usedLen) ss
               (Nothing, _) -> Nothing
-          boundaryCost = BoundaryState.cost (String.length newWord) newBState
+          boundaryCost = BoundaryState.cost (tKLen + usedKLen) newBState
+          leftoverKLen = kLen - usedKLen
         in
           Just
             { state =
                 { word = Just newWord
                 , i = i
                 , leftovers = leftovers
+                , kLen = leftoverKLen
                 , spaces = newSpaces
                 , startSpace = startSpace
                 }
             , cost =
                 cost + boundaryCost + BoundaryState.extraWordCost +
-                  wordCost * (toFloat <| String.length newWord)
+                  wordCost * toFloat (tKLen + usedKLen)
             }
