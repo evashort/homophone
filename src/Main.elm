@@ -131,7 +131,7 @@ view address model =
                 , ("min-height", "1.25em")
                 , ("width", "20em")
                 , ("padding", "10pt")
-                , ("border", "1pt solid")
+                , ("border", "1pt solid black")
                 , ("border-radius", "3pt")
                 , ("margin", "10pt")
                 , ("resize", "horizontal")
@@ -140,7 +140,7 @@ view address model =
                 , ("word-wrap", "break-word")
                 ] ++
                   case model.userText of
-                    RawText _ -> [ ("color", "#767676") ]
+                    RawText _ -> [ ("color", "darkgray") ]
                     Respelled _ -> []
             ]
             [ Html.text <|
