@@ -158,11 +158,13 @@ else:
         for line in totalCountFile:
             tokens = line.split("\t")
             totalCount += int(tokens[1])
-    
+
     print "saving total count"
     with open(totalCountOutPath, "w") as totalCountOutFile:
         totalCountOutFile.write(str(totalCount) + "\n")
     print "saved total count"
+
+CAPITALMULTIPLIER = 0.5
 
 countAndPronouncePath = os.path.join(intermediateDir, "countAndPronounce.txt")
 if os.path.isfile(countAndPronouncePath):
@@ -188,7 +190,8 @@ else:
                 if tokens[0] not in tokensToRemove:
                     spelling = toSpelling(tokens[0])
                     phonemes = toPhonemes(tokens[1:])
-                    count, ws = pronouncerDict.setdefault(spelling, ({}, []))
+                    count, ws = pronouncerDict.setdefault(spelling,
+                                                          ({spelling: 0}, []))
                     ws.append(phonemes)
 
     print "loading custom words"
@@ -197,7 +200,8 @@ else:
             tokens = line.split()
             spelling = toSpelling(tokens[0])
             phonemes = toPhonemes(tokens[1:])
-            count, ws = pronouncerDict.setdefault(spelling, ({}, []))
+            count, ws = pronouncerDict.setdefault(spelling,
+                                                  ({spelling: 0}, []))
             ws.append(phonemes)
 
     for countPath in countPaths:
@@ -229,11 +233,9 @@ else:
     print "saving counted pronunciations"
     with open(countAndPronouncePath, "w") as countAndPronounceFile:
         for key, (caps, ws) in pronouncer:
-            if caps:
-                cap, maxCount = max(caps.iteritems(), key = lambda t: t[1])
-            else:
-                cap = key
-            count = sum(caps.itervalues())
+            weightedCount = \
+                lambda t: t[1] * (1 if t[0].islower() else CAPITALMULTIPLIER)
+            cap, count = max(caps.iteritems(), key = weightedCount)
             for phonemes in ws:
                 line = "\t".join((cap, str(count), phonemes)) + "\n"
                 countAndPronounceFile.write(line)
@@ -253,19 +255,24 @@ else:
     
     print "loading counted pronunciations"
     pronouncer = []
+    totalCapitalCount = 0
     with open(countAndPronouncePath, "r") as countAndPronounceFile:
         for line in countAndPronounceFile:
             tokens = line.rstrip("\n").split("\t")
             cap, strCount, phonemes = tokens
-            count = int(strCount)
+            count = float(strCount)
+            if cap.islower():
+                totalCapitalCount += count
+                count *= CAPITALMULTIPLIER
             if pronouncer and cap == pronouncer[-1][0]:
                 pronouncer[-1][2].append(phonemes)
             else:
                 pronouncer.append((cap, count, [phonemes]))
 
     print "calculating entropy"
-    totalCount += COUNTOFFSET * len(pronouncer)
-    totalCount = float(totalCount)
+    totalCount = float(
+        totalCount + COUNTOFFSET * len(pronouncer) - \
+            (1 - CAPITALMULTIPLIER) * totalCapitalCount)
     for i, (cap, count, ws) in enumerate(pronouncer):
         entropy = -math.log((count + COUNTOFFSET) / totalCount)
         intEntropy = int(round(entropy * ENTROPYMULTIPLIER))

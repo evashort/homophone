@@ -12,10 +12,10 @@ type alias BoundaryState =
     }
 
 sameSpaceCost : Float
-sameSpaceCost = 1.0
+sameSpaceCost = 0.2
 
 sameWordCost : Float
-sameWordCost = 3.0
+sameWordCost = 1.0
 
 extraWordCost : Float
 extraWordCost = 1.0
