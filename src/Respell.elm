@@ -165,7 +165,7 @@ maxUnitSizeHelper : Int -> Pronouncer -> List String -> Int
 maxUnitSizeHelper knownGood pronouncer tokens =
   if knownGood < List.length tokens &&
     CompletionDict.startWith
-      (String.concat <| List.take knownGood tokens)
+      (String.toLower <| String.concat <| List.take knownGood tokens)
       pronouncer
   then maxUnitSizeHelper (knownGood + 1) pronouncer tokens
   else knownGood
