@@ -32,7 +32,7 @@ all =
     , test
         "it avoids double sameSpaceCost even when the space is cushioned by deletions" <|
         assertEqual
-          (Just (["boaton"], 3.9 * sameSpaceCost + 2 * extraWordCost)) <|
+          (Just (["boaton"], t <| 3.9 * sameSpaceCost + 2 * extraWordCost)) <|
           respellExample
             [["bo"], ["ah"], ["up"], ["on"]]
             [("boa", 0.0), ("boah", 0.0), ("boaton", 0.0), ("pon", 0.0), ("upon", 0.0)]
@@ -50,7 +50,7 @@ all =
     , test
         "double sameSpaceCost applies in the space left by entire deleted words" <|
         assertEqual
-          (Just (["ah", "ha"], 4 * sameSpaceCost + 2 * sameWordCost + 7 * extraWordCost)) <|
+          (Just (["ah", "ha"], t <| 4 * sameSpaceCost + 2 * sameWordCost + 7 * extraWordCost)) <|
           respellExample
             [["a"], ["uu"], ["u"], ["uu"], ["a"]]
             [("ah", 0.0), ("ha", 0.0)]
@@ -59,7 +59,7 @@ all =
     , test
         "When a word is fully replaced, a boundary within it gets no cost" <|
         assertEqual
-          (Just (["ado", "go"], 2 * sameSpaceCost + 2 * extraWordCost)) <|
+          (Just (["ado", "go"], t <| 2 * sameSpaceCost + 2 * extraWordCost)) <|
           respellExample
             [["a"], ["cat"], ["o"]]
             [("ado", 0.0), ("go", 0.0)]
@@ -68,7 +68,7 @@ all =
     , test
         "sameWordCost and double sameSpaceCost apply if key and value both contain space" <|
         assertEqual
-          (Just (["bet", "dime"], 2 * sameWordCost + 4 * sameSpaceCost + 7 * extraWordCost)) <|
+          (Just (["bet", "dime"], t <| 2 * sameWordCost + 4 * sameSpaceCost + 7 * extraWordCost)) <|
           respellExample
             [["bed"], ["time"]]
             [("bet", 0.0), ("dime", 0.0)]
@@ -77,7 +77,7 @@ all =
     , test
         "It can choose a pronunciation that is completed by the other one" <|
         assertEqual
-          (Just (["aha"], 2 * sameSpaceCost + extraWordCost)) <|
+          (Just (["aha"], t <| 2 * sameSpaceCost + extraWordCost)) <|
           respellExample
             [["ab", "a"], ["a"]]
             [("abra", 0.0), ("aha", 0.0)]
@@ -86,7 +86,7 @@ all =
     , test
         "It can choose a pronunciation that is a completion of the other one" <|
         assertEqual
-          (Just (["abra"], 2 * sameSpaceCost + extraWordCost)) <|
+          (Just (["abra"], t <| 2 * sameSpaceCost + extraWordCost)) <|
           respellExample
             [["ab", "a"], ["a"]]
             [("abra", 0.0), ("aha", 0.0)]
@@ -113,7 +113,7 @@ all =
     , test
         "Smaller subproblems can overtake larger cheaper ones via a reward" <|
         assertEqual
-          (Just (["gif"], sameWordCost + 2 * sameSpaceCost - 1000.0 + 3 * extraWordCost)) <|
+          (Just (["gif"], t <| sameWordCost + 2 * sameSpaceCost - 1000.0 + 3 * extraWordCost)) <|
           respellExample
             [["abc"]]
             [("def", 0.0), ("gif", 0.0)]
@@ -122,7 +122,7 @@ all =
     , test
         "It stops accumulating reward when there are no more matching words" <|
         assertEqual
-          (Just (["hhot"], sameWordCost + 2 * sameSpaceCost - 1999.0 + 2 * extraWordCost)) <|
+          (Just (["hhot"], t <| sameWordCost + 2 * sameSpaceCost - 1999.0 + 2 * extraWordCost)) <|
           respellExample
             [["at"]]
             [("hhot", 0.0)]
@@ -131,7 +131,7 @@ all =
     , test
         "It can choose the more expensive word to avoid a substitution" <|
         assertEqual
-          (Just (["cot"], 6.0 + sameWordCost + 2 * sameSpaceCost + 3 * extraWordCost)) <|
+          (Just (["cot"], t <| 6.0 + sameWordCost + 2 * sameSpaceCost + 3 * extraWordCost)) <|
           respellExample
             [["cot"]]
             [("cat", 1.0), ("cot", 2.0)]
@@ -140,7 +140,7 @@ all =
     , test
         "It can make an expensive substitution to avoid the more exensive word" <|
         assertEqual
-          (Just (["cat"], 5.0 + sameWordCost + 2 * sameSpaceCost + 3 * extraWordCost)) <|
+          (Just (["cat"], t <| 5.0 + sameWordCost + 2 * sameSpaceCost + 3 * extraWordCost)) <|
           respellExample
             [["cot"]]
             [("cat", 1.0), ("cot", 2.0)]
@@ -157,7 +157,7 @@ all =
         -- therefore cost(deleting b) > sameWordCost + sameSpaceCost
         -- and cost(deleting b) < 2 * sameWordCost + 2 * sameSpaceCost + extraWordCost
         assertEqual
-          (Just (["sa", "x", "yc"], 3.5 * sameSpaceCost + 2 * sameWordCost + 4 * extraWordCost)) <|
+          (Just (["sa", "x", "yc"], t <| 3.5 * sameSpaceCost + 2 * sameWordCost + 4 * extraWordCost)) <|
           respellExample
             [["s"], ["abc"]]
             [("s", 0.0), ("sa", 0.0), ("x", 0.0), ("yc", 0.0)]
@@ -166,7 +166,7 @@ all =
     , test
         "It doesn't prematurely expand puzzles created by deletions alone" <|
         assertEqual
-          (Just (["a", "x", "yc"], 4 * sameSpaceCost + 2 * sameWordCost + 4 * extraWordCost)) <|
+          (Just (["a", "x", "yc"], t <| 4 * sameSpaceCost + 2 * sameWordCost + 4 * extraWordCost)) <|
           respellExample
             [["a"], ["bc"]]
             [("a", 0.0), ("x", 0.0), ("yc", 0.0)]
@@ -175,7 +175,7 @@ all =
     , test
         "It can choose words that increase the length of the leftovers" <|
         assertEqual
-          (Just (["p", "ii", "zza"], 2 * sameSpaceCost + sameWordCost + 3 * extraWordCost)) <|
+          (Just (["p", "ii", "zza"], t <| 2 * sameSpaceCost + sameWordCost + 3 * extraWordCost)) <|
           respellExample
             [["a"]]
             [("ii", 0.0), ("p", 0.0), ("zza", 0.0)]
@@ -184,7 +184,7 @@ all =
     , test
         "sameWordCost applies to words ending in spaced 1val + rabbit" <|
         assertEqual
-          (Just (["balladh", "in", "ner"], sameWordCost + 3 * sameSpaceCost + 9 * extraWordCost)) <|
+          (Just (["balladh", "in", "ner"], t <| sameWordCost + 3 * sameSpaceCost + 9 * extraWordCost)) <|
           respellExample
             [["ballat"], ["dinner"]]
             [("balladh", 0.0), ("in", 0.0), ("ner", 0.0)]
@@ -193,7 +193,7 @@ all =
     , test
         "sameWordCost n/a if next word starts with spaced 1val" <|
         assertEqual
-          (Just (["balla", "tin", "ner"], 3 * sameSpaceCost + 3 * extraWordCost)) <|
+          (Just (["balla", "tin", "ner"], t <| 3 * sameSpaceCost + 3 * extraWordCost)) <|
           respellExample
             [["ballat"], ["dinner"]]
             [("balla", 0.0), ("ner", 0.0), ("tin", 0.0)]
@@ -202,7 +202,7 @@ all =
     , test
         "sameWordCost n/a if next word starts with rabbit + spaced 1val" <|
         assertEqual
-          (Just (["balla", "htin", "ner"], 3 * sameSpaceCost + 3 * extraWordCost)) <|
+          (Just (["balla", "htin", "ner"], t <| 3 * sameSpaceCost + 3 * extraWordCost)) <|
           respellExample
             [["ballat"], ["dinner"]]
             [("balla", 0.0), ("htin", 0.0), ("ner", 0.0)]
@@ -211,7 +211,7 @@ all =
     , test
         "sameWordCost n/a if next word starts with spaced nval" <|
         assertEqual
-          (Just (["balla", "dtin", "ner"], 2 * sameSpaceCost + 3 * extraWordCost)) <|
+          (Just (["balla", "dtin", "ner"], t <| 2 * sameSpaceCost + 3 * extraWordCost)) <|
           respellExample
             [["ballat"], ["dinner"]]
             [("balla", 0.0), ("dtin", 0.0), ("ner", 0.0)]
@@ -220,7 +220,7 @@ all =
     , test
         "sameWordCost n/a if next word has real sub before spaced 1val" <|
         assertEqual
-          (Just (["ball", "odin", "ner"], 2 * sameSpaceCost + 3 * extraWordCost)) <|
+          (Just (["ball", "odin", "ner"], t <| 2 * sameSpaceCost + 3 * extraWordCost)) <|
           respellExample
             [["ballat"], ["dinner"]]
             [("ball", 0.0), ("ner", 0.0), ("odin", 0.0)]
@@ -229,7 +229,7 @@ all =
     , test
         "sameWordCost applies if final nval is from rspaced 1key" <|
         assertEqual
-          (Just (["ballat", "tin", "ner"], sameWordCost + 3 * sameSpaceCost + 8 * extraWordCost)) <|
+          (Just (["ballat", "tin", "ner"], t <| sameWordCost + 3 * sameSpaceCost + 8 * extraWordCost)) <|
           respellExample
             [["ballat"], ["inner"]]
             [("ballat", 0.0), ("ner", 0.0), ("tin", 0.0)]
@@ -238,7 +238,7 @@ all =
     , test
         "sameWordCost n/a if final nval is from lspaced 1key" <|
         assertEqual
-          (Just (["ballad", "din", "ner"], 3 * sameSpaceCost + 3 * extraWordCost)) <|
+          (Just (["ballad", "din", "ner"], t <| 3 * sameSpaceCost + 3 * extraWordCost)) <|
           respellExample
             [["balla"], ["dinner"]]
             [("ballad", 0.0), ("din", 0.0), ("ner", 0.0)]
@@ -247,7 +247,7 @@ all =
     , test
         "sameWordCost n/a if final sub starts with space" <|
         assertEqual
-          (Just (["ballad", "tin", "ner"], 2 * sameSpaceCost + 3 * extraWordCost)) <|
+          (Just (["ballad", "tin", "ner"], t <| 2 * sameSpaceCost + 3 * extraWordCost)) <|
           respellExample
             [["balla"], ["td"], ["inner"]]
             [("ballad", 0.0), ("ner", 0.0), ("tin", 0.0)]
@@ -256,7 +256,7 @@ all =
     , test
         "sameWordCost applies if word starts with rabbit + spaced 1val " <|
         assertEqual
-          (Just (["bal", "la", "htinner"], sameWordCost + 3 * sameSpaceCost + 9 * extraWordCost)) <|
+          (Just (["bal", "la", "htinner"], t <| sameWordCost + 3 * sameSpaceCost + 9 * extraWordCost)) <|
           respellExample
             [["ballat"], ["dinner"]]
             [("bal", 0.0), ("htinner", 0.0), ("la", 0.0)]
@@ -265,7 +265,7 @@ all =
     , test
         "sameWordCost n/a if initial nval is from rspaced 1key" <|
         assertEqual
-          (Just (["bal", "lad", "dinner"], 3 * sameSpaceCost + 3 * extraWordCost)) <|
+          (Just (["bal", "lad", "dinner"], t <| 3 * sameSpaceCost + 3 * extraWordCost)) <|
           respellExample
             [["ballad"], ["inner"]]
             [("bal", 0.0), ("dinner", 0.0), ("lad", 0.0)]
@@ -274,7 +274,7 @@ all =
     , test
         "sameWordCost n/a if word starts inside unspaced nval" <|
         assertEqual
-          (Just (["bal", "lad", "tinner"], 2 * sameSpaceCost + 3 * extraWordCost)) <|
+          (Just (["bal", "lad", "tinner"], t <| 2 * sameSpaceCost + 3 * extraWordCost)) <|
           respellExample
             [["balla"], ["tdinner"]]
             [("bal", 0.0), ("lad", 0.0), ("tinner", 0.0)]
@@ -283,7 +283,7 @@ all =
     , test
         "sameWordCost n/a if word starts inside nval from nkey followed by space" <|
         assertEqual
-          (Just (["bal", "lat", "dinner"], 2 * sameSpaceCost + 3 * extraWordCost)) <|
+          (Just (["bal", "lat", "dinner"], t <| 2 * sameSpaceCost + 3 * extraWordCost)) <|
           respellExample
             [["balladt"], ["inner"]]
             [("bal", 0.0), ("dinner", 0.0), ("lat", 0.0)]
@@ -292,7 +292,7 @@ all =
     , test
         "sameWordCost n/a if word ends inside unspaced nval" <|
         assertEqual
-          (Just (["ballad", "tin", "ner"], 2 * sameSpaceCost + 3 * extraWordCost)) <|
+          (Just (["ballad", "tin", "ner"], t <| 2 * sameSpaceCost + 3 * extraWordCost)) <|
           respellExample
             [["ballatd"], ["inner"]]
             [("ballad", 0.0), ("ner", 0.0), ("tin", 0.0)]
@@ -301,7 +301,7 @@ all =
     , test
         "sameWordCost n/a if final nval is from 1key with deletion after lspace" <|
         assertEqual
-          (Just (["ballad", "din", "ner"], 3 * sameSpaceCost + 3 * extraWordCost)) <|
+          (Just (["ballad", "din", "ner"], t <| 3 * sameSpaceCost + 3 * extraWordCost)) <|
           respellExample
             [["balla"], ["hdinner"]]
             [("ballad", 0.0), ("din", 0.0), ("ner", 0.0)]
@@ -310,7 +310,7 @@ all =
     , test
         "sameWordCost applies if final nval is from 1key with deletion before rspace" <|
         assertEqual
-          (Just (["ballat", "tin", "ner"], sameWordCost + 3 * sameSpaceCost + 8 * extraWordCost)) <|
+          (Just (["ballat", "tin", "ner"], t <| sameWordCost + 3 * sameSpaceCost + 8 * extraWordCost)) <|
           respellExample
             [["ballath"], ["inner"]]
             [("ballat", 0.0), ("ner", 0.0), ("tin", 0.0)]
@@ -319,7 +319,7 @@ all =
     , test
         "sameWordCost n/a if next word starts with spaced 1val followed by deletion" <|
         assertEqual
-          (Just (["balla", "tin", "ner"], 3 * sameSpaceCost + 3 * extraWordCost)) <|
+          (Just (["balla", "tin", "ner"], t <| 3 * sameSpaceCost + 3 * extraWordCost)) <|
           respellExample
             [["ballat"], ["dhinner"]]
             [("balla", 0.0), ("ner", 0.0), ("tin", 0.0)]
@@ -328,7 +328,7 @@ all =
     , test
         "sameWordCost n/a if next word starts with unspaced 1val from nkey + space + deletion" <|
         assertEqual
-          (Just (["balla", "tin", "ner"], 2 * sameSpaceCost + 3 * extraWordCost)) <|
+          (Just (["balla", "tin", "ner"], t <| 2 * sameSpaceCost + 3 * extraWordCost)) <|
           respellExample
             [["ballatd"], ["hinner"]]
             [("balla", 0.0), ("ner", 0.0), ("tin", 0.0)]
@@ -337,7 +337,7 @@ all =
     , test
         "sameWordCost n/a if word starts inside nval from 1key + space + deletion" <|
         assertEqual
-          (Just (["bal", "lat", "tinner"], 3 * sameSpaceCost + 3 * extraWordCost)) <|
+          (Just (["bal", "lat", "tinner"], t <| 3 * sameSpaceCost + 3 * extraWordCost)) <|
           respellExample
             [["ballat"], ["hinner"]]
             [("bal", 0.0), ("lat", 0.0), ("tinner", 0.0)]
@@ -346,7 +346,7 @@ all =
     , test
         "sameWordCost n/a if word starts inside nval from 1key + deletion + space" <|
         assertEqual
-          (Just (["bal", "lat", "tinner"], 3 * sameSpaceCost + 3 * extraWordCost)) <|
+          (Just (["bal", "lat", "tinner"], t <| 3 * sameSpaceCost + 3 * extraWordCost)) <|
           respellExample
             [["ballath"], ["inner"]]
             [("bal", 0.0), ("lat", 0.0), ("tinner", 0.0)]
@@ -355,7 +355,7 @@ all =
     , test
         "sameWordCost n/a if word starts inside unspaced nval from nval + space + deletion" <|
         assertEqual
-          (Just (["bal", "lad", "tinner"], 2 * sameSpaceCost + 3 * extraWordCost)) <|
+          (Just (["bal", "lad", "tinner"], t <| 2 * sameSpaceCost + 3 * extraWordCost)) <|
           respellExample
             [["ballatd"], ["hinner"]]
             [("bal", 0.0), ("lad", 0.0), ("tinner", 0.0)]
@@ -364,7 +364,7 @@ all =
     , test
         "sameWordCost n/a if word starts inside unspaced nval followed by space" <|
         assertEqual
-          (Just (["bal", "lad", "tinner"], 2 * sameSpaceCost + 3 * extraWordCost)) <|
+          (Just (["bal", "lad", "tinner"], t <| 2 * sameSpaceCost + 3 * extraWordCost)) <|
           respellExample
             [["balla"], ["td"], ["inner"]]
             [("bal", 0.0), ("lad", 0.0), ("tinner", 0.0)]
@@ -373,7 +373,7 @@ all =
     , test
         "word cost is multiplied by initial deletions" <|
         assertEqual
-          (Just (["c"], sameWordCost + 2 * sameSpaceCost + 3 * extraWordCost + 30)) <|
+          (Just (["c"], t <| sameWordCost + 2 * sameSpaceCost + 3 * extraWordCost + 30)) <|
           respellExample
             [["abc"]]
             [("c", 10.0)]
@@ -382,7 +382,7 @@ all =
     , test
         "non-initial deletions multiply the earlier word cost" <|
         assertEqual
-          (Just (["c", "d"], 2 * sameWordCost + 4 * sameSpaceCost + 4 * extraWordCost + 130)) <|
+          (Just (["c", "d"], t <| 2 * sameWordCost + 4 * sameSpaceCost + 4 * extraWordCost + 130)) <|
           respellExample
             [["c"], ["abd"]]
             [("c", 10.0), ("d", 100.0)]
@@ -391,7 +391,7 @@ all =
     , test
         "key phonemes are distributed between words proportionally to value phonemes" <|
         assertEqual
-          (Just (["cwx", "yzd"], sameWordCost + 3 * sameSpaceCost + 3 * extraWordCost + 220)) <|
+          (Just (["cwx", "yzd"], t <| sameWordCost + 3 * sameSpaceCost + 3 * extraWordCost + 220)) <|
           respellExample
             [["c"], ["abd"]]
             [("cwx", 10.0), ("yzd", 100.0)]
@@ -400,8 +400,8 @@ all =
     , test
         "caahe" <|
         assertEqual
-          [ Just (["bb"], 2 * sameSpaceCost + extraWordCost)
-          , Just (["bbb"], 2 * sameSpaceCost + extraWordCost)
+          [ Just (["bb"], t <| 2 * sameSpaceCost + extraWordCost)
+          , Just (["bbb"], t <| 2 * sameSpaceCost + extraWordCost)
           ] <|
           cacheExample
             [ [["b"], ["b"]]
@@ -413,9 +413,9 @@ all =
     , test
         "caahe2" <|
         assertEqual
-          [ Just (["be"], 1 * sameWordCost + 2 * sameSpaceCost + 2 * extraWordCost)
-          , Just (["bebe"], 2 * sameSpaceCost + extraWordCost)
-          , Just (["bib", "ebe"], 2 * sameSpaceCost + 0.1 + 2 * extraWordCost)
+          [ Just (["be"], t <| 1 * sameWordCost + 2 * sameSpaceCost + 2 * extraWordCost)
+          , Just (["bebe"], t <| 2 * sameSpaceCost + extraWordCost)
+          , Just (["bib", "ebe"], t <| 2 * sameSpaceCost + 0.1 + 2 * extraWordCost)
           ] <|
           cacheExample
             [ [["be"]]
@@ -428,8 +428,8 @@ all =
     , test
         "caahe3" <|
         assertEqual
-          [ Just (["b"], 1 * sameWordCost + 2 * sameSpaceCost + extraWordCost)
-          , Just (["b", "b"], 2 * sameWordCost + 4 * sameSpaceCost + 2 * extraWordCost)
+          [ Just (["b"], t <| 1 * sameWordCost + 2 * sameSpaceCost + extraWordCost)
+          , Just (["b", "b"], t <| 2 * sameWordCost + 4 * sameSpaceCost + 2 * extraWordCost)
           ] <|
           cacheExample
             [ [["b"]]
@@ -508,6 +508,9 @@ interpretCache : (Cache, Int) -> Maybe (List String, Float)
 interpretCache (cache, _) =
   if Repronounce.done cache then
     if Repronounce.complete cache then
-      Just (Repronounce.pronunciation cache, Repronounce.cost cache)
+      Just (Repronounce.pronunciation cache, t <| Repronounce.cost cache)
     else Nothing
   else Debug.crash "ran out of iterations"
+
+t : Float -> Float -- 2^31, highest power of 2 that doen't give NaN
+t x = toFloat (round (x * 2147483648)) / 2147483648
