@@ -12,13 +12,10 @@ type alias BoundaryState =
     }
 
 sameSpaceCost : Float
-sameSpaceCost = 0.2
+sameSpaceCost = 2.0
 
 sameWordCost : Float
-sameWordCost = 1.0
-
-extraWordCost : Float
-extraWordCost = 1.0
+sameWordCost = 10.0
 
 initial : BoundaryState
 initial = Nothing
@@ -60,8 +57,7 @@ cost wordLength state =
     Just b ->
       (if b.startSpace then sameSpaceCost else 0.0) +
         (if b.endSpace then sameSpaceCost else 0.0) +
-        ( if b.startSpace && b.endSpace && not b.midSpace then
-            sameWordCost + extraWordCost * toFloat (wordLength - 1)
+        ( if b.startSpace && b.endSpace && not b.midSpace then sameWordCost
           else 0.0
         )
     Nothing -> 0.0

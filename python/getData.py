@@ -164,7 +164,7 @@ else:
         totalCountOutFile.write(str(totalCount) + "\n")
     print "saved total count"
 
-CAPITALMULTIPLIER = 0.5
+CAPITALMULTIPLIER = 0.1
 
 countAndPronouncePath = os.path.join(intermediateDir, "countAndPronounce.txt")
 if os.path.isfile(countAndPronouncePath):
@@ -261,7 +261,7 @@ else:
             tokens = line.rstrip("\n").split("\t")
             cap, strCount, phonemes = tokens
             count = float(strCount)
-            if cap.islower():
+            if not cap.islower():
                 totalCapitalCount += count
                 count *= CAPITALMULTIPLIER
             if pronouncer and cap == pronouncer[-1][0]:

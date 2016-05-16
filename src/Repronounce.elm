@@ -19,6 +19,12 @@ import SubCosts exposing (SubCosts)
 import Subs exposing (SubChoice)
 import WordCosts exposing (WordCosts)
 
+adultWordLen : Int  -- once a word is shorter than adultWordLen, it's
+adultWordLen = 5    -- considered a "kid" and its cost stops decreasing in
+                    -- proportion to its length. this prevents uncommon words
+                    -- from slipping through the cracks because they're too
+                    -- short for the cost to be significant
+
 type alias Cache =
   { dCosts : DeletionCosts
   , sCosts : SubCosts
@@ -288,6 +294,6 @@ toWordChoice
                 , startSpace = startSpace
                 }
             , cost =
-                cost + boundaryCost + BoundaryState.extraWordCost +
-                  wordCost * toFloat (tKLen + usedKLen)
+                cost + boundaryCost +
+                  wordCost * toFloat (max adultWordLen <| tKLen + usedKLen)
             }
