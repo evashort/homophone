@@ -40,11 +40,9 @@ AA, AH
 AE, AH
 AO, AH
 EH, AH
-ER, AH
 IH, AH
 OW, AH
 UH, AH
-UW, AH
 R, ER, ER R
 AA R, ER
 AE R, ER
@@ -71,13 +69,15 @@ SH T, S T
 N D, N T, N
 AE, AO
 AY, IH
-AY, IY
 EH, AE
 IY, AH
 AW, AO
 IH, AA
+IH, AE
 UH, IH
 UH, AO
 EY, IY
-3
+ER, AH
+UW, AH
+10
 AH,
