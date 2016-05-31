@@ -4,9 +4,10 @@ import Html exposing (Html)
 import String
 
 import DeletionCosts exposing (DeletionCosts)
+import Pronouncer exposing (Pronouncer)
 import Respell exposing (Cache)
 import SubCosts exposing (SubCosts)
-import WordCosts exposing (Pronouncer, Speller, WordCosts)
+import WordCosts exposing (Speller, WordCosts)
 
 type alias Rack =
   { prototype : Cache

@@ -21,8 +21,8 @@ parseErrorToString err =
 parse : String -> Result ParseError DeletionCosts
 parse fileContents =
   Result.andThen
-  (parsePricedDeletions fileContents) <|
-  Result.fromMaybe NotSorted << CompletionDict.fromSortedPairs
+    (parsePricedDeletions fileContents) <|
+    Result.fromMaybe NotSorted << CompletionDict.fromSortedPairs
 
 parsePricedDeletions : String -> Result ParseError (List PricedString)
 parsePricedDeletions fileContents =

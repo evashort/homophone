@@ -8,9 +8,10 @@ import String
 import CompletionDict
 import DeletionCosts exposing (DeletionCosts)
 import NumParser
+import Pronouncer exposing (Pronouncer)
 import Repronounce
 import SubCosts exposing (SubCosts)
-import WordCosts exposing (Pronouncer, Speller, WordCosts)
+import WordCosts exposing (Speller, WordCosts)
 
 type alias TextUnit = NumParser.TextUnit
 

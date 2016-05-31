@@ -28,7 +28,6 @@ elm-stuff/
 # elm-repl generated files
 repl-temp-*
 
-python/downloads/
 
 # Created by https://www.gitignore.io/api/python
 
@@ -38,4 +37,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+
+cache/
 index.html

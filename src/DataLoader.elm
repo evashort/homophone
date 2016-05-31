@@ -6,25 +6,29 @@ import Http
 import Task
 
 import DeletionCosts exposing (DeletionCosts)
+import Pronouncer exposing (Pronouncer)
 import SubCosts exposing (SubCosts)
-import WordCosts exposing (Pronouncer, Speller, WordCosts)
+import WordCosts exposing (Speller, WordCosts)
 
 dURL = "data/deletions.txt"
 sURL = "data/substitutions.txt"
-wURL = "data/entropyAndPronounce.txt"
+pURL = "data/pronouncer.txt"
+wURL = "data/speller.txt"
 
 type alias Model =
   { dState : Maybe (Result DError DeletionCosts)
   , sState : Maybe (Result SError SubCosts)
-  , wState : Maybe (Result WError (Pronouncer, Speller, WordCosts))
+  , pState : Maybe (Result PError (Pronouncer))
+  , wState : Maybe (Result WError (Speller, WordCosts))
   }
 
 init : (Model, Effects Action)
 init =
-  ( { dState = Nothing, sState = Nothing, wState = Nothing }
+  ( { dState = Nothing, sState = Nothing, pState = Nothing, wState = Nothing }
   , Effects.batch
     [ Effects.task <| Task.map DLoaded <| Task.toResult <| Http.getString dURL
     , Effects.task <| Task.map SLoaded <| Task.toResult <| Http.getString sURL
+    , Effects.task <| Task.map PLoaded <| Task.toResult <| Http.getString pURL
     , Effects.task <| Task.map WLoaded <| Task.toResult <| Http.getString wURL
     ]
   )
@@ -49,6 +53,16 @@ sErrorToString err =
     SParseError parseErr ->
       "error parsing substitutions: " ++ SubCosts.parseErrorToString parseErr
 
+type PError = PLoadError Http.Error | PParseError Pronouncer.ParseError
+
+pErrorToString : PError -> String
+pErrorToString err =
+  case err of
+    PLoadError httpErr ->
+      "error loading " ++ pURL ++ ": " ++ httpErrorToString httpErr
+    PParseError parseErr ->
+      "error parsing pronouncer: " ++ Pronouncer.parseErrorToString parseErr
+
 type WError = WLoadError Http.Error | WParseError WordCosts.ParseError
 
 wErrorToString : WError -> String
@@ -57,7 +71,7 @@ wErrorToString err =
     WLoadError httpErr ->
       "error loading " ++ wURL ++ ": " ++ httpErrorToString httpErr
     WParseError parseErr ->
-      "error parsing words: " ++ WordCosts.parseErrorToString parseErr
+      "error parsing speller: " ++ WordCosts.parseErrorToString parseErr
 
 httpErrorToString : Http.Error -> String
 httpErrorToString err =
@@ -71,6 +85,7 @@ httpErrorToString err =
 type Action
   = DLoaded (Result Http.Error String)
   | SLoaded (Result Http.Error String)
+  | PLoaded (Result Http.Error String)
   | WLoaded (Result Http.Error String)
 
 update : Action -> Model -> (Model, Effects.Effects Action)
@@ -92,6 +107,14 @@ update action model =
                 (Result.formatError SLoadError result) <|
                 Result.formatError SParseError << SubCosts.parse
         }
+      PLoaded result ->
+        { model
+        | pState =
+            Just <|
+              Result.andThen
+                (Result.formatError PLoadError result) <|
+                Result.formatError PParseError << Pronouncer.parse
+        }
       WLoaded result ->
         { model
         | wState =
@@ -106,10 +129,11 @@ update action model =
 data :
   Model -> Maybe (Pronouncer, Speller, DeletionCosts, SubCosts, WordCosts)
 data model =
-  case (model.dState, model.sState, model.wState) of
+  case (model.dState, model.sState, model.pState, model.wState) of
     ( Just (Ok dCosts)
     , Just (Ok sCosts)
-    , Just (Ok (pronouncer, speller, wCosts))
+    , Just (Ok pronouncer)
+    , Just (Ok (speller, wCosts))
     ) -> Just (pronouncer, speller, dCosts, sCosts, wCosts)
     _ -> Nothing
 
@@ -124,6 +148,11 @@ view model =
     ( case model.sState of
         Just (Err err) ->
           [ Html.div [] [ Html.text <| sErrorToString err ] ]
+        _ -> []
+    ) ++
+    ( case model.pState of
+        Just (Err err) ->
+          [ Html.div [] [ Html.text <| pErrorToString err ] ]
         _ -> []
     ) ++
     ( case model.wState of
