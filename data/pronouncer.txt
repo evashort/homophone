@@ -11,6 +11,7 @@
 'm	um
 'n	un
 'round	rxnd
+'s	s z
 'til	til
 'tis	tiz
 'twas	twuz

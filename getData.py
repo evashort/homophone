@@ -97,11 +97,6 @@ def generatePronouncer(cmuPath, wordsPath, noPronouncePath, shorteningsPath,
                 s, p = line.split("\t")
                 d.setdefault(parseCMUSpelling(s), []).append(shorten(p))
 
-    with open(wordsPath, "r") as wordsFile:
-        for line in withoutComments(wordsFile):
-            s, p = line.split("\t")
-            d.setdefault(parseCMUSpelling(s), []).append(shorten(p))
-
     with open(noPronouncePath, "r") as noPronounceFile:
         for line in withoutComments(noPronounceFile):
             try:
@@ -110,6 +105,11 @@ def generatePronouncer(cmuPath, wordsPath, noPronouncePath, shorteningsPath,
                 del d[parseCMUSpelling(line)]
             else:
                 d[parseCMUSpelling(s)].remove(p)
+
+    with open(wordsPath, "r") as wordsFile:
+        for line in withoutComments(wordsFile):
+            s, p = line.split("\t")
+            d.setdefault(parseCMUSpelling(s), []).append(shorten(p))
 
     for v in d.itervalues():
         v.sort()

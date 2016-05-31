@@ -87916,6 +87916,7 @@ rxzd	roused	12154
 rxziN	rousing	13434
 rxziz	Rouse's	18804
 ryWtarO	Ryutaro	20093
+s	's	25678
 sA	say	7871
 sAE	seyi	21135
 sAO	seo	15340
@@ -112734,6 +112735,7 @@ yxs	youse	15720
 yxsif	Yousif	20631
 yxts	Youtz	20073
 yxtsE	Youtsey	20722
+z	's	25678
 zAR	zaher	20219
 zARz	Zayre's	21915
 zAaz	Zayas	18097
