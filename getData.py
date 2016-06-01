@@ -104,7 +104,7 @@ def generatePronouncer(cmuPath, wordsPath, noPronouncePath, shorteningsPath,
             except ValueError:
                 del d[parseCMUSpelling(line)]
             else:
-                d[parseCMUSpelling(s)].remove(p)
+                d[parseCMUSpelling(s)].remove(shorten(p))
 
     with open(wordsPath, "r") as wordsFile:
         for line in withoutComments(wordsFile):
@@ -161,9 +161,12 @@ def adjustCount(count, cap):
     return count * (1 if cap.islower() else CAPITALMULTIPLIER)
 
 COUNTOFFSET = 1
-def generateSpeller(pronouncerPath, totalPath, *bookPaths):
+def generateSpeller(pronouncerPath, totalPath, noSpellPath, shorteningsPath,
+                    *bookPaths):
     spellerPath = bookPaths[-1]
     bookPaths = bookPaths[:-1]
+
+    shorten = loadShortener(shorteningsPath)
 
     counts = {}
     for bookPath in bookPaths:
@@ -183,13 +186,27 @@ def generateSpeller(pronouncerPath, totalPath, *bookPaths):
     total += sum(adjustCount(n, cap) - n \
                  for m in counts.itervalues() for cap, n in m.iteritems())
 
-    speller = {}
+    pronouncer = {}
     with open(pronouncerPath, "r") as pronouncerFile:
         for line in withoutComments(pronouncerFile):
             s, v = line.split("\t")
-            for p in v.split():
-                menu = speller.setdefault(p, {})
-                menu.update(counts.get(s, {s: 0.0}))
+            pronouncer[s] = v.split()
+
+    with open(noSpellPath, "r") as noSpellFile:
+        for line in withoutComments(noSpellFile):
+            try:
+                s, p = line.split("\t")
+            except ValueError:
+                del pronouncer[parseCMUSpelling(line)]
+            else:
+                pronouncer[parseCMUSpelling(s)].remove(shorten(p))
+
+    speller = {}
+    for s, v in pronouncer.iteritems():
+        for p in v:
+            menu = speller.setdefault(p, {})
+            menu.update(counts.get(s, {s: 0.0}))
+    del pronouncer
     del counts
 
     for p, menu in speller.iteritems():
@@ -250,6 +267,7 @@ shortenings = os.path.join(os.getcwd(), "handcraft", "shortenings.txt")
 groups = os.path.join(os.getcwd(), "handcraft", "groups.txt")
 words = os.path.join(os.getcwd(), "handcraft", "words.txt")
 noPronounce = os.path.join(os.getcwd(), "handcraft", "noPronounce.txt")
+noSpell = os.path.join(os.getcwd(), "handcraft", "noSpell.txt")
 
 cmuURL = "http://svn.code.sf.net/p/cmusphinx/code/trunk/cmudict/sphinxdict/cmudict_SPHINX_40"
 cmu = os.path.join(os.getcwd(), "cache", "cmudict_SPHINX_40")
@@ -283,4 +301,5 @@ for gbook, book in zip(gbooks, books):
 for gbook, book in zip(gbooks, books):
     ifNotExists(book, generateBook, gbook, cmu, words,
                 invalidating = [speller])
-ifNotExists(speller, generateSpeller, pronouncer, total, *books)
+ifNotExists(speller, generateSpeller, pronouncer, total, noSpell, shortenings,
+            *books)

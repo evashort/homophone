@@ -26251,7 +26251,7 @@ darby's	darbEz
 darbyshire	darbiSIr
 darcangelo	darkaNgelO
 darcey	darsE
-darcie	darkE
+darcie	darsE
 darco	darkO
 darcy	darsE
 dardar	dardar
@@ -79183,7 +79183,7 @@ oetken	Otkun
 oetting	OtiN
 oettinger	OtiNR OtinjR
 oeuvre	Rv Wvru
-of	uv
+of	u uv
 ofallon	Ofqlun
 ofarrell	Oferul Ofqrul
 ofc	OefsE
@@ -115998,7 +115998,6 @@ uterine	yWtRun
 utero	yWtRO
 uterus	yWtRus
 utgoff	utgof
-uthe	uD uT
 uther	uDR yWTR
 utica	yWtEku yWtuku
 utilicorp	yWtilukor yWtilukorp
@@ -120304,7 +120303,7 @@ who'll	hWl
 who're	hWR
 who's	hWz
 who've	hWv
-whoa	hO hwO wO
+whoa	hwO wO
 whobrey	wabrE
 whodunit	hWdunit
 whodunits	hWdunits

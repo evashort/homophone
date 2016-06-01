@@ -270,9 +270,7 @@ AnslE	Ainsley	18515
 AnswRT	Ainsworth	16380
 Ant	ain't	25678
 Anubul	anable	19823
-Anul	anal	12246
 Anun	Eynon	20113
-Anus	anus	12765
 Anz	aynes	20866
 AnzbRg	ainsberg	25678
 AnzlE	Ainslie	17820
@@ -3977,9 +3975,6 @@ Sist	schist	14008
 Sists	schists	14360
 Sisul	Schissel	20937
 SisulR	Shisler	20599
-Sit	shit	12179
-SitE	shitty	15558
-Sithed	shithead	17076
 SivR	shiver	13140
 SivRd	shivered	13016
 SivRdikR	Shiverdecker	23137
@@ -5638,8 +5633,6 @@ abEO	abio	19847
 abEOlu	Abiola	20154
 abEOluz	Abiola's	22799
 abElu	Abila	19555
-abO	abo	14769
-abOz	Abo's	22620
 abRg	Aaberg	20054
 abRn	auburn	14357
 abRt	obert	16948
@@ -6914,7 +6907,7 @@ armstraN	Armstrong	14289
 armstroN	Armstrong	14289
 armstroNz	Armstrong's	16899
 armstrqd	armstrad	25678
-armtek	armtec	25678
+armtek	armtek	25678
 armteks	armtek's	25678
 armuNk	Armonk	17732
 armudilO	armadillo	15282
@@ -8273,7 +8266,6 @@ bOnEnO	Bonino	19080
 bOnEtu	bonita	16824
 bOnO	bono	14538
 bOnOz	Bono's	19799
-bOnR	boner	16669
 bOnRt	Bohnert	20346
 bOnUru	bonura	20951
 bOnacE	Bonacci	20760
@@ -9028,7 +9020,6 @@ bUlEiN	bullying	13528
 bUlEz	bullies	14292
 bUlR	Buller	16936
 bUlRd	Bullard	16583
-bUlSit	bullshit	13967
 bUldOz	bulldoze	16612
 bUldOzR	bulldozer	14817
 bUldOzRz	bulldozers	14986
@@ -9132,12 +9123,9 @@ bWTmun	Boothman	20963
 bWTrYd	Boothroyd	18806
 bWTs	booths	13449
 bWZE	bougie	15076
-bWb	boob	15651
-bWbE	booby	14539
 bWbR	Bubar	21389
 bWbek	Bubeck	20971
 bWbul	Bubel	21369
-bWbz	boobs	15584
 bWc	Bueche	20043
 bWcE	Bucci	19268
 bWcEnO	Buccino	21250
@@ -9392,7 +9380,6 @@ baDRiN	bothering	13228
 baDRsum	bothersome	14478
 baDRz	bothers	13961
 baEO	baio	20223
-baN	bong	15900
 baNgO	bongo	16305
 baNgOz	bongos	16817
 baNgartun	bongarten	25678
@@ -10948,10 +10935,6 @@ biblEagrufEz	bibliographies	13167
 biblikul	biblical	11537
 biblukul	biblical	11537
 bibz	bibs	16304
-bic	bitch	12578
-bicE	bitchy	15904
-bicEnus	bitchiness	17684
-biciz	bitches	14541
 bid	bid	11169
 bidE	biddy	16877
 bidR	bidder	13311
@@ -11881,7 +11864,6 @@ blqg	Blagg	19418
 blqgdun	Blagden	18202
 blqhut	Blahut	21360
 blqk	black	8729
-blqkE	Blackie	16697
 blqkEtR	Blacketer	22428
 blqkR	blacker	14282
 blqkRbE	Blackerby	20786
@@ -12967,8 +12949,6 @@ bqst	bast	14658
 bqstO	Bastow	20401
 bqstOn	Bastogne	17836
 bqstOnz	Bastogne's	22361
-bqstRd	bastard	12526
-bqstRdz	bastards	13542
 bqstil	Bastille	16151
 bqstin	Bastin	18879
 bqstu	basta	16471
@@ -14340,7 +14320,6 @@ brxzR	browser	12419
 brxzRz	browsers	13581
 brxzd	browsed	15302
 brxziN	browsing	13672
-buN	bung	14990
 buNR	bunger	19361
 buNgRd	Bungard	21741
 buNgRt	Bungert	20987
@@ -14471,8 +14450,6 @@ bugEz	buggies	14923
 bugI	bugeye	18485
 bugId	bugeyed	19149
 bugOZin	Boghosian	21275
-bugR	bugger	15368
-bugRz	buggers	16146
 bugaZin	Bogosian	19942
 bugar	bogar	20622
 bugatE	Bugatti	18920
@@ -14873,7 +14850,6 @@ butel	Battelle	17173
 butelz	Battelle's	20494
 butenfEld	Bottenfield	21892
 buterEmarc	Batterymarch	20065
-buthed	butthead	19233
 butiN	butting	14829
 butista	Batista	16390
 butistaz	Batista's	18066
@@ -14906,12 +14882,10 @@ butrusiN	buttressing	15729
 butrusiz	buttresses	13994
 butrust	buttressed	14234
 butrusuz	buttresses	13994
-buts	butts	13791
+buts	buts	15578
 butsR	Butzer	18837
 butsbRgR	butzberger	25678
 butsun	Butson	21128
-butuk	buttock	14447
-butuks	buttocks	13090
 butun	button	10823
 butund	buttoned	13656
 butunhOl	buttonhole	14515
@@ -15861,10 +15835,7 @@ cevRlE	Cheverly	20816
 cevik	chevik	25678
 cevis	Chevys	19903
 cez	chez	13468
-ciN	ching	14498
 ciNdx	Qingdao	19195
-ciNk	chink	14383
-ciNks	chinks	14748
 ciSefskE	Ciszewski	22364
 ciSek	Ciszek	21496
 cibRofskE	Ciborowski	21319
@@ -16026,7 +15997,6 @@ cizum	Chisholm	16347
 cizwik	Chiswick	17606
 clibofskE	Chlebowski	20788
 co	chaw	15940
-coN	chong	16926
 coNkiN	Chongqing	18350
 cocEO	Ciaccio	20557
 codrE	Chaudhry	19415
@@ -18200,7 +18170,6 @@ dargun	Dargan	18619
 daris	Doris	14861
 darjEliN	Darjeeling	17962
 dark	dark	9193
-darkE	darkie	17370
 darkO	Darco	20525
 darkR	darker	11883
 darkaNgelO	darcangelo	25678
@@ -19199,7 +19168,6 @@ diNgulR	Dingler	20465
 diNguldIn	Dingledine	20576
 diNgulz	Dingell's	20857
 diNgwul	Dingwall	18451
-diNk	dink	16444
 diNkE	dinky	16148
 diNkinz	Dinkins	18508
 diNkul	Dinkel	20082
@@ -19575,7 +19543,6 @@ dijuts	digits	12225
 dijutul	digital	11128
 dijutulE	digitally	14561
 dijutulz	Digital's	19406
-dik	Dick	13607
 dikA	decay	11159
 dikAiN	decaying	12948
 dikAtR	Decatur	15531
@@ -21343,8 +21310,6 @@ dizun	Dizon	20037
 dmEtrE	Dmitri	16610
 dnEstR	Dniester	17866
 do	daw	15929
-doN	dong	14606
-doNg	dong	14606
 doNgun	Dongen	18927
 doNkE	donkey	12887
 doS	Dosch	19899
@@ -21669,7 +21634,7 @@ dqlusiz	Dallas's	18787
 dqlyu	dahlia	15761
 dqlzEl	Dalziel	18348
 dqlzul	Dalzell	18166
-dqm	damn	11639
+dqm	dam	11658
 dqmEetu	Damietta	17935
 dqmEkO	d'amico	25678
 dqmR	dammer	19578
@@ -21680,9 +21645,9 @@ dqmbak	Dambach	20689
 dqmbakR	Dambacher	21876
 dqmbrOsEO	Dambrosio	23337
 dqmbru	dambra	25678
-dqmd	damned	11758
+dqmd	dammed	14551
 dqmgard	Damgard	22232
-dqmiN	damning	13940
+dqmiN	damming	15104
 dqmij	damage	10054
 dqmijd	damaged	11349
 dqmijiN	damaging	12291
@@ -21690,7 +21655,6 @@ dqmijiz	damages	11032
 dqminuzId	daminozide	19182
 dqmit	dammit	15204
 dqmits	Damitz	22547
-dqmnASun	damnation	13235
 dqmp	damp	11660
 dqmpER	Dampier	17483
 dqmpR	damper	13751
@@ -22500,7 +22464,7 @@ dukiN	ducking	14367
 dukit	Duckett	18128
 duklOz	Duclos	17841
 duklRk	DeClercq	20814
-duklRks	deklerk's	25678
+duklRks	declerque's	25678
 dukliN	duckling	15186
 dukliNz	ducklings	15181
 dukqmp	decamp	15429
@@ -25301,8 +25265,6 @@ eskulAtid	escalated	14099
 eskulAts	escalates	15479
 eskulad	escalade	16612
 eskulus	aeschelus	25678
-eskumO	Eskimo	15246
-eskumOz	Eskimos	15766
 eskunabu	Escanaba	18444
 eskunazE	Eskenazi	19828
 eskunderEun	eskandarian	25678
@@ -27044,7 +27006,6 @@ fefRul	Pfefferle	21795
 feglE	Fegley	20280
 fegun	Fegan	20077
 fehR	Feher	18919
-fek	feck	17170
 fekEt	Fekete	19237
 fekR	Fecher	20964
 feklis	feckless	15549
@@ -27063,7 +27024,6 @@ felR	feller	13553
 felRz	fellers	14456
 felbR	felber	19273
 felbutal	Felbatol	20881
-felc	Felch	18903
 feld	felled	13562
 feldEn	Feldene	19794
 feldR	Felder	17952
@@ -28337,8 +28297,6 @@ flqnRE	Flannery	16723
 flqndRz	Flanders	14724
 flqnigun	Flanigan	18222
 flqnigunz	Flanigan's	21161
-flqnj	flange	12757
-flqnjuz	flanges	13513
 flqnsbRg	Flansburg	21436
 flqnu	Flanna	20835
 flqnugin	Flanagin	20235
@@ -28469,7 +28427,6 @@ foN	fong	16378
 foNR	fonger	19328
 foRr	Forrer	19112
 foT	Fauth	20226
-fob	fob	14276
 fobUS	Fawbush	21453
 fobid	forbid	12062
 fobidiN	forbidding	12424
@@ -28957,7 +28914,6 @@ fqdumun	Fadiman	18249
 fqdun	Fadden	18917
 fqdz	fads	14135
 fqf	Pfaff	17915
-fqg	fag	14603
 fqgart	Faggart	21913
 fqglE	Fagley	20630
 fqgnunt	Fagnant	22277
@@ -28966,8 +28922,6 @@ fqgun	fagen	17909
 fqgundz	Fagundes	20234
 fqgusIt	phagocyte	15694
 fqgusIts	phagocytes	14395
-fqgut	faggot	14917
-fqgz	fags	15901
 fqhE	Fahey	17690
 fqhRtE	Faherty	19931
 fqk	fac	13837
@@ -29946,16 +29900,9 @@ fujEtu	fajita	18443
 fujEtuz	fajitas	17184
 fujd	fudged	16881
 fujiN	fudging	16777
-fuk	fuck	12817
-fukR	fucker	15593
-fukRz	fuckers	16262
-fukiN	fucking	12658
-fuks	fucks	16098
-fukt	fucked	13965
 fuktO	Facteau	22098
 fukunditE	fecundity	13906
 fulA	fillet	13635
-fulASEO	fellatio	15328
 fulASus	fallacious	13519
 fulASuslE	fallaciously	16908
 fulAd	filleted	16343
@@ -31001,7 +30948,6 @@ gUdyEr	Goodyear	16110
 gUdyir	Goodyear	16110
 gUdyirz	Goodyear's	18853
 gUdz	goods	9511
-gUk	gook	16352
 gUkin	Gookin	17675
 gUnTR	Guenther	17614
 gUptu	Gupta	16366
@@ -31185,7 +31131,6 @@ gadbE	Godbey	19136
 gadbOld	Godbold	19659
 gadbOlt	Godbolt	20937
 gadbxt	Godbout	19645
-gaddqm	goddamn	13480
 gadfaDR	godfather	13942
 gadfaDRz	godfathers	15828
 gadfrE	Godfrey	15128
@@ -33159,7 +33104,7 @@ grErz	Grier's	19774
 grEs	grease	12330
 grEsE	greasy	12999
 grEsEmR	Griesemer	20251
-grEsR	greaser	16233
+grEsR	Grieser	20260
 grEsbak	Griesbach	18213
 grEsiN	greasing	15507
 grEsiNR	Griesinger	18620
@@ -34713,7 +34658,6 @@ hETrO	Heathrow	17827
 hETrOz	Heathrow's	22081
 hETs	Heath's	17740
 hETwUd	Heathwood	21870
-hEb	Hebe	17250
 hEbE	Hebei	18436
 hEbR	Heber	16483
 hEbRlin	Heaberlin	21235
@@ -34868,7 +34812,7 @@ hIbrxz	highbrows	16618
 hIbul	Heibel	21826
 hIc	Hyche	22179
 hId	hide	10826
-hIdAu	hydeia	25678
+hIdAu	hydea	25678
 hIdE	Heidi	16335
 hIdEs	Heidi's	19042
 hIdEu	hydea	25678
@@ -35246,7 +35190,6 @@ hIwu	heiwa	19328
 hIyEld	highyield	18432
 hIz	highs	14191
 hIzR	Heizer	17932
-hO	ho	11497
 hOE	Hoey	18081
 hOIsul	Hoheisel	21021
 hON	Hoang	17885
@@ -35463,7 +35406,6 @@ hOmEOpqTuk	homeopathic	14376
 hOmEOstAsus	homeostasis	13545
 hOmEOstqtik	homeostatic	14333
 hOmER	Homeyer	19895
-hOmO	homo	13248
 hOmOfOn	homophone	17076
 hOmOfOnz	homophones	16533
 hOmOirektus	homo-erectus	25678
@@ -36999,7 +36941,6 @@ hekuvu	heckuva	18893
 hekyWbu	Hecuba	17139
 hekyWvu	heckuva	18893
 hekyubu	Hecuba	17139
-hel	hell	10458
 helASus	hellacious	18163
 helASuslE	hellaciously	20916
 helASusnus	hellaciousness	25678
@@ -37052,7 +36993,6 @@ heldriN	Heldring	21358
 heldriT	Heldreth	19766
 heldz	helds	18471
 helf	helf	17823
-helfIr	hellfire	15953
 helfR	Helfer	19192
 helfgat	Helfgott	20004
 helfmun	Helfman	20073
@@ -37066,7 +37006,6 @@ helgren	Helgren	21569
 helgu	Helga	16838
 heliN	helling	18397
 heliNR	Hellinger	18488
-heliS	hellish	13985
 helikan	Helicon	17171
 helikanz	helicons	19965
 helikaptR	helicopter	12774
@@ -37118,7 +37057,6 @@ helplusnus	helplessness	12567
 helprin	Helprin	20402
 helps	helps	10621
 helpt	helped	10008
-helrAzR	hellraiser	19472
 helsR	Helser	20936
 helsiNkE	Helsinki	15776
 helsiT	Helseth	19820
@@ -37151,7 +37089,6 @@ heluts	helots	16085
 helvE	Helvey	20533
 helwig	Helwig	18789
 helyR	Hellier	19613
-helz	hell's	14477
 helzR	Helzer	19164
 hem	hem	12488
 hemE	Hemy	19577
@@ -37603,8 +37540,6 @@ hilb	hilb	20022
 hilbRg	Hilberg	18498
 hilbRn	Hilburn	19523
 hilbRt	Hilbert	16579
-hilbilE	hillbilly	15037
-hilbilEz	hillbillies	16436
 hilbun	Hilbun	21559
 hild	hild	16742
 hildE	Hildy	18403
@@ -38052,7 +37987,6 @@ honts	haunts	12814
 hontud	haunted	12201
 hopE	hoppy	18200
 hopt	Haupt	16915
-hor	whore	13022
 horASEOz	Horatio's	18675
 horASus	Horatius	17233
 horAsEO	Horacio	17908
@@ -38079,7 +38013,6 @@ horgR	Horger	20489
 horgun	Horgan	17828
 horguvit	horgavitt	25678
 horhA	Jorge	15414
-horhxs	whorehouse	15451
 horifik	horrific	14183
 horig	Hoerig	22970
 horigWcE	Horiguchi	20014
@@ -38993,7 +38926,6 @@ huNgrE	hungry	11129
 huNgrER	hungrier	15790
 huNgrulE	hungrily	14676
 huNk	hunk	14708
-huNkE	hunky	16490
 huNkR	hunker	16519
 huNkRd	hunkered	15530
 huNkRiN	hunkering	17296
@@ -40151,15 +40083,11 @@ idEOpqTuk	idiopathic	13001
 idEOsinkrqtik	idiosyncratic	13334
 idEOsinkrusE	idiosyncrasy	14420
 idEOsinkrusEz	idiosyncrasies	13998
-idEatik	idiotic	13789
-idEatiklE	idiotically	16190
 idEmu	edema	11603
 idEum	idiom	12747
 idEumqtik	idiomatic	14103
 idEumz	idioms	13759
 idEusE	idiocy	14017
-idEut	idiot	12631
-idEuts	idiots	13576
 idOlu	idola	17034
 idOnE	idoney	25678
 idOnEu	Idonia	21075
@@ -40378,7 +40306,6 @@ ijipSunz	Egyptians	14294
 ijqkyWlAt	ejaculate	14739
 ijuz	Ijaz	21400
 ikAdu	Ikeda	17460
-ikE	Ikey	18759
 ikEz	Ickes	16518
 ikOl	ecole	15517
 ikRd	Ikard	20154
@@ -41014,10 +40941,6 @@ imbrOgnO	Imbrogno	22152
 imbrOlyO	imbroglio	15491
 imbrYdR	embroider	15038
 imbrYdREz	embroideries	14928
-imbusIl	imbecile	13849
-imbusIlz	imbeciles	14820
-imbusul	imbecile	13849
-imbusulz	imbeciles	14820
 imbyW	imbue	14881
 imbyWd	imbued	12892
 imeZRqblE	immeasurably	13462
@@ -43537,8 +43460,6 @@ iregyulRlE	irregularly	12653
 iregyulRz	irregulars	15182
 iregyulerutE	irregularity	12785
 iregyulerutEz	irregularities	12590
-irekSun	erection	11921
-irekSunz	erections	14327
 irekt	erect	11298
 irektR	erector	15246
 irektiN	erecting	12946
@@ -44263,14 +44184,9 @@ jRgunz	Jurgens	18588
 jRgunzmIr	Jurgensmeyer	22513
 jRjlE	Gergely	19427
 jRjuvik	Djurdjevic	23039
-jRk	jerk	12821
 jRkE	jerky	14000
-jRkiN	jerking	13686
 jRkin	Gerkin	20608
 jRkinz	jerkins	16608
-jRkof	jerk-off	25678
-jRks	jerks	13806
-jRkt	jerked	12740
 jRkvelov	dzhirkvelov	25678
 jRm	germ	11875
 jRmAn	germane	14039
@@ -45127,8 +45043,6 @@ jintiN	Ginting	23032
 jinuks	Gynex	22287
 jinyard	Ginyard	22893
 jip	gyp	16485
-jipsE	gypsy	13514
-jipsEz	gypsies	14209
 jipsum	gypsum	13125
 jipsumz	gypsum's	21850
 jipsun	Jipson	20785
@@ -45279,7 +45193,6 @@ jqklin	Jacqueline	15532
 jqkmun	Jackman	17357
 jqkpat	jackpot	15432
 jqkpats	jackpots	17610
-jqkqs	jackass	14982
 jqkrqbut	jackrabbit	16363
 jqks	jacks	13847
 jqksOnEun	Jacksonian	16359
@@ -45364,8 +45277,6 @@ jqnyWerE	January	11635
 jqnyWerEz	January's	19246
 jqnz	Jan's	17755
 jqnzun	Janzen	18172
-jqp	Jap	15797
-jqps	Japs	16020
 jqpunEz	Japanese	11947
 jqrid	Jarryd	22857
 jqru	Jarrod	19264
@@ -45733,8 +45644,6 @@ kAnd	caned	15992
 kAniN	caning	15928
 kAniNz	canings	18487
 kAnin	canin	19158
-kAnuk	Canuck	19352
-kAnuks	Canucks	20032
 kAnun	Canaan	14967
 kAnunIt	Canaanite	16229
 kAnz	canes	13507
@@ -47281,7 +47190,6 @@ kWmiNz	Cumings	18607
 kWmorE	kumouri	25678
 kWmorEz	kumouri's	25678
 kWmz	Coombs	16388
-kWn	coon	14357
 kWnE	Cooney	17130
 kWnR	Kuhner	19920
 kWnRt	Kuhnert	20266
@@ -47347,7 +47255,6 @@ kWsunz	Cousens	19275
 kWt	coot	15473
 kWtE	coutee	21584
 kWtEnO	Cuttino	21241
-kWtR	cooter	18527
 kWtUr	couture	15356
 kWtUrER	couturier	16612
 kWtayu	Cutaia	22592
@@ -47566,7 +47473,7 @@ kajEanO	Caggiano	20504
 kajEmu	Kajima	19733
 kajitASun	cogitation	15640
 kajitAt	cogitate	16704
-kak	cock	12118
+kak	caulk	15694
 kakE	khaki	13731
 kakEnus	cockiness	16503
 kakId	cockeyed	15848
@@ -47603,7 +47510,7 @@ kakrum	Cockrum	20066
 kakrun	Cochran	15721
 kakruntun	Cochranton	21280
 kakrunz	Cochran's	18520
-kaks	cocks	13509
+kaks	Cox	14342
 kaksis	Kocsis	19492
 kaksiz	Cox's	17078
 kaksun	Coxon	19097
@@ -50214,7 +50121,6 @@ klInziz	Clines's	22500
 klIs	Kleiss	21172
 klIst	Kleist	16768
 klIt	Clyte	21903
-klItoris	clitoris	13725
 klIts	Clites	22188
 klIunt	client	10025
 klIuntel	clientele	13136
@@ -51296,7 +51202,7 @@ kortek	coretech	25678
 korteks	cortex	11367
 kortelyW	Cortelyou	18150
 korten	corten	19835
-kortenz	cortens	25678
+kortenz	cortens'	25678
 kortez	Cortes	14634
 korthxs	courthouse	12987
 korthxsiz	courthouses	15486
@@ -52693,7 +52599,6 @@ krEsun	Creason	20428
 krEsup	Cresap	17910
 krEt	Crete	15037
 krEts	Kreitz	21007
-krEtun	cretin	15846
 krEu	Korea	13503
 krEun	Korean	13802
 krEunz	Koreans	15536
@@ -53218,7 +53123,6 @@ krinjd	cringed	14846
 krinjiN	cringing	14491
 krinjiz	cringes	16613
 krinskE	Krinsky	19490
-krip	crip	17182
 kripO	Crepeau	20138
 kripliN	crippling	13611
 krips	Cripps	17080
@@ -53230,10 +53134,8 @@ kriptOsporidEum	Cryptosporidium	17674
 kriptan	krypton	15281
 kriptik	cryptic	13753
 kripts	crypts	14558
-kripul	cripple	13298
 kripuld	crippled	12521
 kripuliN	crippling	13611
-kripulz	cripples	14402
 kripun	Crippen	18151
 krir	creer	16556
 kris	Chris	14217
@@ -53527,8 +53429,6 @@ krqnts	Krantz	17582
 krqnul	Crannell	20140
 krqnz	Kranz	18107
 krqnzlR	Kranzler	19589
-krqp	crap	13546
-krqpE	crappy	16079
 krqpSWt	crapshoot	17802
 krqpf	Krapf	19088
 krqprayWn	Kraprayoon	22552
@@ -54952,7 +54852,6 @@ kunsultutiv	consultative	14031
 kunsumSun	consumption	10385
 kunsumpSun	consumption	10385
 kunswAlu	Consuela	18962
-kunt	cunt	14597
 kuntAjun	contagion	13062
 kuntAjus	contagious	12576
 kuntAjusnus	contagiousness	16151
@@ -55093,8 +54992,6 @@ kuntukEz	Kentucky's	17436
 kuntwa	Contois	21512
 kuntz	Kuntze	18309
 kunuT	Kunath	22036
-kunuk	Canuck	19352
-kunuks	Canucks	20032
 kunul	Kuhnle	21093
 kunuliNgus	cunnilingus	15971
 kunun	Cunnane	20827
@@ -56353,7 +56250,6 @@ lARz	layers	10776
 lATun	laythan	25678
 lAb	labe	17444
 lAbAdu	lebeda	20400
-lAbO	Lebo	19207
 lAbR	labor	9034
 lAbRR	laborer	12294
 lAbRRz	laborers	11529
@@ -57606,15 +57502,12 @@ lWmunus	luminous	12185
 lWmut	Lumet	18417
 lWmz	looms	13001
 lWn	loon	14663
-lWnE	loony	15580
 lWnR	lunar	12723
 lWnatE	lunati	20942
 lWnenbRg	Lunenberg	20159
 lWnetu	Lunetta	20311
 lWnu	luna	15043
 lWnusE	lunacy	14228
-lWnutik	lunatic	13115
-lWnutiks	lunatics	14215
 lWnz	loons	15657
 lWoN	luong	18927
 lWolun	Lewallen	19535
@@ -58964,7 +58857,7 @@ lil	lil	14797
 lilE	lily	12680
 lilEbel	Lilybell	23406
 lilEhqmR	Lillehammer	19217
-lilEhqmRz	lillehamer's	25678
+lilEhqmRz	lillehammer's	25678
 lilEnTul	Lilienthal	16941
 lilEqn	Liliane	18941
 lilEqnu	Liliana	18680
@@ -62424,9 +62317,6 @@ maNganarO	Manganaro	20830
 maNganelO	manganello	20531
 maNgeru	Mangueira	21047
 maNgirE	Mangieri	21335
-maNgul	Mongol	15581
-maNgulYd	mongoloid	15871
-maNgulz	Mongols	15715
 maNgun	Mongan	19228
 maNkE	monkee	20866
 maNkEz	Monkees	18799
@@ -63274,7 +63164,7 @@ marsal	Marsal	19930
 marsalis	Marsalis	18477
 marsalu	marsala	17662
 marsdun	Marsden	16354
-marseku	marseca	25678
+marseku	marseka	25678
 marsekuz	marseca's	25678
 marsel	Marcel	14928
 marselO	Marcello	16781
@@ -64355,7 +64245,7 @@ metyR	metier	15387
 metz	Metze	20643
 metziNR	Metzinger	19444
 mevaruc	mevarach	25678
-mevarucuz	mevarachs	25678
+mevarucuz	mevarach's	25678
 mevukor	Mevacor	19667
 mez	mez	17000
 mezE	Mezey	19021
@@ -64575,14 +64465,9 @@ mihulE	Mihaly	18338
 mihulek	Mihalek	23177
 mihulik	Mihalik	21176
 mij	midge	15724
-mijet	Midgette	21101
-mijit	Midgett	19860
 mijiz	midges	15620
 mijlE	Midgley	17868
 mijunt	migent	25678
-mijut	midget	14734
-mijutmqn	Midgetman	20496
-mijuts	midgets	15882
 mijuz	midges	15620
 mik	MC	14294
 mikAl	Mikhail	15737
@@ -65597,7 +65482,6 @@ moradO	morado	18471
 moragu	Moraga	17509
 moral	morrall	19541
 moralez	Moralez	21465
-moran	moron	14775
 moranO	Morano	19217
 morandE	Morandi	19019
 morandO	morando	18896
@@ -66696,12 +66580,6 @@ mqsport	Massport	20773
 mqst	mast	12109
 mqstR	master	9612
 mqstRE	mastery	11668
-mqstRbASun	masturbation	13029
-mqstRbAt	masturbate	14695
-mqstRbAtiN	masturbating	15003
-mqstRbAtid	masturbated	15393
-mqstRbAts	masturbates	16653
-mqstRbAtud	masterbated	25678
 mqstRd	mastered	12273
 mqstRful	masterful	13469
 mqstRfulE	masterfully	15170
@@ -66861,8 +66739,6 @@ mruk	Mruk	21405
 mruzinskE	Mrozinski	22718
 muDR	mother	8574
 muDRSed	Mothershed	21335
-muDRfukR	motherfucker	15240
-muDRfukRz	motherfuckers	16334
 muDRhUd	motherhood	12751
 muDRiN	mothering	13686
 muDRinlo	mother-in-law	25678
@@ -67002,14 +66878,12 @@ mudulz	muddles	16397
 mudwqgun	mudwagon	21416
 mudz	muds	15122
 muev	Maeve	17400
-muf	muff	14852
 mufE	Muffy	19215
 mufWmA	Mfume	20412
 muflE	Muffley	20978
 muflR	muffler	14637
 muflRz	mufflers	15610
 mufliN	muffling	15559
-mufs	muffs	15910
 muful	muffle	14534
 mufuld	muffled	12833
 mufuliN	muffling	15559
@@ -68830,9 +68704,6 @@ nEf	Neef	18709
 nEfRt	Neifert	20756
 nEfsE	Kneafsey	22277
 nEgAtid	negated	14207
-nEgrO	negro	11578
-nEgrOz	negroes	11906
-nEgrYd	negroid	16064
 nEgrelE	Nigrelli	20991
 nEgul	Neagle	18508
 nEgus	negus	16680
@@ -70406,7 +70277,6 @@ nifin	Kniffin	19994
 nifoN	Nifong	18816
 niftE	nifty	15410
 nifun	Kniffen	19291
-nig	Nigg	19241
 nigAt	negate	13815
 nigAtiN	negating	14729
 nigAts	negates	14694
@@ -70419,20 +70289,13 @@ nigOSEAtRz	negotiators	13604
 nigOSEAtiN	negotiating	12292
 nigOSEAtid	negotiated	12071
 nigOSEAts	negotiates	14604
-nigR	nigger	12873
-nigRd	niggard	15754
-nigRdlE	niggardly	14702
-nigRdlEnus	niggardliness	16211
-nigRz	niggers	13502
 nigel	Niguel	19894
 niglekt	neglect	10896
 niglektful	neglectful	14404
 niglektiN	neglecting	12673
 niglektid	neglected	10918
 niglekts	neglects	13376
-nigrO	nigro	16395
 nigren	Nygren	18421
-nigris	nigris	16961
 nihA	Nihei	21380
 nihIzR	Nihiser	22678
 nihOlu	Nichola	19476
@@ -72356,7 +72219,6 @@ pEcirilO	Piccirillo	20606
 pEciz	peaches	13029
 pEctrE	Peachtree	17359
 pEcuz	peaches	13029
-pEd	peed	15783
 pEdEqtrik	pediatric	12450
 pEdEqtriks	pediatrics	14175
 pEdEutriSun	pediatrician	13798
@@ -72434,8 +72296,6 @@ pEnalujE	penology	15638
 pEnedu	Pineda	17782
 pEnerO	Pineiro	19892
 pEnherO	Pinheiro	18709
-pEnis	penis	12008
-pEnisiz	penises	15310
 pEnocet	Pinochet	17279
 pEnocets	Pinochet's	18913
 pEntar	pintar	18123
@@ -73576,14 +73436,12 @@ pUru	pura	15565
 pUrum	Purim	16999
 pUrvEuns	Purviance	18649
 pUs	puss	15053
-pUsE	pussy	14174
 pUsEfUt	pussyfoot	17714
 pUsEfUtiN	pussyfooting	17292
 pUsEfUts	pussyfoots	20253
 pUsEfUtud	pussyfooted	19197
 pUsEkqt	pussycat	16760
 pUsEkqts	pussycats	18298
-pUsEz	pussies	16798
 pUsiz	pusses	17560
 pUt	put	8204
 pUtan	put-on	25678
@@ -73639,13 +73497,8 @@ pWn	poon	17435
 pWnEt	Puneet	22357
 pWnt	Puente	17130
 pWntO	punto	15276
-pWp	poop	14148
 pWpO	pupo	19858
-pWpR	pooper	17632
 pWpRd	Poupard	20587
-pWpRz	poopers	19423
-pWps	poops	17335
-pWpt	pooped	16451
 pWr	poor	8854
 pWrR	poorer	11947
 pWrbo	Poorbaugh	21582
@@ -75487,7 +75340,6 @@ pirumidz	pyramids	12878
 pirun	Pyron	19726
 pirundelO	Pirandello	17114
 pirz	peers	11433
-pis	piss	14108
 pisOnE	Pisoni	19492
 pisRek	Pisarek	22488
 pisarskE	Pisarski	21241
@@ -75497,7 +75349,6 @@ pisitelO	Piscitello	21881
 piskqtuwA	Piscataway	17482
 pisku	pisca	19770
 pisnel	Pesnell	22724
-pist	pissed	13901
 pistOl	pistole	16882
 pistOlA	pistole	16882
 pistR	pistor	19084
@@ -78949,7 +78800,6 @@ pyW	pew	13443
 pyWZO	Peugeot	18023
 pyWabik	Pewabic	19806
 pyWbRtE	puberty	12348
-pyWbik	pubic	13306
 pyWdR	puder	20210
 pyWdoN	Pudong	19469
 pyWfal	Pufahl	21720
@@ -81324,7 +81174,6 @@ qrunts	arrants	19790
 qrurat	Ararat	17108
 qrus	arris	16929
 qrustofunEz	Aristophanes	15621
-qs	ass	11748
 qsAR	assayer	16115
 qsE	assay	12120
 qsRtAn	ascertain	11438
@@ -81346,7 +81195,6 @@ qsfiksEAtiN	asphyxiating	16253
 qsfiksEAtid	asphyxiated	15534
 qsfiksEAts	asphyxiates	18940
 qsfolt	asphalt	12598
-qshOl	asshole	14166
 qsilin	Asselin	19540
 qsilsun	Asleson	22126
 qsimO	Asimow	20823
@@ -81453,7 +81301,6 @@ qsusEz	associes	17546
 qsutAt	acetate	11891
 qsutOn	acetone	12880
 qsuvAdO	Acevedo	18288
-qsuz	asses	13368
 qt	at	5593
 qtE	attie	18809
 qtImqtR	antimatter	15911
@@ -83150,13 +82997,9 @@ rEtWl	retool	16811
 rEtWld	retooled	16942
 rEtWliN	retooling	16170
 rEtakO	Ritacco	22805
-rEtard	retard	13015
 rEtardASun	retardation	11999
 rEtardiN	retarding	13744
-rEtardid	retarded	11683
-rEtardud	retarded	11683
 rEtardunt	retardant	15007
-rEtardz	retards	14208
 rEtel	retell	15209
 rEteliN	retelling	14198
 rEtenSun	retention	11414
@@ -85036,8 +84879,6 @@ rednus	redness	12897
 redpOl	redpoll	18426
 redpOlz	redpolls	18234
 redpqT	Redpath	17751
-redskin	redskin	16045
-redskinz	redskins	15369
 redstOn	Redstone	17391
 redstOnz	Redstone's	21290
 reduk	Reddoch	22010
@@ -86588,10 +86429,7 @@ ritRnd	returned	9241
 ritRniN	returning	10625
 ritRnz	returns	10405
 ritRz	Ritter's	18531
-ritard	retard	13015
 ritardiN	retarding	13744
-ritardid	retarded	11683
-ritardz	retards	14208
 riteS	ritesh	25678
 ritgR	Ritger	21635
 ritgRz	Rittgers	21653
@@ -87297,7 +87135,6 @@ rqst	rast	16917
 rqstR	raster	14427
 rqstRap	rasterop	25678
 rqstRaps	RasterOps	21772
-rqstus	Rastus	18824
 rqt	rat	11162
 rqtA	Ratay	21762
 rqtE	ratty	15687
@@ -87916,7 +87753,6 @@ rxzd	roused	12154
 rxziN	rousing	13434
 rxziz	Rouse's	18804
 ryWtarO	Ryutaro	20093
-s	's	25678
 sA	say	7871
 sAE	seyi	21135
 sAO	seo	15340
@@ -87931,7 +87767,7 @@ sAbR	sabre	13981
 sAbRbIn	saberbein	25678
 sAbRbInz	saberbein's	25678
 sAbRt	Seybert	18822
-sAbRtek	sabortech	25678
+sAbRtek	sabretech	25678
 sAbRz	sabres	14768
 sAbalOz	Ceballos	18578
 sAbin	Sabin	16423
@@ -93224,9 +93060,6 @@ slumpt	slumped	13478
 slumz	slums	12988
 slus	Sluss	20432
 slusR	Slusser	19086
-slut	slut	14563
-slutE	slutty	17477
-sluts	Slutz	21050
 slutskE	Slutsky	18794
 sluvOnEu	Slavonia	18098
 sluvOnyu	Slavonia	18098
@@ -94342,7 +94175,6 @@ spifiN	spiffing	18770
 spigut	spigot	14855
 spiguts	spigots	16245
 spihalskE	Spychalski	20546
-spik	spic	16331
 spikRd	Spickard	19678
 spiklR	Spickler	21495
 spil	spill	12849
@@ -94652,7 +94484,6 @@ sprxtud	sprouted	14096
 sprxtufIl	sproutaphile	25678
 sprxtufIlz	sproutaphiles	25678
 sprxul	Sprowle	20730
-spuNk	spunk	15353
 spuNkE	spunky	15961
 spud	spud	16033
 spudz	spuds	16193
@@ -94951,7 +94782,6 @@ sqmUlsun	Samuelsen	21122
 sqmUrI	samurai	13659
 sqmar	Samar	17764
 sqmarkqnd	Samarkand	17257
-sqmbO	Sambo	17322
 sqmbRg	Samberg	21341
 sqmbru	Sambre	18036
 sqmbyWku	sambuca	18290
@@ -100844,7 +100674,6 @@ tisdul	Tisdell	20214
 tisun	Tison	18834
 tisyW	tissue	9748
 tisyWz	tissues	10578
-tit	tit	12850
 titR	titter	15329
 titRiNtun	Titterington	20367
 titfortqt	tit-for-tat	25678
@@ -102854,7 +102683,6 @@ tyen	tien	15187
 tyenfW	tien-fu	25678
 tyenunmen	Tienanmen	20542
 u	a	4096
-uD	uthe	18323
 uDR	other	6514
 uDRnus	otherness	13788
 uDRwIz	otherwise	9551
@@ -102891,7 +102719,6 @@ uSajE	ashaji	25678
 uSajEz	ashaji's	25678
 uSbo	Ashbaugh	19083
 uSor	ashore	11918
-uT	uthe	18323
 uTEnEun	Athenian	14482
 uTEnEunz	Athenians	14555
 uTEnu	Athena	15548
@@ -103661,7 +103488,7 @@ uklAmd	acclaimed	13331
 uklAmiN	acclaiming	16380
 uklAmz	acclaims	16720
 uklWZun	occlusion	12303
-uklak	:00	25678
+uklak	o'clock	25678
 uklips	eclipse	12627
 uklipsiN	eclipsing	15258
 uklipst	eclipsed	13498
@@ -106352,7 +106179,6 @@ vIb	vibe	15758
 vIbrASun	vibration	11794
 vIbrASunz	vibrations	12110
 vIbrAt	vibrate	13420
-vIbrAtR	vibrator	14484
 vIbrAtiN	vibrating	12921
 vIbrAts	vibrates	14269
 vIbrunsE	vibrancy	15733
@@ -108141,8 +107967,6 @@ vuhEmunt	vehement	12997
 vuhEmuntlE	vehemently	13090
 vuhofskE	Wachowski	19957
 vuhxEqk	Wachowiak	21799
-vujInu	vagina	12005
-vujInul	vaginal	11862
 vujelOs	Vagelos	20362
 vukarO	Vaccaro	18613
 vukelih	Vukelich	21236
@@ -109303,7 +109127,6 @@ wYtkxskE	Wojtkowski	22158
 wYtus	Wojtas	23121
 wYtuvic	Wojtowicz	20730
 wa	wa	12249
-waNk	wank	18066
 waNkO	Wanko	21608
 waS	wash	11035
 waSE	washy	15733
@@ -109487,13 +109310,11 @@ wanubEz	wannabes	16726
 wanumAkR	Wanamaker	17200
 wanumakR	Wannemacher	20726
 wanzR	Wanzer	19697
-wap	wop	15781
 wapA	wah-pei	25678
 wapR	whopper	16373
 wapRz	whoppers	17397
 wapiN	whopping	15152
 wapnR	Wapner	18854
-waps	wops	17078
 warSawa	Warszawa	18190
 warez	Juarez	15600
 warezespin	juarez-espin	25678
@@ -110107,8 +109928,6 @@ widxsun	Widdowson	18545
 wif	whiff	14055
 wifulz	Wyffels	22822
 wig	wig	12967
-wigR	wigger	19458
-wigRz	Wiggers	18866
 wigfEld	Wigfield	19435
 wigfol	Wigfall	18331
 wigiNtun	Wigington	20477
@@ -111103,7 +110922,7 @@ wotwUd	Watwood	22200
 woz	was	5057
 wozmWT	Wasmuth	19257
 wozmund	Wasmund	21586
-wqN	Wang	14428
+wqN	whang	16852
 wqNR	Wanger	18388
 wqNglR	wangler	19916
 wqNgul	wangle	16455
@@ -111139,8 +110958,6 @@ wqgunz	wagons	11817
 wqgz	wags	15120
 wqk	whack	14446
 wqkE	wacky	15502
-wqkO	wacko	16996
-wqkOz	wackos	18195
 wqkR	Wacker	17416
 wqkRlE	Wackerle	21198
 wqkRul	Wackerle	21198
@@ -112735,7 +112552,6 @@ yxs	youse	15720
 yxsif	Yousif	20631
 yxts	Youtz	20073
 yxtsE	Youtsey	20722
-z	's	25678
 zAR	zaher	20219
 zARz	Zayre's	21915
 zAaz	Zayas	18097
