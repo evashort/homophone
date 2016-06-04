@@ -267,7 +267,7 @@ shortenings = os.path.join(os.getcwd(), "handcraft", "shortenings.txt")
 groups = os.path.join(os.getcwd(), "handcraft", "groups.txt")
 words = os.path.join(os.getcwd(), "handcraft", "words.txt")
 noPronounce = os.path.join(os.getcwd(), "handcraft", "noPronounce.txt")
-noSpell = os.path.join(os.getcwd(), "handcraft", "noSpell.txt")
+noSpell = os.path.join(os.getcwd(), "handcraft", "noSpell[Explicit].txt")
 
 cmuURL = "http://svn.code.sf.net/p/cmusphinx/code/trunk/cmudict/sphinxdict/cmudict_SPHINX_40"
 cmu = os.path.join(os.getcwd(), "cache", "cmudict_SPHINX_40")
