@@ -70,7 +70,7 @@ view address model =
           [ Attributes.style
               [ ("font-size", "20pt")
               , ("line-height", "1.25em")
-              , ("min-height", "20pt")
+              , ("min-height", "24px")
               , ("border", "1px solid")
               , ("border-radius", "3px")
               , ("margin", "12px")
@@ -129,7 +129,7 @@ view address model =
                 [ ("font-size", "20pt")
                 , ("line-height", "1.25em")
                 , ("min-height", "1.25em")
-                , ("width", "20em")
+                , ("width", "450px")
                 , ("padding", "12px")
                 , ("border", "1px solid black")
                 , ("border-radius", "3px")
