@@ -48,7 +48,7 @@ view address model =
         [ Attributes.style
             [ ("font-size", "20pt")
             , ("line-height", "1.25em")
-            , ("margin", "10pt")
+            , ("margin", "12px")
             ]
         ]
         [ Html.text "Homophone Generator" ]
@@ -57,7 +57,7 @@ view address model =
          , Events.onClick
              address <|
              if model.hidden then ShowInput else HideInput
-         , Attributes.style [ ("margin", "10pt") ]
+         , Attributes.style [ ("margin", "12px") ]
          ]
          [ Html.text <| if model.hidden then "Show input" else "Hide input" ]
     , Html.div
@@ -71,9 +71,9 @@ view address model =
               [ ("font-size", "20pt")
               , ("line-height", "1.25em")
               , ("min-height", "20pt")
-              , ("border", "1pt solid")
-              , ("border-radius", "3pt")
-              , ("margin", "10pt")
+              , ("border", "1px solid")
+              , ("border-radius", "3px")
+              , ("margin", "12px")
               , ("position", "relative")
               ]
           ]
@@ -86,7 +86,7 @@ view address model =
                   , ("line-height", "inherit")
                   , ("width", "100%")
                   , ("height", "100%")
-                  , ("padding", "10pt")
+                  , ("padding", "12px")
                   , ("border", "none")
                   , ("margin", "0")
                   , ("position", "absolute")
@@ -105,7 +105,7 @@ view address model =
           , Html.div
               [ Attributes.style <|
                   [ ("min-height", "1.25em")
-                  , ("padding", "10pt")
+                  , ("padding", "12px")
                   , ("white-space", "pre-wrap")
                   , ("word-wrap", "break-word")
                   , ("color", "transparent")
@@ -130,10 +130,10 @@ view address model =
                 , ("line-height", "1.25em")
                 , ("min-height", "1.25em")
                 , ("width", "20em")
-                , ("padding", "10pt")
-                , ("border", "1pt solid black")
-                , ("border-radius", "3pt")
-                , ("margin", "10pt")
+                , ("padding", "12px")
+                , ("border", "1px solid black")
+                , ("border-radius", "3px")
+                , ("margin", "12px")
                 , ("resize", "horizontal")
                 , ("overflow", "auto")
                 , ("white-space", "pre-wrap")
@@ -152,7 +152,7 @@ view address model =
      , Html.a
          [ Attributes.href
              "https://github.com/evanshort73/homophone/blob/master/LICENSE"
-         , Attributes.style [ ("margin", "10pt") ]
+         , Attributes.style [ ("margin", "12px") ]
          ]
          [ Html.text "License" ]
     , DataLoader.view model.dataLoader
