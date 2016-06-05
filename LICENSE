@@ -1,11 +1,11 @@
-src/data/entropyAndPronounce.txt is derived from Google Books Ngrams,
-which can be found at
+data/speller.txt is derived from Google Books Ngrams, which can be found at
 http://storage.googleapis.com/books/ngrams/books/datasetsv2.html
 It is licensed under a Creative Commons Attribution 3.0 Unported License,
 which can be found at http://creativecommons.org/licenses/by/3.0/
 
-src/data/entropyAndPronounce.txt is also derived from the CMU Pronouncing
-Dictionary, which can be found at http://www.speech.cs.cmu.edu/cgi-bin/cmudict
+data/speller.txt is also derived from the CMU Pronouncing Dictionary, and so
+is data/pronouncer.txt. The CMU Pronouncing Dictionary can be found at
+http://www.speech.cs.cmu.edu/cgi-bin/cmudict
 Its license is as follows:
 
     Copyright (C) 1993-2015 Carnegie Mellon University. All rights reserved.

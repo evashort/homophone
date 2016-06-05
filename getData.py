@@ -13,7 +13,7 @@ def withoutComment(line):
 def withoutComments(f):
     for line in f:
         lineWithoutComment = withoutComment(line)
-        if not lineWithoutComment.isspace():
+        if lineWithoutComment and not lineWithoutComment.isspace():
             yield lineWithoutComment
 
 def loadShortener(shorteningsPath):

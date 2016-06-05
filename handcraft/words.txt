@@ -1,3 +1,16 @@
+// Words to add to the CMU Pronouncing Dictionary
+
+// handcraft/noPronounce.txt does not apply to the words in this file but
+// handcraft/noSpell[Explicit].txt does
+
+// These words and pronunciations are parsed the same way as the CMU
+// Pronouncing Dictionary, but parenthesized numbers are not required if a
+// word has multiple pronunciations
+
+// After modifying this file, delete data/pronouncer.txt as well as
+// cache/book0.txt through cache/book9.txt and rerun getData.py.
+// data/speller.txt will be automatically deleted and regenerated as well.
+
 &	AH N D
 &	AE N D
 'S	S

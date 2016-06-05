@@ -1,3 +1,11 @@
+// Used to convert the multi-character phonemes used in the CMU Pronouncing
+// Dictionary to single-character representations for convenience and
+// efficiency
+
+// After changing this file, delete data/deletions.txt,
+// data/substitutions.txt and data/pronouncer.txt, and rerun getData.py.
+// data/speller.txt will be automatically deleted and regenerated as well.
+
 AA	a
 AE	q
 AH	u

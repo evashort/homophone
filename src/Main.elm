@@ -150,11 +150,10 @@ view address model =
             ]
         ]
      , Html.a
-         [ Attributes.href
-             "https://github.com/evanshort73/homophone/blob/master/LICENSE"
+         [ Attributes.href "https://github.com/evanshort73/homophone"
          , Attributes.style [ ("margin", "12px") ]
          ]
-         [ Html.text "License" ]
+         [ Html.text "GitHub" ]
     , DataLoader.view model.dataLoader
     ]
 

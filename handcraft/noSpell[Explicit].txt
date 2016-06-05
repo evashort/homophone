@@ -1,3 +1,17 @@
+// Content warning: swear words
+
+// Words in this file will never be shown as output, but will still be
+// pronounced if the user types them in
+
+// To prevent a word from being spelled only if it is pronounced a certain
+// way, put the spelling and pronunciation on the same line, separated by a
+// tab character
+
+// All capitalizations of these words will be removed. You cannot remove a
+// a specific capitalization of a word using this file.
+
+// After changing this file, delete data/speller.txt and rerun getData.py
+
 &
 'S
 +

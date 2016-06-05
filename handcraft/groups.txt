@@ -1,3 +1,15 @@
+// Groups of similar-sounding phoneme sequences
+
+// This file is organized into cost sections. Each cost section starts with a
+// floating-point number specifying the cost of substituting one phoneme
+// sequence for another in the same group.
+
+// The cost of deleting or inserting a phoneme sequence can be specified by
+// putting it in a group with an empty sequence
+
+// After modifying this file, delete data/deletions.txt and
+// data/substitutions.txt and rerun getData.py
+
 0
 DH DH, DH
 F F, F

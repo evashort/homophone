@@ -1,3 +1,14 @@
+// Words to ignore from the CMU Pronouncing Dictionary. They will never show
+// up in the output and they will by highlighted as unknown if the user types
+// them in.
+
+// By default, all pronunciations of a word will be removed. To remove a
+// specific pronunciation of a word, put the spelling and pronunciation on the
+// same line, separated by a tab character
+
+// After changing this file, delete data/pronouncer.txt and rerun getData.py.
+// data/speller.txt will be automatically deleted and regenerated as well.
+
 !EXCLAMATION-POINT
 "CLOSE-QUOTE
 "DOUBLE-QUOTE
