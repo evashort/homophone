@@ -21,8 +21,6 @@ main =
     , subscriptions = \_ -> Sub.none
     }
 
--- TODO: set page title
-
 type UserText = RawText String | Respelled Rack
 
 type alias Model =
