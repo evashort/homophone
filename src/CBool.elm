@@ -1,4 +1,4 @@
-module CBool where
+module CBool exposing (..)
 
 type alias CBool = Int
 

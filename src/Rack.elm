@@ -1,4 +1,4 @@
-module Rack where
+module Rack exposing (..)
 
 import Html exposing (Html)
 import String
@@ -96,5 +96,5 @@ costs = List.map Respell.cost << .shelves
 spelling : Rack -> String
 spelling = String.concat << List.map Respell.spelling << .shelves
 
-view : Rack -> List Html
+view : Rack -> List (Html msg)
 view = List.concatMap Respell.view << .shelves

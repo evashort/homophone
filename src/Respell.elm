@@ -1,4 +1,4 @@
-module Respell where
+module Respell exposing (..)
 
 import Char
 import Html exposing (Html)
@@ -79,10 +79,10 @@ dotCount : Int -> Int
 dotCount remainingPhonemes =
   max 3 <| round <| 2.33 * toFloat remainingPhonemes
 
-view : Cache -> List Html
+view : Cache -> List (Html msg)
 view cache = List.map viewTextUnit cache.textUnits ++ [ Html.text "\n" ]
 
-viewTextUnit : TextUnit -> Html
+viewTextUnit : TextUnit -> Html msg
 viewTextUnit textUnit =
   if List.isEmpty textUnit.pathLists &&
     isPronounced (firstChar textUnit.spelling) then

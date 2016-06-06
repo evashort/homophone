@@ -1,4 +1,4 @@
-module PeakedList where
+module PeakedList exposing (..)
 
 import Random
 

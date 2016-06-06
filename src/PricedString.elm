@@ -1,4 +1,4 @@
-module PricedString where
+module PricedString exposing (..)
 
 import String
 

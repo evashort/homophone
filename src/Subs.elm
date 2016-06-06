@@ -1,4 +1,4 @@
-module Subs where
+module Subs exposing (..)
 
 import List
 import String

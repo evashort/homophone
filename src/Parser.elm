@@ -1,4 +1,4 @@
-module Parser where
+module Parser exposing (..)
 
 import List
 import String

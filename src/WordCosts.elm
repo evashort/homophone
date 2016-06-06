@@ -1,4 +1,4 @@
-module WordCosts where
+module WordCosts exposing (..)
 
 import List
 import String
@@ -18,10 +18,11 @@ type ParseError
 
 parseErrorToString : ParseError -> String
 parseErrorToString err =
-  case err of
-    InvalidTriplet t ->
-      "\"" ++ t ++ "\" is not of the form \"phonemes\tspelling\tcost\""
-    NotSorted -> "phoneme strings are not in sorted order"
+  "error parsing speller: " ++
+    case err of
+      InvalidTriplet t ->
+        "\"" ++ t ++ "\" is not of the form \"phonemes\tspelling\tcost\""
+      NotSorted -> "phoneme strings are not in sorted order"
 
 parse : String -> Result ParseError (Speller, WordCosts)
 parse fileContents =

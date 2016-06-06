@@ -1,4 +1,4 @@
-module DAG where
+module DAG exposing (..)
 
 import Array exposing (Array)
 import Bisect

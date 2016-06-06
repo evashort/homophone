@@ -1,4 +1,4 @@
-module BoundaryState where
+module BoundaryState exposing (..)
 
 import List
 

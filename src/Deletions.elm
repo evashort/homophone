@@ -1,4 +1,4 @@
-module Deletions where
+module Deletions exposing (..)
 
 import Dict
 import Random

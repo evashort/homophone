@@ -1,4 +1,4 @@
-module Bisect where
+module Bisect exposing (..)
 
 import Array exposing (Array)
 

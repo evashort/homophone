@@ -1,4 +1,4 @@
-module Repronounce where
+module Repronounce exposing (..)
 
 import Array exposing (Array)
 import Dict exposing (Dict)

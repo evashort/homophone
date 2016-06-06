@@ -40,3 +40,4 @@ __pycache__/
 
 cache/
 index.html
+tests.js

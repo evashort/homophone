@@ -1,4 +1,4 @@
-module CompletionDict where
+module CompletionDict exposing (..)
 
 import Array exposing (Array)
 import List

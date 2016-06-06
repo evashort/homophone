@@ -1,5 +1,3 @@
-module Tests where
-
 import ElmTest exposing (..)
 import List
 import String
@@ -7,6 +5,9 @@ import String
 import CompletionDict
 import BoundaryState exposing (sameSpaceCost, sameWordCost)
 import Repronounce exposing (Cache, adultWordLen)
+
+main : Program Never
+main = runSuite all
 
 all : Test
 all =

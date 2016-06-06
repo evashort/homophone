@@ -1,4 +1,4 @@
-module Pronouncer where
+module Pronouncer exposing (..)
 
 import List
 import String
@@ -14,10 +14,11 @@ type ParseError
 
 parseErrorToString : ParseError -> String
 parseErrorToString err =
-  case err of
-    InvalidPair p ->
-      "\"" ++ p ++ "\" is not of the form \"spelling\tpronunciations\""
-    NotSorted -> "spellings are not in sorted order"
+  "error parsing pronouncer: " ++
+    case err of
+      InvalidPair p ->
+        "\"" ++ p ++ "\" is not of the form \"spelling\tpronunciations\""
+      NotSorted -> "spellings are not in sorted order"
 
 parse : String -> Result ParseError Pronouncer
 parse fileContents =

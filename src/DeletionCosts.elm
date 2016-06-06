@@ -1,4 +1,4 @@
-module DeletionCosts where
+module DeletionCosts exposing (..)
 
 import List
 
@@ -14,9 +14,11 @@ type ParseError
 
 parseErrorToString : ParseError -> String
 parseErrorToString err =
-  case err of
-    InvalidPricedString p -> "\"" ++ p ++ "\" is not of the form \"key=cost\""
-    NotSorted -> "keys are not in sorted order"
+  "error parsing deletions: " ++
+    case err of
+      InvalidPricedString p ->
+        "\"" ++ p ++ "\" is not of the form \"key=cost\""
+      NotSorted -> "keys are not in sorted order"
 
 parse : String -> Result ParseError DeletionCosts
 parse fileContents =

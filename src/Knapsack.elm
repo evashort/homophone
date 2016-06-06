@@ -1,4 +1,4 @@
-module Knapsack where
+module Knapsack exposing (..)
 
 import Dict exposing (Dict)
 import Random

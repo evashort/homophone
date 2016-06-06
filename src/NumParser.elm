@@ -1,4 +1,4 @@
-module NumParser where
+module NumParser exposing (..)
 
 import Char
 import List

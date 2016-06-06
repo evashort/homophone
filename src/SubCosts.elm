@@ -1,4 +1,4 @@
-module SubCosts where
+module SubCosts exposing (..)
 
 import List
 import String
@@ -17,12 +17,13 @@ type ParseError
 
 parseErrorToString : ParseError -> String
 parseErrorToString err =
-  case err of
-    InvalidPricedString p ->
-      "\"" ++ p ++ "\" is not of the form \"value=cost\""
-    NoValues k -> "no values for key \"" ++ k ++ "\""
-    KeyEqualsValue k -> "key \"" ++ k ++ "\" has identical value"
-    NotSorted -> "keys are not in sorted order"
+  "error parsing substitutions: " ++
+    case err of
+      InvalidPricedString p ->
+        "\"" ++ p ++ "\" is not of the form \"value=cost\""
+      NoValues k -> "no values for key \"" ++ k ++ "\""
+      KeyEqualsValue k -> "key \"" ++ k ++ "\" has identical value"
+      NotSorted -> "keys are not in sorted order"
 
 parse : String -> Result ParseError SubCosts
 parse fileContents =

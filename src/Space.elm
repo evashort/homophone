@@ -1,4 +1,4 @@
-module Space where
+module Space exposing (..)
 
 type alias Space = (Int, Int, Int, Int)
 

@@ -1,4 +1,4 @@
-module PrioritySet where
+module PrioritySet exposing (..)
 
 import List
 import PairingHeap exposing (PairingHeap)
