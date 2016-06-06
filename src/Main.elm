@@ -5,6 +5,7 @@ import Html.Events as Events
 import Html.Attributes as Attributes
 import Http
 import Json.Decode
+import Process
 import Random
 import String
 import Task
@@ -185,13 +186,7 @@ update action model =
                     }
                   , if Rack.done rack then mappedSubEffect
                     else
-                      Cmd.batch
-                        [ mappedSubEffect
-                        , Task.perform
-                            never
-                            identity <|
-                            Task.succeed RespellText
-                        ]
+                      Cmd.batch [ mappedSubEffect, yieldAndThen RespellText ]
                   )
               _ -> ({ model | dataLoader = newDataLoader }, mappedSubEffect)
     EditText newUserText ->
@@ -202,9 +197,7 @@ update action model =
           ( { model
             | userText = Respelled <| Rack.setGoal newUserText rack
             }
-          , if Rack.done rack then
-               Task.perform never identity <| Task.succeed RespellText
-            else Cmd.none
+          , if Rack.done rack then yieldAndThen RespellText else Cmd.none
           )
     RespellText ->
       case model.userText of
@@ -216,7 +209,7 @@ update action model =
                 else
                   Debug.crash <|
                     "no solution for \"" ++ Rack.goal newRack ++ "\""
-              else Task.perform never identity <| Task.succeed RespellText
+              else yieldAndThen RespellText
             )
         RawText _ -> Debug.crash "RespellText action before data loaded"
     HideInput -> ({ model | hidden = True }, Cmd.none)
@@ -242,5 +235,7 @@ update action model =
             else Debug.crash "still in progress after maxInt iterations"
         _ -> Debug.crash "RefreshText action before data loaded"
 
-never : Never -> a
-never n = never n
+yieldAndThen : msg -> Cmd msg
+yieldAndThen =
+  Task.perform identity identity <<
+    Task.andThen (Process.sleep 0.0) << always << Task.succeed
