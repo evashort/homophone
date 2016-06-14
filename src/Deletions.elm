@@ -26,12 +26,14 @@ getDeletions dCosts dag i =
   let
     knapsacks =
       Dict.values <|
-        fst <|
-          Knapsack.getKnapsacks
-            stateKey
-            (deletionChoices dCosts dag)
-            Random.maxInt
-            (Knapsack.emptyCache stateKey { i = i, kLen = 0 })
+        Knapsack.knapsacks <|
+          fst <|
+            Knapsack.update
+              Random.maxInt <|
+              Knapsack.singleton
+                stateKey
+                (deletionChoices dCosts dag)
+                { i = i, kLen = 0 }
   in
     { list = List.map toDeletionChoice knapsacks
     , peak = force <| List.maximum <| List.map .peak knapsacks

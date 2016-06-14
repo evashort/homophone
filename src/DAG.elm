@@ -48,12 +48,12 @@ spaceInRange start end dag =
 getSpace : Int -> DAG -> Maybe Int
 getSpace i dag = Array.get i dag.spaces
 
+empty : DAG
+empty = { nodes = Array.fromList [[]], spaces = Array.fromList [0] }
+
 fromPathLists : List PathList -> DAG
 fromPathLists pathLists =
-  List.foldl
-    appendPathList
-    { nodes = Array.fromList [[]], spaces = Array.fromList [0] }
-    pathLists
+  List.foldl appendPathList empty pathLists
 
 appendPathList : PathList -> DAG -> DAG
 appendPathList pathList dag =

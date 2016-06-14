@@ -12,6 +12,15 @@ type alias PrioritySet comparable =
 empty : PrioritySet comparable
 empty = { heap = PairingHeap.empty, set = Set.empty }
 
+singleton : comparable -> PrioritySet comparable
+singleton k =
+  { heap = PairingHeap.insert (k, ()) PairingHeap.empty
+  , set = Set.singleton k
+  }
+
+isEmpty : PrioritySet comparable -> Bool
+isEmpty s = Set.isEmpty s.set
+
 insert : comparable -> PrioritySet comparable -> PrioritySet comparable
 insert k s =
   if Set.member k s.set then s

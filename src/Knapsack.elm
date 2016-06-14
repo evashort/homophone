@@ -18,62 +18,66 @@ type alias Knapsack s =
   , peak : Int
   }
 
-emptyCache : (s -> comparable) -> s -> Dict comparable (Knapsack s)
-emptyCache keyFunc state =
-  Dict.singleton
-    (keyFunc state)
-    { state = state, ancestors = [], cost = 0.0, peak = Random.maxInt }
-
 mapPeaks :
   (Int -> Int) -> Dict comparable (Knapsack s) -> Dict comparable (Knapsack s)
-mapPeaks f cache = Dict.map (curry <| mapPeak f << snd) cache
+mapPeaks f knapsacks = Dict.map (curry <| mapPeak f << snd) knapsacks
 
 mapPeak : (Int -> Int) -> Knapsack s -> Knapsack s
 mapPeak f knapsack = { knapsack | peak = f knapsack.peak }
 
-getKnapsacks :
-  (s -> comparable) -> (comparable -> PeakedList (Priced s)) -> Int ->
-    Dict comparable (Knapsack s) -> (Dict comparable (Knapsack s), Int)
-getKnapsacks keyFunc successorFunc iterations cache =
-  let
-    fringe =
-      PrioritySet.fromList <|
-        Dict.keys <|
-          Dict.filter (curry <| (==) Random.maxInt << .peak << snd) cache
-  in
-    knapsackHelper keyFunc successorFunc iterations fringe cache
-
-done : Dict comparable (Knapsack s) -> Bool
-done = Dict.foldl alsoNotOnFringe True
-
-alsoNotOnFringe : comparable -> Knapsack s -> Bool -> Bool
-alsoNotOnFringe _ knapsack noneOnFringe =
-  noneOnFringe && knapsack.peak /= Random.maxInt
-
-toChild : List s -> Float -> Priced s -> Knapsack s
-toChild ancestors parentCost pricedState =
-  { state = pricedState.state
-  , ancestors = ancestors
-  , cost = parentCost + pricedState.cost
-  , peak = Random.maxInt
+type alias Search comparable s =
+  { knapsacks : Dict comparable (Knapsack s)
+  , fringe : PrioritySet comparable
+  , keyFunc : s -> comparable
+  , successorFunc : comparable -> PeakedList (Priced s)
   }
 
-knapsackHelper :
-  (s -> comparable) -> (comparable -> PeakedList (Priced s)) -> Int ->
-    PrioritySet comparable -> Dict comparable (Knapsack s) ->
-    (Dict comparable (Knapsack s), Int)
-knapsackHelper keyFunc successorFunc iterations fringe knapsacks =
-  if iterations <= 0 then (knapsacks, iterations)
+singleton :
+  (s -> comparable) -> (comparable -> PeakedList (Priced s)) -> s ->
+    Search comparable s
+singleton keyFunc successorFunc state =
+  let key = keyFunc state in
+    { knapsacks =
+        Dict.singleton
+          key
+          { state = state, ancestors = [], cost = 0.0, peak = Random.maxInt }
+    , fringe = PrioritySet.singleton key
+    , keyFunc = keyFunc
+    , successorFunc = successorFunc
+    }
+
+init :
+  (s -> comparable) -> (comparable -> PeakedList (Priced s)) ->
+    Dict comparable (Knapsack s) -> Search comparable s
+init keyFunc successorFunc knapsacks =
+  { knapsacks = knapsacks
+  , fringe =
+      PrioritySet.fromList <|
+        Dict.keys <|
+          Dict.filter (curry <| (==) Random.maxInt << .peak << snd) knapsacks
+  , keyFunc = keyFunc
+  , successorFunc = successorFunc
+  }
+
+knapsacks : Search comparable s -> Dict comparable (Knapsack s)
+knapsacks = .knapsacks
+
+done : Search comparable s -> Bool
+done search = PrioritySet.isEmpty search.fringe
+
+update : Int -> Search comparable s -> (Search comparable s, Int)
+update iterations search =
+  if iterations <= 0 then (search, iterations)
   else
-    case PrioritySet.findMin fringe of
-      Nothing -> (knapsacks, iterations)
+    case PrioritySet.findMin search.fringe of
+      Nothing -> (search, iterations)
       Just key ->
-        case Dict.get key knapsacks of
+        case Dict.get key search.knapsacks of
           Nothing -> Debug.crash "fringe key not found in knapsacks"
           Just knapsack ->
             let
               ancestors = knapsack.state :: knapsack.ancestors
-              peakedSuccessors = successorFunc key
+              peakedSuccessors = search.successorFunc key
             in let
               successors =
                 List.map
@@ -83,30 +87,41 @@ knapsackHelper keyFunc successorFunc iterations fringe knapsacks =
                 Dict.insert
                   key
                   { knapsack | peak = peakedSuccessors.peak }
-                  knapsacks
-            in let
-              (newFringe, newKnapsacks) =
-                List.foldl
-                  (insertKnapsack keyFunc)
-                  (PrioritySet.deleteMin fringe, raisedKnapsacks)
-                  successors
+                  search.knapsacks
             in
-              knapsackHelper
-                keyFunc successorFunc (iterations - 1) newFringe newKnapsacks
+              update
+                (iterations - 1) <|
+                List.foldl
+                  insertKnapsack
+                  { search
+                  | fringe = PrioritySet.deleteMin search.fringe
+                  , knapsacks = raisedKnapsacks
+                  }
+                  successors
 
-insertKnapsack :
-  (s -> comparable) -> Knapsack s ->
-    (PrioritySet comparable, Dict comparable (Knapsack s)) ->
-    (PrioritySet comparable, Dict comparable (Knapsack s))
-insertKnapsack keyFunc knapsack (fringe, knapsacks) =
+toChild : List s -> Float -> Priced s -> Knapsack s
+toChild ancestors parentCost pricedState =
+  { state = pricedState.state
+  , ancestors = ancestors
+  , cost = parentCost + pricedState.cost
+  , peak = Random.maxInt
+  }
+
+insertKnapsack : Knapsack s -> Search comparable s -> Search comparable s
+insertKnapsack knapsack search =
   let
-    key = keyFunc knapsack.state
+    key = search.keyFunc knapsack.state
   in let
     shouldInsert =
       Maybe.withDefault
         True <|
-        Maybe.map ((<) knapsack.cost << .cost) <| Dict.get key knapsacks
+        Maybe.map
+          ((<) knapsack.cost << .cost) <|
+          Dict.get key search.knapsacks
   in
     if shouldInsert then
-      ( PrioritySet.insert key fringe, Dict.insert key knapsack knapsacks )
-    else (fringe, knapsacks)
+      { search
+      | fringe = PrioritySet.insert key search.fringe
+      , knapsacks = Dict.insert key knapsack search.knapsacks
+      }
+    else search

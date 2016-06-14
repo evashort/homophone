@@ -12,7 +12,7 @@ import CompletionDict exposing (CompletionDict)
 import DAG exposing (DAG)
 import DeletionCosts exposing (DeletionCosts)
 import Deletions exposing (DeletionChoice)
-import Knapsack exposing (Priced, Knapsack)
+import Knapsack exposing (Priced, Knapsack, Search)
 import PeakedList exposing (PeakedList)
 import Space exposing (Space)
 import SubCosts exposing (SubCosts)
@@ -25,38 +25,53 @@ adultWordLen = 5    -- considered a "kid" and its cost stops decreasing in
                     -- from slipping through the cracks because they're too
                     -- short for the cost to be significant
 
+type alias StateKey = (Int, String, Int, List Space, CBool, CBool)
+
+type Goal
+  = WordListsGoal
+      { wordLists : List (List String)
+      , knapsacks : Dict StateKey (Knapsack State)
+      }
+  | DAGGoal { dag : DAG, search : Search StateKey State }
+
 type alias Cache =
   { dCosts : DeletionCosts
   , sCosts : SubCosts
   , wCosts : WordCosts
-  , knapsacks :
-      Dict (Int, String, Int, List Space, CBool, CBool) (Knapsack State)
   , wordLists : List (List String)
-  , dag : DAG
-  , newWordLists : List (List String)
+  , goal : Goal
+  , pronunciation : List String
+  , remainingPhonemes : Int
+  , cost : Float
   }
 
 init : DeletionCosts -> SubCosts -> WordCosts -> Cache
 init dCosts sCosts wCosts =
-  fst <|
-    update -- to start off as done, we need one interation to get the
-      2 <| -- i=0 state, and another to determine that it has no successors
+  fst <|               -- to start off as done, we need one iteration to get
+    update             -- the i=0 state, and another to determine that it has
+      Random.maxInt <| -- no successors. for test cases, we may need more.
       { dCosts = dCosts
       , sCosts = sCosts
       , wCosts = wCosts
-      , knapsacks =
-          Knapsack.emptyCache
-            stateKey
-            { word = Nothing
-            , i = -1
-            , leftovers = ""
-            , kLen = 0
-            , spaces = Nothing
-            , startSpace = False
-            }
       , wordLists = []
-      , dag = DAG.fromPathLists []
-      , newWordLists = []
+      , goal =
+          DAGGoal
+            { dag = DAG.empty
+            , search =
+                Knapsack.singleton
+                  stateKey
+                  (getSuccessors dCosts sCosts wCosts DAG.empty)
+                  { word = Nothing
+                  , i = -1
+                  , leftovers = ""
+                  , kLen = 0
+                  , spaces = Nothing
+                  , startSpace = False
+                  }
+            }
+        , pronunciation = []
+        , remainingPhonemes = 0
+        , cost = 0.0
       }
 
 type alias State =
@@ -69,76 +84,96 @@ type alias State =
   }
 
 setGoal : List (List String) -> Cache -> Cache
-setGoal wordLists cache = { cache | newWordLists = wordLists }
+setGoal wordLists cache =
+  { cache
+  | goal =
+      WordListsGoal <|
+        case cache.goal of
+          WordListsGoal goal -> { goal | wordLists = wordLists }
+          DAGGoal goal ->
+            { wordLists = wordLists
+            , knapsacks = Knapsack.knapsacks goal.search
+            }
+  }
 
 update : Int -> Cache -> (Cache, Int)
 update iterations cache =
   let
-    dag = DAG.fromPathLists cache.newWordLists
-    reusedWords =
-      firstTrue <| List.map2 (/=) cache.newWordLists cache.wordLists
+    dag =
+      case cache.goal of
+        WordListsGoal goal -> DAG.fromPathLists goal.wordLists
+        DAGGoal goal -> goal.dag
   in let
-    cutoff = force <| DAG.getSpace reusedWords dag
-    newWords = List.length cache.newWordLists - reusedWords
+    search =
+      case cache.goal of
+        WordListsGoal goal ->
+          let
+            reusedWords =
+              firstTrue <| List.map2 (/=) goal.wordLists cache.wordLists
+          in let
+            seaLevel = force <| DAG.getSpace reusedWords dag
+          in let
+            reusedKnapsacks =
+              Dict.filter
+                (curry <| (>=) seaLevel << fst6 << fst)
+                goal.knapsacks
+          in
+            Knapsack.init
+              stateKey
+              (getSuccessors cache.dCosts cache.sCosts cache.wCosts dag) <|
+              if List.length goal.wordLists > reusedWords then
+                Knapsack.mapPeaks (growPlants seaLevel) reusedKnapsacks
+              else reusedKnapsacks
+        DAGGoal goal -> goal.search
   in let
-    reusedKnapsacks =
-      Dict.filter (curry <| (>=) cutoff << fst6 << fst) cache.knapsacks
-    seaLevel = if newWords > 0 then cutoff else Random.maxInt
+    (newSearch, remainingIterations) = Knapsack.update iterations search
   in let
-    (knapsacks, remainingIterations) =
-      Knapsack.getKnapsacks
-        stateKey
-        (getSuccessors cache.dCosts cache.sCosts cache.wCosts dag)
-        iterations <|
-        Knapsack.mapPeaks (growPlants seaLevel) reusedKnapsacks
+    wordEndKeys =
+      Array.filter
+        (flip Dict.member <| Knapsack.knapsacks newSearch) <|
+        Array.map toFinalKey dag.spaces
+  in let
+    finalKey = force <| Array.get (Array.length wordEndKeys - 1) wordEndKeys
+  in let
+    finalKnapsack = force <| Dict.get finalKey <| Knapsack.knapsacks newSearch
   in
     ( { cache
-      | knapsacks = knapsacks
-      , wordLists = cache.newWordLists
-      , dag = dag
+      | wordLists =
+          case cache.goal of
+            WordListsGoal goal -> goal.wordLists
+            DAGGoal _ -> cache.wordLists
+      , goal = DAGGoal { dag = dag, search = newSearch }
+      , pronunciation =
+          List.reverse <|
+            List.filterMap
+              .word <|
+              finalKnapsack.state :: finalKnapsack.ancestors
+      , remainingPhonemes = DAG.length dag - 1 - fst6 finalKey
+      , cost = finalKnapsack.cost
       }
     , remainingIterations
     )
 
 done : Cache -> Bool
 done cache =
-  cache.newWordLists == cache.wordLists && Knapsack.done cache.knapsacks
+  case cache.goal of
+    WordListsGoal _ -> False
+    DAGGoal goal -> Knapsack.done goal.search
 
 complete : Cache -> Bool
 complete cache =
-  cache.newWordLists == cache.wordLists &&
-    Dict.member (toFinalKey <| DAG.length cache.dag - 1) cache.knapsacks
+  case cache.goal of
+    WordListsGoal _ -> False
+    DAGGoal _ -> cache.remainingPhonemes == 0
 
 remainingPhonemes : Cache -> Int
-remainingPhonemes cache = DAG.length cache.dag - 1 - fst6 (finalKey cache)
+remainingPhonemes = .remainingPhonemes
 
 pronunciation : Cache -> List String
-pronunciation cache =
-  let knapsack = finalKnapsack cache in
-    List.reverse <|
-      List.filterMap .word <| knapsack.state :: knapsack.ancestors
+pronunciation = .pronunciation
 
 cost : Cache -> Float
-cost = .cost << finalKnapsack
-
-finalKnapsack : Cache -> Knapsack State
-finalKnapsack cache = force <| Dict.get (finalKey cache) cache.knapsacks
-
-finalKey : Cache -> (Int, String, Int, List Space, CBool, CBool)
-finalKey cache =
-  let
-    wordEndKeys =
-      Array.filter
-        (flip Dict.member cache.knapsacks) <|
-        Array.map toFinalKey cache.dag.spaces
-  in
-    force <| Array.get (Array.length wordEndKeys - 1) wordEndKeys
-
-toFinalKey : Int -> (Int, String, Int, List Space, CBool, CBool)
-toFinalKey i = (i, "", 0, [], CBool.cFalse, CBool.cTrue)
-
-fst6 : (a, b, c, d, e, f) -> a
-fst6 (x, _, _, _, _, _) = x
+cost = .cost
 
 firstTrue : List Bool -> Int
 firstTrue a =
@@ -152,8 +187,14 @@ force maybeX =
     Just x -> x
     Nothing -> Debug.crash "expected Maybe to have a value"
 
+fst6 : (a, b, c, d, e, f) -> a
+fst6 (x, _, _, _, _, _) = x
+
 growPlants : Int -> Int -> Int
 growPlants seaLevel peak = if peak >= seaLevel then Random.maxInt else peak
+
+toFinalKey : Int -> StateKey
+toFinalKey i = (i, "", 0, [], CBool.cFalse, CBool.cTrue)
 
 initialDeletions : DeletionCosts -> DAG -> PeakedList (Priced State)
 initialDeletions dCosts dag =
@@ -172,7 +213,7 @@ deletionToState deletion =
   , cost = deletion.cost
   }
 
-stateKey : State -> (Int, String, Int, List Space, CBool, CBool)
+stateKey : State -> StateKey
 stateKey state =
   ( state.i
   , state.leftovers
@@ -183,8 +224,8 @@ stateKey state =
   )
 
 getSuccessors :
-  DeletionCosts -> SubCosts -> WordCosts -> DAG ->
-    (Int, String, Int, List Space, CBool, CBool) -> PeakedList (Priced State)
+  DeletionCosts -> SubCosts -> WordCosts -> DAG -> StateKey ->
+    PeakedList (Priced State)
 getSuccessors
   dCosts sCosts wCosts dag
     (i, leftovers, kLen, ghostlySpaces, cHasKey, cStartSpace) =

@@ -20,6 +20,7 @@ type alias Cache =
   , speller : Speller
   , cache : Repronounce.Cache
   , textUnits : List TextUnit
+  , goal : String
   }
 
 init :
@@ -29,6 +30,7 @@ init pronouncer speller dCosts sCosts wCosts =
   , speller = speller
   , cache = Repronounce.init dCosts sCosts wCosts
   , textUnits = []
+  , goal = ""
   }
 
 setGoal : String -> Cache -> Cache
@@ -38,10 +40,11 @@ setGoal text cache =
     | cache =
         Repronounce.setGoal (List.concatMap .pathLists textUnits) cache.cache
     , textUnits = textUnits
+    , goal = text
     }
 
 goal : Cache -> String
-goal cache = String.concat <| List.map .spelling cache.textUnits
+goal = .goal
 
 update : Int -> Cache -> (Cache, Int)
 update iterations cache =
@@ -68,7 +71,7 @@ spelling cache =
         (force << (flip CompletionDict.get) cache.speller) <|
         Repronounce.pronunciation cache.cache
   ) ++
-    if Repronounce.done cache.cache then "\n"
+    if done cache then "\n"
     else
       String.repeat
         (dotCount <| Repronounce.remainingPhonemes cache.cache)
