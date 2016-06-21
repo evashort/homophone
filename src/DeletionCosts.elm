@@ -1,9 +1,10 @@
-module DeletionCosts exposing (..)
+module DeletionCosts exposing
+  (DeletionCosts, ParseError, parseErrorToString, parse)
 
 import List
 
 import CompletionDict exposing (CompletionDict)
-import Parser
+import ParseUtils
 import PricedString exposing (PricedString)
 
 type alias DeletionCosts = CompletionDict Float
@@ -28,8 +29,8 @@ parse fileContents =
 
 parsePricedDeletions : String -> Result ParseError (List PricedString)
 parsePricedDeletions fileContents =
-  Parser.foldResults <|
-    List.map parsePricedDeletion <| Parser.nonEmptyLines fileContents
+  ParseUtils.foldResults <|
+    List.map parsePricedDeletion <| ParseUtils.nonEmptyLines fileContents
 
 parsePricedDeletion : String -> Result ParseError PricedString
 parsePricedDeletion text =

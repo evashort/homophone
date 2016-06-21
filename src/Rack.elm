@@ -1,22 +1,23 @@
-module Rack exposing (..)
+module Rack exposing
+  (Rack, init, setGoal, goal, update, done, complete, costs, spelling, view)
 
 import Html exposing (Html)
 import String
 
 import DeletionCosts exposing (DeletionCosts)
 import Pronouncer exposing (Pronouncer)
-import Respell exposing (Cache)
+import Shelf exposing (Shelf)
 import SubCosts exposing (SubCosts)
 import WordCosts exposing (Speller, WordCosts)
 
 type alias Rack =
-  { prototype : Cache
-  , shelves : List Cache
+  { prototype : Shelf
+  , shelves : List Shelf
   }
 
 init : Pronouncer -> Speller -> DeletionCosts -> SubCosts -> WordCosts -> Rack
 init pronouncer speller dCosts sCosts wCosts =
-  let prototype = Respell.init pronouncer speller dCosts sCosts wCosts in
+  let prototype = Shelf.init pronouncer speller dCosts sCosts wCosts in
     { prototype = prototype, shelves = [ prototype ] }
 
 setGoal : String -> Rack -> Rack
@@ -26,14 +27,14 @@ setGoal text rack =
       let
         (topShelves, _, laterShelves, laterLines) =
           splitOnTrue2
-            ((/=) << Respell.goal)
+            ((/=) << Shelf.goal)
             rack.shelves <|
             String.lines text
       in let
         (bottomShelves, _, midShelves, midLines) =
           reverse4 <|
             splitOnTrue2
-              ((/=) << Respell.goal)
+              ((/=) << Shelf.goal)
               (List.reverse laterShelves) <|
               List.reverse laterLines
       in let
@@ -42,9 +43,9 @@ setGoal text rack =
             (List.head midShelves, List.head midLines, List.tail midLines)
           of
             (Just changedShelf, Just changedLine, Just newLines) ->
-              Respell.setGoal changedLine changedShelf ::
-                List.map (flip Respell.setGoal rack.prototype) newLines
-            _ -> List.map (flip Respell.setGoal rack.prototype) midLines
+              Shelf.setGoal changedLine changedShelf ::
+                List.map (flip Shelf.setGoal rack.prototype) newLines
+            _ -> List.map (flip Shelf.setGoal rack.prototype) midLines
       in
         topShelves ++ newMidShelves ++ bottomShelves
   }
@@ -69,7 +70,7 @@ reverse4 (l1, l2, l3, l4) =
   (List.reverse l1, List.reverse l2, List.reverse l3, List.reverse l4)
 
 goal : Rack -> String
-goal = String.join "\n" << List.map Respell.goal << .shelves
+goal = String.join "\n" << List.map Shelf.goal << .shelves
 
 update : Int -> Rack -> (Rack, Int)
 update iterations rack =
@@ -79,22 +80,22 @@ update iterations rack =
   in
     ({ rack | shelves = List.reverse newShelves }, remainingIterations)
 
-updateShelf : Cache -> (List Cache, Int) -> (List Cache, Int)
+updateShelf : Shelf -> (List Shelf, Int) -> (List Shelf, Int)
 updateShelf shelf (newShelves, iterations) =
-  let (newShelf, remainingIterations) = Respell.update iterations shelf in
+  let (newShelf, remainingIterations) = Shelf.update iterations shelf in
     (newShelf :: newShelves, remainingIterations)
 
 done : Rack -> Bool
-done = List.foldl (&&) True << List.map Respell.done << .shelves
+done = List.foldl (&&) True << List.map Shelf.done << .shelves
 
 complete : Rack -> Bool
-complete = List.foldl (&&) True << List.map Respell.complete << .shelves
+complete = List.foldl (&&) True << List.map Shelf.complete << .shelves
 
 costs : Rack -> List Float
-costs = List.map Respell.cost << .shelves
+costs = List.map Shelf.cost << .shelves
 
 spelling : Rack -> String
-spelling = String.concat << List.map Respell.spelling << .shelves
+spelling = String.concat << List.map Shelf.spelling << .shelves
 
 view : Rack -> List (Html msg)
-view = List.concatMap Respell.view << .shelves
+view = List.concatMap Shelf.view << .shelves

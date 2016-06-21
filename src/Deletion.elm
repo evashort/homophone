@@ -1,4 +1,4 @@
-module Deletions exposing (..)
+module Deletion exposing (Deletion, getChoices)
 
 import Dict
 import Random
@@ -7,10 +7,10 @@ import String
 import CompletionDict exposing (CompletionDict)
 import DAG exposing (DAG, Edge)
 import DeletionCosts exposing (DeletionCosts)
-import Knapsack exposing (Priced, Knapsack)
+import Search exposing (Priced, Knapsack)
 import PeakedList exposing (PeakedList)
 
-type alias DeletionChoice =
+type alias Deletion =
   { i : Int
   , kLen : Int
   , cost : Float
@@ -21,21 +21,21 @@ type alias State =
   , kLen : Int
   }
 
-getDeletions : DeletionCosts -> DAG -> Int -> PeakedList DeletionChoice
-getDeletions dCosts dag i =
+getChoices : DeletionCosts -> DAG -> Int -> PeakedList Deletion
+getChoices dCosts dag i =
   let
     knapsacks =
       Dict.values <|
-        Knapsack.knapsacks <|
+        Search.knapsacks <|
           fst <|
-            Knapsack.update
+            Search.update
               Random.maxInt <|
-              Knapsack.singleton
+              Search.singleton
                 stateKey
-                (deletionChoices dCosts dag)
+                (getSuccessors dCosts dag)
                 { i = i, kLen = 0 }
   in
-    { list = List.map toDeletionChoice knapsacks
+    { list = List.map toDeletion knapsacks
     , peak = force <| List.maximum <| List.map .peak knapsacks
     }
 
@@ -45,8 +45,8 @@ force maybeX =
     Just x -> x
     Nothing -> Debug.crash "expected Maybe to have a value"
 
-toDeletionChoice : Knapsack State -> DeletionChoice
-toDeletionChoice knapsack =
+toDeletion : Knapsack State -> Deletion
+toDeletion knapsack =
   { i = knapsack.state.i
   , kLen = knapsack.state.kLen
   , cost = knapsack.cost
@@ -55,16 +55,17 @@ toDeletionChoice knapsack =
 stateKey : State -> (Int, Int)
 stateKey state = (state.i, state.kLen)
 
-deletionChoices :
+getSuccessors :
   DeletionCosts -> DAG -> (Int, Int) -> PeakedList (Priced State)
-deletionChoices dCosts dag (i, kLen) =
+getSuccessors dCosts dag (i, kLen) =
   PeakedList.concatMap
-    i (deletionChoicesHelper dCosts dag kLen "") <|
+    i
+    (getSuccessorsHelper dCosts dag kLen "") <|
     DAG.get i dag
 
-deletionChoicesHelper :
+getSuccessorsHelper :
   DeletionCosts -> DAG -> Int -> String -> Edge -> PeakedList (Priced State)
-deletionChoicesHelper dCosts dag kLen key edge =
+getSuccessorsHelper dCosts dag kLen key edge =
   let
     newKey = key ++ String.fromChar edge.phoneme
   in let
@@ -72,7 +73,7 @@ deletionChoicesHelper dCosts dag kLen key edge =
       if CompletionDict.startWith newKey dCosts then
         PeakedList.concatMap
           edge.dst
-          (deletionChoicesHelper dCosts dag kLen newKey) <|
+          (getSuccessorsHelper dCosts dag kLen newKey) <|
           DAG.get edge.dst dag
       else PeakedList.empty
   in

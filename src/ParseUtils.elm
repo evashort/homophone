@@ -1,4 +1,4 @@
-module Parser exposing (..)
+module ParseUtils exposing (nonEmptyLines, foldResults, split2, split3)
 
 import List
 import String

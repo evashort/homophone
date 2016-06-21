@@ -1,4 +1,4 @@
-module Bisect exposing (..)
+module Bisect exposing (bisectLeft, bisectRight)
 
 import Array exposing (Array)
 

@@ -1,10 +1,10 @@
-module Pronouncer exposing (..)
+module Pronouncer exposing (Pronouncer, ParseError, parseErrorToString, parse)
 
 import List
 import String
 
 import CompletionDict exposing (CompletionDict)
-import Parser
+import ParseUtils
 
 type alias Pronouncer = CompletionDict (List String)
 
@@ -28,14 +28,14 @@ parse fileContents =
 
 parsePairs : String -> Result ParseError (List (String, List String))
 parsePairs fileContents =
-  Parser.foldResults <|
-    List.map parsePair <| Parser.nonEmptyLines fileContents
+  ParseUtils.foldResults <|
+    List.map parsePair <| ParseUtils.nonEmptyLines fileContents
 
 parsePair : String -> Result ParseError (String, List String)
 parsePair text =
   Result.fromMaybe
     (InvalidPair text) <|
-    case Parser.split2 "\t" text of
+    case ParseUtils.split2 "\t" text of
       Nothing -> Nothing
       Just ("", _) -> Nothing
       Just (spelling, wordChoicesString) ->

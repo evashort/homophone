@@ -1,18 +1,16 @@
-import Char
 import Html exposing (Html)
 import Html.App
 import Html.Events as Events
 import Html.Attributes as Attributes
-import Http
 import Json.Decode
 import Process
 import Random
-import String
 import Task
 
 import DataLoader
 import Rack exposing (Rack)
 
+main : Program Never
 main =
   Html.App.program
     { init = init

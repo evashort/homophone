@@ -1,10 +1,11 @@
-module WordCosts exposing (..)
+module WordCosts exposing
+  (Speller, WordCosts, ParseError, parseErrorToString, parse)
 
 import List
 import String
 
 import CompletionDict exposing (CompletionDict)
-import Parser
+import ParseUtils
 
 costMultiplier : Float
 costMultiplier = 1.5 / 25784.0
@@ -41,14 +42,14 @@ parse fileContents =
 
 parseTriplets : String -> Result ParseError (List (String, (String, Float)))
 parseTriplets fileContents =
-  Parser.foldResults <|
-    List.map parseTriplet <| Parser.nonEmptyLines fileContents
+  ParseUtils.foldResults <|
+    List.map parseTriplet <| ParseUtils.nonEmptyLines fileContents
 
 parseTriplet : String -> Result ParseError (String, (String, Float))
 parseTriplet text =
   Result.fromMaybe
     (InvalidTriplet text) <|
-    case Parser.split3 "\t" text of
+    case ParseUtils.split3 "\t" text of
       Nothing -> Nothing
       Just ("", _, _) -> Nothing
       Just (_, _, "") -> Nothing

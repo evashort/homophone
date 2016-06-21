@@ -1,15 +1,13 @@
-module Knapsack exposing (..)
+module Search exposing
+  ( Knapsack, mapPeaks, Priced, Search, singleton, init, knapsacks, done
+  , update
+  )
 
 import Dict exposing (Dict)
 import Random
 
 import PeakedList exposing (PeakedList)
 import PrioritySet exposing (PrioritySet)
-
-type alias Priced s =
-  { state : s
-  , cost : Float
-  }
 
 type alias Knapsack s =
   { state : s
@@ -24,6 +22,11 @@ mapPeaks f knapsacks = Dict.map (curry <| mapPeak f << snd) knapsacks
 
 mapPeak : (Int -> Int) -> Knapsack s -> Knapsack s
 mapPeak f knapsack = { knapsack | peak = f knapsack.peak }
+
+type alias Priced s =
+  { state : s
+  , cost : Float
+  }
 
 type alias Search comparable s =
   { knapsacks : Dict comparable (Knapsack s)

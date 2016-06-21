@@ -1,4 +1,7 @@
-module DAG exposing (..)
+module DAG exposing
+  ( DAG, Node, Edge, PathList, get, length, isSpace, spaceInRange, getSpace
+  , empty, fromPathLists
+  )
 
 import Array exposing (Array)
 import Bisect

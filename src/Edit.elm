@@ -1,4 +1,4 @@
-module Subs exposing (..)
+module Edit exposing (Edit, getChoices)
 
 import List
 import String
@@ -6,14 +6,14 @@ import String
 import CompletionDict exposing (CompletionDict)
 import DAG exposing (DAG, Edge)
 import DeletionCosts exposing (DeletionCosts)
-import Deletions exposing (DeletionChoice)
-import Knapsack exposing (Priced)
+import Deletion exposing (Deletion)
+import Search exposing (Priced)
 import PeakedList exposing (PeakedList)
 import PricedString exposing (PricedString)
 import Space exposing (Space)
 import SubCosts exposing (SubCosts)
 
-type alias SubChoice =
+type alias Edit =
   { value : String
   , kLen : Int
   , spaces : Maybe (List Space)
@@ -22,14 +22,14 @@ type alias SubChoice =
   , cost : Float
   }
 
-getSubChoices :
-  DeletionCosts -> SubCosts -> DAG -> Bool -> Int -> PeakedList SubChoice
-getSubChoices dCosts sCosts dag startSpace i =
+getChoices :
+  DeletionCosts -> SubCosts -> DAG -> Bool -> Int -> PeakedList Edit
+getChoices dCosts sCosts dag startSpace i =
   let
     rest =
       PeakedList.concatMap
         i
-        (subChoicesHelper dCosts sCosts dag "" [startSpace]) <|
+        (getChoicesHelper dCosts sCosts dag "" [startSpace]) <|
         DAG.get i dag
   in
     PeakedList.append
@@ -39,7 +39,7 @@ getSubChoices dCosts sCosts dag startSpace i =
       )
       rest
 
-toRabbit : Bool -> Int -> PricedString -> SubChoice
+toRabbit : Bool -> Int -> PricedString -> Edit
 toRabbit startSpace i (value, cost) =
   { value = value
   , kLen = 0
@@ -49,21 +49,21 @@ toRabbit startSpace i (value, cost) =
   , cost = cost
   }
 
-subChoicesHelper :
+getChoicesHelper :
   DeletionCosts -> SubCosts -> DAG -> String -> List Bool -> Edge ->
-    PeakedList SubChoice
-subChoicesHelper dCosts sCosts dag key rPins edge =
+    PeakedList Edit
+getChoicesHelper dCosts sCosts dag key rPins edge =
   let
     newKey = key ++ String.fromChar edge.phoneme
     newRPins = DAG.isSpace edge.dst dag :: rPins
   in let
     rest =
-      -- we don't have to modify startWith to account for identity subs because
-      -- newKey != ""
+      -- we don't have to modify startWith to account for identity subs
+      -- because newKey != ""
       if CompletionDict.startWith newKey sCosts then
         PeakedList.concatMap
           edge.dst
-          (subChoicesHelper dCosts sCosts dag newKey newRPins) <|
+          (getChoicesHelper dCosts sCosts dag newKey newRPins) <|
           DAG.get edge.dst dag
       else PeakedList.empty
   in
@@ -71,14 +71,14 @@ subChoicesHelper dCosts sCosts dag key rPins edge =
       Nothing -> rest
       Just valueChoices ->
         let
-          peakedDeletions = Deletions.getDeletions dCosts dag edge.dst
+          peakedDeletions = Deletion.getChoices dCosts dag edge.dst
           kLen = String.length newKey
         in
           PeakedList.raise
             peakedDeletions.peak <|
             PeakedList.append
               ( List.concatMap
-                  (toSubChoices dag rPins peakedDeletions.list edge.dst kLen)
+                  (toEdits dag rPins peakedDeletions.list edge.dst kLen)
                   valueChoices
               )
               rest
@@ -90,16 +90,13 @@ getValueChoices key sCosts =
       (key, 0.0) :: (Maybe.withDefault [] <| CompletionDict.get key sCosts)
   else CompletionDict.get key sCosts
 
-toSubChoices :
-  DAG -> List Bool -> List DeletionChoice -> Int -> Int -> PricedString ->
-    List SubChoice
-toSubChoices dag rPins deletions kEnd kLen pricedValue =
-  List.map (toSubChoice dag rPins pricedValue kEnd kLen) deletions
+toEdits :
+  DAG -> List Bool -> List Deletion -> Int -> Int -> PricedString -> List Edit
+toEdits dag rPins deletions kEnd kLen pricedValue =
+  List.map (toEdit dag rPins pricedValue kEnd kLen) deletions
 
-toSubChoice :
-  DAG -> List Bool -> PricedString -> Int -> Int -> DeletionChoice ->
-    SubChoice
-toSubChoice dag rPins (value, cost) kEnd kLen deletion =
+toEdit : DAG -> List Bool -> PricedString -> Int -> Int -> Deletion -> Edit
+toEdit dag rPins (value, cost) kEnd kLen deletion =
   let startSpace = DAG.spaceInRange kEnd deletion.i dag in
     { value = value
     , kLen = kLen + deletion.kLen

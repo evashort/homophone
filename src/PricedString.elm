@@ -1,8 +1,8 @@
-module PricedString exposing (..)
+module PricedString exposing (PricedString, parse)
 
 import String
 
-import Parser
+import ParseUtils
 
 costMultiplier : Float
 costMultiplier = 0.001
@@ -11,7 +11,7 @@ type alias PricedString = (String, Float)
 
 parse : String -> Maybe PricedString
 parse text =
-  case Parser.split2 "=" text of
+  case ParseUtils.split2 "=" text of
     Nothing -> Nothing
     Just ("", costString) -> Nothing
     Just (string, costString) ->

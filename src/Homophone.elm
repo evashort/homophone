@@ -1,4 +1,7 @@
-module Repronounce exposing (..)
+module Homophone exposing
+  ( adultWordLen, Homophone, init, setGoal, update, done, complete
+  , remainingPhonemes, pronunciation, cost
+  )
 
 import Array exposing (Array)
 import Dict exposing (Dict)
@@ -10,13 +13,13 @@ import BoundaryState exposing (BoundaryState)
 import CBool exposing (CBool)
 import CompletionDict exposing (CompletionDict)
 import DAG exposing (DAG)
+import Deletion exposing (Deletion)
 import DeletionCosts exposing (DeletionCosts)
-import Deletions exposing (DeletionChoice)
-import Knapsack exposing (Priced, Knapsack, Search)
+import Edit exposing (Edit)
 import PeakedList exposing (PeakedList)
+import Search exposing (Priced, Knapsack, Search)
 import Space exposing (Space)
 import SubCosts exposing (SubCosts)
-import Subs exposing (SubChoice)
 import WordCosts exposing (WordCosts)
 
 adultWordLen : Int  -- once a word is shorter than adultWordLen, it's
@@ -34,7 +37,7 @@ type Goal
       }
   | DAGGoal { dag : DAG, search : Search StateKey State }
 
-type alias Cache =
+type alias Homophone =
   { dCosts : DeletionCosts
   , sCosts : SubCosts
   , wCosts : WordCosts
@@ -45,7 +48,7 @@ type alias Cache =
   , cost : Float
   }
 
-init : DeletionCosts -> SubCosts -> WordCosts -> Cache
+init : DeletionCosts -> SubCosts -> WordCosts -> Homophone
 init dCosts sCosts wCosts =
   fst <|               -- to start off as done, we need one iteration to get
     update             -- the i=0 state, and another to determine that it has
@@ -58,7 +61,7 @@ init dCosts sCosts wCosts =
           DAGGoal
             { dag = DAG.empty
             , search =
-                Knapsack.singleton
+                Search.singleton
                   stateKey
                   (getSuccessors dCosts sCosts wCosts DAG.empty)
                   { word = Nothing
@@ -83,33 +86,33 @@ type alias State =
   , startSpace : Bool
   }
 
-setGoal : List (List String) -> Cache -> Cache
-setGoal wordLists cache =
-  { cache
+setGoal : List (List String) -> Homophone -> Homophone
+setGoal wordLists homophone =
+  { homophone
   | goal =
       WordListsGoal <|
-        case cache.goal of
+        case homophone.goal of
           WordListsGoal goal -> { goal | wordLists = wordLists }
           DAGGoal goal ->
             { wordLists = wordLists
-            , knapsacks = Knapsack.knapsacks goal.search
+            , knapsacks = Search.knapsacks goal.search
             }
   }
 
-update : Int -> Cache -> (Cache, Int)
-update iterations cache =
+update : Int -> Homophone -> (Homophone, Int)
+update iterations homophone =
   let
     dag =
-      case cache.goal of
+      case homophone.goal of
         WordListsGoal goal -> DAG.fromPathLists goal.wordLists
         DAGGoal goal -> goal.dag
   in let
     search =
-      case cache.goal of
+      case homophone.goal of
         WordListsGoal goal ->
           let
             reusedWords =
-              firstTrue <| List.map2 (/=) goal.wordLists cache.wordLists
+              firstTrue <| List.map2 (/=) goal.wordLists homophone.wordLists
           in let
             seaLevel = force <| DAG.getSpace reusedWords dag
           in let
@@ -118,30 +121,32 @@ update iterations cache =
                 (curry <| (>=) seaLevel << fst6 << fst)
                 goal.knapsacks
           in
-            Knapsack.init
+            Search.init
               stateKey
-              (getSuccessors cache.dCosts cache.sCosts cache.wCosts dag) <|
+              ( getSuccessors
+                  homophone.dCosts homophone.sCosts homophone.wCosts dag
+              ) <|
               if List.length goal.wordLists > reusedWords then
-                Knapsack.mapPeaks (growPlants seaLevel) reusedKnapsacks
+                Search.mapPeaks (growPlants seaLevel) reusedKnapsacks
               else reusedKnapsacks
         DAGGoal goal -> goal.search
   in let
-    (newSearch, remainingIterations) = Knapsack.update iterations search
+    (newSearch, remainingIterations) = Search.update iterations search
   in let
     wordEndKeys =
       Array.filter
-        (flip Dict.member <| Knapsack.knapsacks newSearch) <|
+        (flip Dict.member <| Search.knapsacks newSearch) <|
         Array.map toFinalKey dag.spaces
   in let
     finalKey = force <| Array.get (Array.length wordEndKeys - 1) wordEndKeys
   in let
-    finalKnapsack = force <| Dict.get finalKey <| Knapsack.knapsacks newSearch
+    finalKnapsack = force <| Dict.get finalKey <| Search.knapsacks newSearch
   in
-    ( { cache
+    ( { homophone
       | wordLists =
-          case cache.goal of
+          case homophone.goal of
             WordListsGoal goal -> goal.wordLists
-            DAGGoal _ -> cache.wordLists
+            DAGGoal _ -> homophone.wordLists
       , goal = DAGGoal { dag = dag, search = newSearch }
       , pronunciation =
           List.reverse <|
@@ -154,25 +159,25 @@ update iterations cache =
     , remainingIterations
     )
 
-done : Cache -> Bool
-done cache =
-  case cache.goal of
+done : Homophone -> Bool
+done homophone =
+  case homophone.goal of
     WordListsGoal _ -> False
-    DAGGoal goal -> Knapsack.done goal.search
+    DAGGoal goal -> Search.done goal.search
 
-complete : Cache -> Bool
-complete cache =
-  case cache.goal of
+complete : Homophone -> Bool
+complete homophone =
+  case homophone.goal of
     WordListsGoal _ -> False
-    DAGGoal _ -> cache.remainingPhonemes == 0
+    DAGGoal _ -> homophone.remainingPhonemes == 0
 
-remainingPhonemes : Cache -> Int
+remainingPhonemes : Homophone -> Int
 remainingPhonemes = .remainingPhonemes
 
-pronunciation : Cache -> List String
+pronunciation : Homophone -> List String
 pronunciation = .pronunciation
 
-cost : Cache -> Float
+cost : Homophone -> Float
 cost = .cost
 
 firstTrue : List Bool -> Int
@@ -198,9 +203,9 @@ toFinalKey i = (i, "", 0, [], CBool.cFalse, CBool.cTrue)
 
 initialDeletions : DeletionCosts -> DAG -> PeakedList (Priced State)
 initialDeletions dCosts dag =
-  PeakedList.map deletionToState <| Deletions.getDeletions dCosts dag 0
+  PeakedList.map deletionToState <| Deletion.getChoices dCosts dag 0
 
-deletionToState : DeletionChoice -> Priced State
+deletionToState : Deletion -> Priced State
 deletionToState deletion =
   { state =
       { word = Nothing
@@ -241,60 +246,59 @@ getSuccessors
       rest =
         if CompletionDict.startWith leftovers wCosts then
           let
-            peakedSubChoices =
-              Subs.getSubChoices dCosts sCosts dag startSpace i
+            peakedEdits = Edit.getChoices dCosts sCosts dag startSpace i
           in
             PeakedList.concatMap
-              peakedSubChoices.peak
-              ( getWordChoices
+              peakedEdits.peak
+              ( getSuccessorsHelper
                   dCosts sCosts wCosts dag leftovers newBState kLen i 0.0
               )
-              peakedSubChoices.list
+              peakedEdits.list
         else PeakedList.empty
     in
       PeakedList.append
         ( List.filterMap
-          ( toWordChoice
+          ( toSuccessor
               wCosts dag "" leftovers kLen spaces startSpace bState 0 i 0.0
           )
           [1..String.length leftovers]
         )
         rest
 
-getWordChoices :
+getSuccessorsHelper :
   DeletionCosts -> SubCosts -> WordCosts -> DAG -> String -> BoundaryState ->
-    Int -> Int -> Float -> SubChoice -> PeakedList (Priced State)
-getWordChoices dCosts sCosts wCosts dag word bState tKLen i cost subChoice =
+    Int -> Int -> Float -> Edit -> PeakedList (Priced State)
+getSuccessorsHelper
+  dCosts sCosts wCosts dag word bState tKLen i cost edit =
   let
-    value = subChoice.value
-    kLen = subChoice.kLen
-    spaces = subChoice.spaces
-    startSpace = subChoice.startSpace
+    value = edit.value
+    kLen = edit.kLen
+    spaces = edit.spaces
+    startSpace = edit.startSpace
   in let
     newWord = word ++ value
     newBState = BoundaryState.update (String.length value) spaces bState
     newTKLen = tKLen + kLen
-    newI = subChoice.i
-    newCost = cost + subChoice.cost
+    newI = edit.i
+    newCost = cost + edit.cost
   in let
     rest =
       if CompletionDict.startWith newWord wCosts then
         let
-          peakedSubChoices =
-            Subs.getSubChoices dCosts sCosts dag startSpace newI
+          peakedEdits = Edit.getChoices dCosts sCosts dag startSpace newI
         in
           PeakedList.concatMap
-            peakedSubChoices.peak
-            ( getWordChoices
+            peakedEdits.peak
+            ( getSuccessorsHelper
                 dCosts sCosts wCosts dag newWord newBState newTKLen newI
                   newCost
             )
-            peakedSubChoices.list
+            peakedEdits.list
       else PeakedList.empty
   in
     PeakedList.append
       ( List.filterMap
-          ( toWordChoice
+          ( toSuccessor
               wCosts dag word value kLen spaces startSpace bState tKLen newI
                 newCost
           )
@@ -302,10 +306,10 @@ getWordChoices dCosts sCosts wCosts dag word bState tKLen i cost subChoice =
       )
       rest
 
-toWordChoice :
+toSuccessor :
   WordCosts -> DAG -> String -> String -> Int -> Maybe (List Space) -> Bool ->
     BoundaryState -> Int -> Int -> Float -> Int -> Maybe (Priced State)
-toWordChoice
+toSuccessor
   wCosts dag word value kLen spaces startSpace bState tKLen i cost usedLen =
   let newWord = word ++ String.left usedLen value in
     case CompletionDict.get newWord wCosts of

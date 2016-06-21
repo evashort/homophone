@@ -1,4 +1,4 @@
-module CBool exposing (..)
+module CBool exposing (CBool, cFalse, cTrue, cBool, toBool)
 
 type alias CBool = Int
 

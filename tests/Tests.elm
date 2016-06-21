@@ -4,7 +4,7 @@ import String
 
 import CompletionDict
 import BoundaryState exposing (sameSpaceCost, sameWordCost)
-import Repronounce exposing (Cache, adultWordLen)
+import Homophone exposing (Homophone, adultWordLen)
 
 main : Program Never
 main = runSuite all
@@ -34,7 +34,7 @@ all =
         "it avoids double sameSpaceCost even when the space is cushioned by deletions" <|
         assertEqual
           (Just (["boaton"], t <| 3.9 * sameSpaceCost)) <|
-          respellExample
+          homophoneExample
             [["bo"], ["ah"], ["up"], ["on"]]
             [("boa", 0.0), ("boah", 0.0), ("boaton", 0.0), ("pon", 0.0), ("upon", 0.0)]
             [("p", [("t", sameSpaceCost * 1.9)])]
@@ -52,7 +52,7 @@ all =
         "double sameSpaceCost applies in the space left by entire deleted words" <|
         assertEqual
           (Just (["ah", "ha"], t <| 4 * sameSpaceCost + 2 * sameWordCost)) <|
-          respellExample
+          homophoneExample
             [["a"], ["uu"], ["u"], ["uu"], ["a"]]
             [("ah", 0.0), ("ha", 0.0)]
             [("", [("hh", 0.0)])]
@@ -61,7 +61,7 @@ all =
         "When a word is fully replaced, a boundary within it gets no cost" <|
         assertEqual
           (Just (["ado", "go"], t <| 2 * sameSpaceCost)) <|
-          respellExample
+          homophoneExample
             [["a"], ["cat"], ["o"]]
             [("ado", 0.0), ("go", 0.0)]
             [("cat", [("dog", 0.0)])]
@@ -70,7 +70,7 @@ all =
         "sameWordCost and double sameSpaceCost apply if key and value both contain space" <|
         assertEqual
           (Just (["bet", "dime"], t <| 2 * sameWordCost + 4 * sameSpaceCost)) <|
-          respellExample
+          homophoneExample
             [["bed"], ["time"]]
             [("bet", 0.0), ("dime", 0.0)]
             [("dt", [("td", 0.0)])]
@@ -79,7 +79,7 @@ all =
         "It can choose a pronunciation that is completed by the other one" <|
         assertEqual
           (Just (["aha"], t <| 2 * sameSpaceCost)) <|
-          respellExample
+          homophoneExample
             [["ab", "a"], ["a"]]
             [("abra", 0.0), ("aha", 0.0)]
             [("", [("h", 0.0), ("r", 1.0)])]
@@ -88,7 +88,7 @@ all =
         "It can choose a pronunciation that is a completion of the other one" <|
         assertEqual
           (Just (["abra"], t <| 2 * sameSpaceCost)) <|
-          respellExample
+          homophoneExample
             [["ab", "a"], ["a"]]
             [("abra", 0.0), ("aha", 0.0)]
             [("", [("h", 1.0), ("r", 0.0)])]
@@ -115,7 +115,7 @@ all =
         "Smaller subproblems can overtake larger cheaper ones via a reward" <|
         assertEqual
           (Just (["gif"], t <| sameWordCost + 2 * sameSpaceCost - 1000.0)) <|
-          respellExample
+          homophoneExample
             [["abc"]]
             [("def", 0.0), ("gif", 0.0)]
             [("a", [("g", 1000.0)]), ("ab", [("de", 0.0)]), ("b", [("i", -2000.0)]), ("c", [("f", 0.0)])]
@@ -124,7 +124,7 @@ all =
         "It stops accumulating reward when there are no more matching words" <|
         assertEqual
           (Just (["hhot"], t <| sameWordCost + 2 * sameSpaceCost - 1999.0)) <|
-          respellExample
+          homophoneExample
             [["at"]]
             [("hhot", 0.0)]
             [("", [("h", -1000.0)]), ("a", [("o", 1.0)])]
@@ -133,7 +133,7 @@ all =
         "It can choose the more expensive word to avoid a substitution" <|
         assertEqual
           (Just (["cot"], t <| 2.0 * toFloat adultWordLen + sameWordCost + 2 * sameSpaceCost)) <|
-          respellExample
+          homophoneExample
             [["cot"]]
             [("cat", 1.0), ("cot", 2.0)]
             [("o", [("a", 2.0 * toFloat adultWordLen)])]
@@ -142,7 +142,7 @@ all =
         "It can make an expensive substitution to avoid the more exensive word" <|
         assertEqual
           (Just (["cat"], t <| 2.0 * toFloat adultWordLen + sameWordCost + 2 * sameSpaceCost)) <|
-          respellExample
+          homophoneExample
             [["cot"]]
             [("cat", 1.0), ("cot", 3.0)]
             [("o", [("a", 1.0 * toFloat adultWordLen)])]
@@ -159,7 +159,7 @@ all =
         -- and cost(deleting b) < 2 * sameWordCost + 2 * sameSpaceCost
         assertEqual
           (Just (["sa", "x", "yc"], t <| 3.5 * sameSpaceCost + 2 * sameWordCost)) <|
-          respellExample
+          homophoneExample
             [["s"], ["abc"]]
             [("s", 0.0), ("sa", 0.0), ("x", 0.0), ("yc", 0.0)]
             [("", [("xy", 0.0)])]
@@ -168,7 +168,7 @@ all =
         "It doesn't prematurely expand puzzles created by deletions alone" <|
         assertEqual
           (Just (["a", "x", "yc"], t <| 4 * sameSpaceCost + 2 * sameWordCost)) <|
-          respellExample
+          homophoneExample
             [["a"], ["bc"]]
             [("a", 0.0), ("x", 0.0), ("yc", 0.0)]
             [("", [("xy", 0.0)])]
@@ -177,7 +177,7 @@ all =
         "It can choose words that increase the length of the leftovers" <|
         assertEqual
           (Just (["p", "ii", "zza"], t <| 2 * sameSpaceCost + sameWordCost)) <|
-          respellExample
+          homophoneExample
             [["a"]]
             [("ii", 0.0), ("p", 0.0), ("zza", 0.0)]
             [("", [("izz", 0.0), ("pi", 0.0), ("pzz", 1000.0)])]
@@ -186,7 +186,7 @@ all =
         "sameWordCost applies to words ending in spaced 1val + rabbit" <|
         assertEqual
           (Just (["balladh", "in", "ner"], t <| sameWordCost + 3 * sameSpaceCost)) <|
-          respellExample
+          homophoneExample
             [["ballat"], ["dinner"]]
             [("balladh", 0.0), ("in", 0.0), ("ner", 0.0)]
             [("", [("h", 0.0)]), ("td", [("d", 0.0)])]
@@ -195,7 +195,7 @@ all =
         "sameWordCost n/a if next word starts with spaced 1val" <|
         assertEqual
           (Just (["balla", "tin", "ner"], t <| 3 * sameSpaceCost)) <|
-          respellExample
+          homophoneExample
             [["ballat"], ["dinner"]]
             [("balla", 0.0), ("ner", 0.0), ("tin", 0.0)]
             [("td", [("t", 0.0)])]
@@ -204,7 +204,7 @@ all =
         "sameWordCost n/a if next word starts with rabbit + spaced 1val" <|
         assertEqual
           (Just (["balla", "htin", "ner"], t <| 3 * sameSpaceCost)) <|
-          respellExample
+          homophoneExample
             [["ballat"], ["dinner"]]
             [("balla", 0.0), ("htin", 0.0), ("ner", 0.0)]
             [("", [("h", 0.0)]), ("td", [("t", 0.0)])]
@@ -213,7 +213,7 @@ all =
         "sameWordCost n/a if next word starts with spaced nval" <|
         assertEqual
           (Just (["balla", "dtin", "ner"], t <| 2 * sameSpaceCost)) <|
-          respellExample
+          homophoneExample
             [["ballat"], ["dinner"]]
             [("balla", 0.0), ("dtin", 0.0), ("ner", 0.0)]
             [("td", [("dt", 0.0)])]
@@ -222,7 +222,7 @@ all =
         "sameWordCost n/a if next word has real sub before spaced 1val" <|
         assertEqual
           (Just (["ball", "odin", "ner"], t <| 2 * sameSpaceCost)) <|
-          respellExample
+          homophoneExample
             [["ballat"], ["dinner"]]
             [("ball", 0.0), ("ner", 0.0), ("odin", 0.0)]
             [("a", [("o", 0.0)]), ("td", [("d", 0.0)])]
@@ -231,7 +231,7 @@ all =
         "sameWordCost applies if final nval is from rspaced 1key" <|
         assertEqual
           (Just (["ballat", "tin", "ner"], t <| sameWordCost + 3 * sameSpaceCost)) <|
-          respellExample
+          homophoneExample
             [["ballat"], ["inner"]]
             [("ballat", 0.0), ("ner", 0.0), ("tin", 0.0)]
             [("t", [("tt", 0.0)])]
@@ -240,7 +240,7 @@ all =
         "sameWordCost n/a if final nval is from lspaced 1key" <|
         assertEqual
           (Just (["ballad", "din", "ner"], t <| 3 * sameSpaceCost)) <|
-          respellExample
+          homophoneExample
             [["balla"], ["dinner"]]
             [("ballad", 0.0), ("din", 0.0), ("ner", 0.0)]
             [("d", [("dd", 0.0)])]
@@ -249,7 +249,7 @@ all =
         "sameWordCost n/a if final sub starts with space" <|
         assertEqual
           (Just (["ballad", "tin", "ner"], t <| 2 * sameSpaceCost)) <|
-          respellExample
+          homophoneExample
             [["balla"], ["td"], ["inner"]]
             [("ballad", 0.0), ("ner", 0.0), ("tin", 0.0)]
             [("td", [("dt", 0.0)])]
@@ -258,7 +258,7 @@ all =
         "sameWordCost applies if word starts with rabbit + spaced 1val " <|
         assertEqual
           (Just (["bal", "la", "htinner"], t <| sameWordCost + 3 * sameSpaceCost)) <|
-          respellExample
+          homophoneExample
             [["ballat"], ["dinner"]]
             [("bal", 0.0), ("htinner", 0.0), ("la", 0.0)]
             [("", [("h", 0.0)]), ("td", [("t", 0.0)])]
@@ -267,7 +267,7 @@ all =
         "sameWordCost n/a if initial nval is from rspaced 1key" <|
         assertEqual
           (Just (["bal", "lad", "dinner"], t <| 3 * sameSpaceCost)) <|
-          respellExample
+          homophoneExample
             [["ballad"], ["inner"]]
             [("bal", 0.0), ("dinner", 0.0), ("lad", 0.0)]
             [("d", [("dd", 0.0)])]
@@ -276,7 +276,7 @@ all =
         "sameWordCost n/a if word starts inside unspaced nval" <|
         assertEqual
           (Just (["bal", "lad", "tinner"], t <| 2 * sameSpaceCost)) <|
-          respellExample
+          homophoneExample
             [["balla"], ["tdinner"]]
             [("bal", 0.0), ("lad", 0.0), ("tinner", 0.0)]
             [("td", [("dt", 0.0)])]
@@ -285,7 +285,7 @@ all =
         "sameWordCost n/a if word starts inside nval from nkey followed by space" <|
         assertEqual
           (Just (["bal", "lat", "dinner"], t <| 2 * sameSpaceCost)) <|
-          respellExample
+          homophoneExample
             [["balladt"], ["inner"]]
             [("bal", 0.0), ("dinner", 0.0), ("lat", 0.0)]
             [("dt", [("td", 0.0)])]
@@ -294,7 +294,7 @@ all =
         "sameWordCost n/a if word ends inside unspaced nval" <|
         assertEqual
           (Just (["ballad", "tin", "ner"], t <| 2 * sameSpaceCost)) <|
-          respellExample
+          homophoneExample
             [["ballatd"], ["inner"]]
             [("ballad", 0.0), ("ner", 0.0), ("tin", 0.0)]
             [("td", [("dt", 0.0)])]
@@ -303,7 +303,7 @@ all =
         "sameWordCost n/a if final nval is from 1key with deletion after lspace" <|
         assertEqual
           (Just (["ballad", "din", "ner"], t <| 3 * sameSpaceCost)) <|
-          respellExample
+          homophoneExample
             [["balla"], ["hdinner"]]
             [("ballad", 0.0), ("din", 0.0), ("ner", 0.0)]
             [("d", [("dd", 0.0)])]
@@ -312,7 +312,7 @@ all =
         "sameWordCost applies if final nval is from 1key with deletion before rspace" <|
         assertEqual
           (Just (["ballat", "tin", "ner"], t <| sameWordCost + 3 * sameSpaceCost)) <|
-          respellExample
+          homophoneExample
             [["ballath"], ["inner"]]
             [("ballat", 0.0), ("ner", 0.0), ("tin", 0.0)]
             [("t", [("tt", 0.0)])]
@@ -321,7 +321,7 @@ all =
         "sameWordCost n/a if next word starts with spaced 1val followed by deletion" <|
         assertEqual
           (Just (["balla", "tin", "ner"], t <| 3 * sameSpaceCost)) <|
-          respellExample
+          homophoneExample
             [["ballat"], ["dhinner"]]
             [("balla", 0.0), ("ner", 0.0), ("tin", 0.0)]
             [("td", [("t", 0.0)])]
@@ -330,7 +330,7 @@ all =
         "sameWordCost n/a if next word starts with unspaced 1val from nkey + space + deletion" <|
         assertEqual
           (Just (["balla", "tin", "ner"], t <| 2 * sameSpaceCost)) <|
-          respellExample
+          homophoneExample
             [["ballatd"], ["hinner"]]
             [("balla", 0.0), ("ner", 0.0), ("tin", 0.0)]
             [("td", [("t", 0.0)])]
@@ -339,7 +339,7 @@ all =
         "sameWordCost n/a if word starts inside nval from 1key + space + deletion" <|
         assertEqual
           (Just (["bal", "lat", "tinner"], t <| 3 * sameSpaceCost)) <|
-          respellExample
+          homophoneExample
             [["ballat"], ["hinner"]]
             [("bal", 0.0), ("lat", 0.0), ("tinner", 0.0)]
             [("t", [("tt", 0.0)])]
@@ -348,7 +348,7 @@ all =
         "sameWordCost n/a if word starts inside nval from 1key + deletion + space" <|
         assertEqual
           (Just (["bal", "lat", "tinner"], t <| 3 * sameSpaceCost)) <|
-          respellExample
+          homophoneExample
             [["ballath"], ["inner"]]
             [("bal", 0.0), ("lat", 0.0), ("tinner", 0.0)]
             [("t", [("tt", 0.0)])]
@@ -357,7 +357,7 @@ all =
         "sameWordCost n/a if word starts inside unspaced nval from nval + space + deletion" <|
         assertEqual
           (Just (["bal", "lad", "tinner"], t <| 2 * sameSpaceCost)) <|
-          respellExample
+          homophoneExample
             [["ballatd"], ["hinner"]]
             [("bal", 0.0), ("lad", 0.0), ("tinner", 0.0)]
             [("td", [("dt", 0.0)])]
@@ -366,7 +366,7 @@ all =
         "sameWordCost n/a if word starts inside unspaced nval followed by space" <|
         assertEqual
           (Just (["bal", "lad", "tinner"], t <| 2 * sameSpaceCost)) <|
-          respellExample
+          homophoneExample
             [["balla"], ["td"], ["inner"]]
             [("bal", 0.0), ("lad", 0.0), ("tinner", 0.0)]
             [("td", [("dt", 0.0)])]
@@ -375,7 +375,7 @@ all =
         "kid word costs are multiplied by adultWordLen" <|
         assertEqual
           (Just (["a"], t <| 5.0 * toFloat adultWordLen + sameWordCost + 2 * sameSpaceCost)) <|
-          respellExample
+          homophoneExample
             [["a"]]
             [("a", 5.0)]
             []
@@ -385,7 +385,7 @@ all =
         let n = adultWordLen + 3 in
           assertEqual
             (Just ([String.repeat n "a"], t <| 5.0 * toFloat n + sameWordCost + 2 * sameSpaceCost)) <|
-            respellExample
+            homophoneExample
               [[String.repeat n "a"]]
               [(String.repeat n "a", 5.0)]
               []
@@ -448,26 +448,26 @@ cacheExample sentences wCosts sCosts dCosts =
         List.reverse <|
           fst <|
             List.foldl
-              asdf
-              ([], Repronounce.init dCosts sCosts wCosts)
+              cacheExampleHelper
+              ([], Homophone.init dCosts sCosts wCosts)
               sentences
       _ -> []
 
-asdf :
-  List (List String) -> (List (Maybe (List String, Float)), Cache) ->
-    (List (Maybe (List String, Float)), Cache)
-asdf sentence (statuses, cache) =
+cacheExampleHelper :
+  List (List String) -> (List (Maybe (List String, Float)), Homophone) ->
+    (List (Maybe (List String, Float)), Homophone)
+cacheExampleHelper sentence (statuses, cache) =
   let
-    newCache = Repronounce.update 100 <| Repronounce.setGoal sentence cache
+    newHomophone = Homophone.update 100 <| Homophone.setGoal sentence cache
   in
-    (interpretCache newCache :: statuses, fst newCache)
+    (interpretHomophone newHomophone :: statuses, fst newHomophone)
 
 
-respellExample :
+homophoneExample :
   List (List String) -> List (String, Float) ->
     List (String, List (String, Float)) -> List (String, Float) ->
       Maybe (List String, Float)
-respellExample sentence wCosts sCosts dCosts =
+homophoneExample sentence wCosts sCosts dCosts =
   let
     maybeDCosts = CompletionDict.fromSortedPairs dCosts
     maybeSCosts = CompletionDict.fromSortedPairs sCosts
@@ -482,12 +482,12 @@ respellExample sentence wCosts sCosts dCosts =
             , wCosts = wCosts
             }
         in
-          interpretCache <|
-            Repronounce.update
+          interpretHomophone <|
+            Homophone.update
               100 <|
-              Repronounce.setGoal
+              Homophone.setGoal
                 sentence <|
-                Repronounce.init dCosts sCosts wCosts
+                Homophone.init dCosts sCosts wCosts
       _ -> Debug.crash "test data not sorted"
 
 costlessExample :
@@ -495,13 +495,13 @@ costlessExample :
     List (String, List (String, Float)) -> List (String, Float) ->
     Maybe (List String)
 costlessExample sentence wCosts sCosts dCosts =
-  Maybe.map fst <| respellExample sentence wCosts sCosts dCosts
+  Maybe.map fst <| homophoneExample sentence wCosts sCosts dCosts
 
-interpretCache : (Cache, Int) -> Maybe (List String, Float)
-interpretCache (cache, _) =
-  if Repronounce.done cache then
-    if Repronounce.complete cache then
-      Just (Repronounce.pronunciation cache, t <| Repronounce.cost cache)
+interpretHomophone : (Homophone, Int) -> Maybe (List String, Float)
+interpretHomophone (homophone, _) =
+  if Homophone.done homophone then
+    if Homophone.complete homophone then
+      Just (Homophone.pronunciation homophone, t <| Homophone.cost homophone)
     else Nothing
   else Debug.crash "ran out of iterations"
 

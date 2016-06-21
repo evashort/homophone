@@ -1,20 +1,20 @@
-module NumParser exposing (..)
+module NumParser exposing (Molecule, parse)
 
 import Char
 import List
 import String
 
-type alias TextUnit =
+type alias Molecule =
   { spelling : String
   , pathLists : List (List String)
   }
 
-parse : List String -> Maybe (TextUnit, List String)
-parse tokens = Maybe.oneOf [ parseInteger tokens, parseDecimal tokens ]
+parse : List String -> Maybe (Molecule, List String)
+parse atoms = Maybe.oneOf [ parseInteger atoms, parseDecimal atoms ]
 
-parseDecimal : List String -> Maybe (TextUnit, List String)
-parseDecimal tokens =
-  case (List.take 2 tokens, List.drop 2 tokens) of
+parseDecimal : List String -> Maybe (Molecule, List String)
+parseDecimal atoms =
+  case (List.take 2 atoms, List.drop 2 atoms) of
     ([".", block], rest) ->
       if isDigits block then
         Just <|
@@ -26,9 +26,9 @@ parseDecimal tokens =
       else Nothing
     _ -> Nothing
 
-parseInteger : List String -> Maybe (TextUnit, List String)
-parseInteger tokens =
-  case getBlocks tokens of
+parseInteger : List String -> Maybe (Molecule, List String)
+parseInteger atoms =
+  case getBlocks atoms of
     (blocks, spelling, rest) ->
       case (List.head blocks, List.tail blocks) of
         (Just first, Just afterFirst) ->
@@ -151,26 +151,26 @@ force maybeX =
     Nothing -> Debug.crash "expected Maybe to have a value"
 
 getBlocks : List String -> (List String, String, List String)
-getBlocks tokens =
-  case (List.head tokens, List.tail tokens) of
+getBlocks atoms =
+  case (List.head atoms, List.tail atoms) of
     (Just block, Just afterBlock) ->
       if isDigits block then
         case getBlocksHelper afterBlock of
           (blocks, spelling, rest) ->
             (block :: blocks, block ++ spelling, rest)
-      else ([], "", tokens)
-    _ -> ([], "", tokens)
+      else ([], "", atoms)
+    _ -> ([], "", atoms)
 
 getBlocksHelper : List String -> (List String, String, List String)
-getBlocksHelper tokens =
-  case (List.take 2 tokens, List.drop 2 tokens) of
+getBlocksHelper atoms =
+  case (List.take 2 atoms, List.drop 2 atoms) of
     ([",", block], afterBlock) ->
       if isDigits block then
         case getBlocksHelper afterBlock of
           (blocks, spelling, rest) ->
             (block :: blocks, "," ++ block ++ spelling, rest)
-      else ([], "", tokens)
-    _ -> ([], "", tokens)
+      else ([], "", atoms)
+    _ -> ([], "", atoms)
 
 isDigits : String -> Bool
 isDigits token =

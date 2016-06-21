@@ -1,10 +1,10 @@
-module SubCosts exposing (..)
+module SubCosts exposing (SubCosts, ParseError, parseErrorToString, parse)
 
 import List
 import String
 
 import CompletionDict exposing (CompletionDict)
-import Parser
+import ParseUtils
 import PricedString exposing (PricedString)
 
 type alias SubCosts = CompletionDict (List PricedString)
@@ -33,8 +33,8 @@ parse fileContents =
 
 parseMenus : String -> Result ParseError (List (String, List PricedString))
 parseMenus fileContents =
-  Parser.foldResults <|
-    List.map parseMenu <| Parser.nonEmptyLines fileContents
+  ParseUtils.foldResults <|
+    List.map parseMenu <| ParseUtils.nonEmptyLines fileContents
 
 parseMenu : String -> Result ParseError (String, List PricedString)
 parseMenu text =
@@ -46,7 +46,7 @@ parseMenu text =
       _ -> Debug.crash "non-empty line somehow has no tokens"
 
 parseMenuItems : (List String) -> Result ParseError (List PricedString)
-parseMenuItems menu = Parser.foldResults <| List.map parseMenuItem menu
+parseMenuItems menu = ParseUtils.foldResults <| List.map parseMenuItem menu
 
 parseMenuItem : String -> Result ParseError PricedString
 parseMenuItem text =

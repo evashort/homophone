@@ -1,4 +1,5 @@
-module PeakedList exposing (..)
+module PeakedList exposing
+  (PeakedList, empty, raise, cons, append, concat, map, concatMap)
 
 import Random
 

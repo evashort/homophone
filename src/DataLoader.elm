@@ -1,4 +1,4 @@
-module DataLoader exposing (..)
+module DataLoader exposing (Model, init, Msg, update, data, view)
 
 import Html exposing (Html)
 import Http

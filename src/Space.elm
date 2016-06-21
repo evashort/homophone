@@ -1,4 +1,4 @@
-module Space exposing (..)
+module Space exposing (Space, fromKIndex, startsWordAt, endsWordAt, minus)
 
 type alias Space = (Int, Int, Int, Int)
 

@@ -1,4 +1,5 @@
-module CompletionDict exposing (..)
+module CompletionDict exposing
+  (CompletionDict, fromSortedPairs, empty, get, map, startWith)
 
 import Array exposing (Array)
 import List

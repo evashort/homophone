@@ -1,4 +1,7 @@
-module PrioritySet exposing (..)
+module PrioritySet exposing
+  ( PrioritySet, empty, singleton, isEmpty, insert, findMin, deleteMin
+  , fromList
+  )
 
 import List
 import PairingHeap exposing (PairingHeap)

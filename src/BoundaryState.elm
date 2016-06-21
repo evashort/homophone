@@ -1,4 +1,5 @@
-module BoundaryState exposing (..)
+module BoundaryState exposing
+  (BoundaryState, sameSpaceCost, sameWordCost, initial, update, cost)
 
 import List
 
