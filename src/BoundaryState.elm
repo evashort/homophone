@@ -5,6 +5,14 @@ import List
 
 import Space exposing (Space)
 
+-- starting your word on a word boundary of the input incurs sameSpaceCost.
+-- ending your word on a word boundary of the input also incurs sameSpaceCost.
+-- note that you can end your word on a boundary without starting the next
+-- word on the same boundary. for example,
+--   input = bus stop, output = bus top
+-- if your word starts on a boundary and ends on a boundary, and there are no
+-- boundaries in between, you get sameWordCost.
+
 type alias BoundaryState =
   Maybe
     { startSpace : Bool

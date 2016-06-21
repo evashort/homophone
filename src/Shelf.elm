@@ -1,9 +1,7 @@
 module Shelf exposing
   (Shelf, init, setGoal, goal, update, done, complete, cost, spelling, view)
 
-import Char
 import Html exposing (Html)
-import Html.Attributes as Attributes
 import String
 
 import CompletionDict
@@ -13,6 +11,8 @@ import Molecule exposing (Molecule)
 import Pronouncer exposing (Pronouncer)
 import SubCosts exposing (SubCosts)
 import WordCosts exposing (Speller, WordCosts)
+
+-- a Shelf represents a single line of user input and its respelling
 
 type alias Shelf =
   { pronouncer : Pronouncer

@@ -5,7 +5,9 @@ module PrioritySet exposing
 
 import List
 import PairingHeap exposing (PairingHeap)
-import Set exposing (Set)
+
+-- a priority queue but if you insert the same thing twice, it only comes out
+-- once
 
 type alias PrioritySet comparable = PairingHeap comparable ()
 

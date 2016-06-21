@@ -9,6 +9,9 @@ import Random
 import PeakedList exposing (PeakedList)
 import PrioritySet exposing (PrioritySet)
 
+-- a Search solves the knapsack problem for an arbitrary data type and
+-- successor function
+
 type alias Knapsack s =
   { state : s
   , ancestors : List s

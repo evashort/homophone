@@ -22,6 +22,19 @@ import Space exposing (Space)
 import SubCosts exposing (SubCosts)
 import WordCosts exposing (WordCosts)
 
+-- a Homophone is given a goal, which is a list of words each having multiple
+-- pronunciations. when its update function is called, it tries to find a new
+-- set of words with similar pronunciations but different word boundaries. it
+-- does this by solving a variant of the knapsack problem where filling the
+-- knapsack means reaching the end of the goal, and adding an item to the
+-- knapsack means performing a predefined phoneme edit with a known cost, or
+-- copying a phoneme unedited. after finding the successors for a partially-
+-- filled knapsack, the knapsack is assigned a "peak". the peak is the index
+-- in the goal where the successor function stopped looking because the
+-- phoneme(s) directly after it didn't correspond to any known edit. if the
+-- goal is changed, knapsacks with peaks before the first changed phoneme (not
+-- touching it) don't need their successors recalculated.
+
 adultWordLen : Int  -- once a word is shorter than adultWordLen, it's
 adultWordLen = 5    -- considered a "kid" and its cost stops decreasing in
                     -- proportion to its length. this prevents uncommon words
@@ -234,6 +247,9 @@ getSuccessors :
 getSuccessors
   dCosts sCosts wCosts dag
     (i, leftovers, kLen, ghostlySpaces, cHasKey, cStartSpace) =
+  -- i == -1 is a special state where all successors consist of zero or more
+  -- deletions. no other state can have a deletion that is not preceeded by a
+  -- replacement. see comment in Edit.elm.
   if i == -1 then initialDeletions dCosts dag
   else
     let

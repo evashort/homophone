@@ -7,6 +7,9 @@ import String
 
 import Bisect
 
+-- a dictionary where the keys are strings, and you can check if any keys
+-- start with a given prefix
+
 type alias CompletionDict valueType =
   { keys : Array String
   , values : Array valueType

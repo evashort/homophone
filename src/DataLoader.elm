@@ -9,9 +9,16 @@ import Pronouncer exposing (Pronouncer)
 import SubCosts exposing (SubCosts)
 import WordCosts exposing (Speller, WordCosts)
 
+dURL : String
 dURL = "data/deletions.txt"
+
+sURL : String
 sURL = "data/substitutions.txt"
+
+pURL : String
 pURL = "data/pronouncer.txt"
+
+wURL : String
 wURL = "data/speller.txt"
 
 type alias Model =

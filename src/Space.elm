@@ -1,5 +1,10 @@
 module Space exposing (Space, fromKIndex, startsWordAt, endsWordAt, minus)
 
+-- if your word boundaries line up with the input, you get penalties as
+-- described in BoundaryState.elm. but when your edit replaces a key with a
+-- different-sized value, how do you know whether a word boundary in the value
+-- lines up with a word boundary in the key? that's what Spaces are for.
+
 type alias Space = (Int, Int, Int, Int)
 
 fromKIndex : Int -> Int -> Int -> Space

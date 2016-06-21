@@ -7,11 +7,16 @@ import CompletionDict exposing (CompletionDict)
 import DAG exposing (DAG, Edge)
 import DeletionCosts exposing (DeletionCosts)
 import Deletion exposing (Deletion)
-import Search exposing (Priced)
 import PeakedList exposing (PeakedList)
 import PricedString exposing (PricedString)
 import Space exposing (Space)
 import SubCosts exposing (SubCosts)
+
+-- an edit is either a replacement followed by zero or more deletions, or an
+-- insertion, which is called a rabbit. this enforces a canonical order where
+-- deletions come before rabbits between each pair of replacements. otherwise
+-- the deletions and rabbits could be interleaved in an exponential number of
+-- equivalent ways.
 
 type alias Edit =
   { value : String

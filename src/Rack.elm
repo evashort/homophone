@@ -10,6 +10,12 @@ import Shelf exposing (Shelf)
 import SubCosts exposing (SubCosts)
 import WordCosts exposing (Speller, WordCosts)
 
+-- each line of user input is given a seprate homophone. the Rack manages the
+-- set of homophones. when the input is changed, the Rack finds a
+-- correspondence between the old set of lines and the new set of lines. it
+-- reuses complete homophone calculations for unchanged lines. it also reuses
+-- a partial homophone calculation for the first changed line.
+
 type alias Rack =
   { prototype : Shelf
   , shelves : List Shelf

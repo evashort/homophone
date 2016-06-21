@@ -11,6 +11,20 @@ import PairingHeap exposing (PairingHeap)
 import Set exposing (Set)
 import String
 
+-- for efficiency, the set of pronunciations for each word is collapsed into a
+-- Directed Acyclic Graph, where each edge is labelled with a phoneme and each
+-- path through the DAG is a pronunciation. for example, the word wanted,
+-- which can be pronounced wantud, wontid, or wonid, becomes
+--          .___.___.
+--        a/  n   t  \u
+--   .___./        ___\.___.
+--     w  \       /i  /  d
+--        o\.___./__./i         (dots are nodes, labelled lines are edges)
+--            n   t
+--
+-- this reduces duplicate work when most of the phonemes are shared between
+-- pronunciations.
+
 type alias DAG =
   { nodes : Array Node
   , spaces : Array Int

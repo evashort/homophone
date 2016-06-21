@@ -10,6 +10,11 @@ import DeletionCosts exposing (DeletionCosts)
 import Search exposing (Priced, Knapsack)
 import PeakedList exposing (PeakedList)
 
+-- a Deletion is actually zero or more deletions in a row. therefore finding
+-- Deletions requires an inner search for each edit considered by the main
+-- search. the comment in Edit.elm explains why multiple consecutive deletions
+-- are done in a single step.
+
 type alias Deletion =
   { i : Int
   , kLen : Int

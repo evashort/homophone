@@ -1,5 +1,7 @@
 module CBool exposing (CBool, cFalse, cTrue, cBool, toBool)
 
+-- Bools aren't comparable, but CBools are
+
 type alias CBool = Int
 
 cFalse : CBool
