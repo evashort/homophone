@@ -56,14 +56,14 @@ view model =
     , Html.div
         [ Attributes.style
             [ ("display", "table")
+            , ("font-size", "20pt")
+            , ("line-height", "1.25em")
             , ("width", "1%")
             ]
         ]
         [ Html.div
           [ Attributes.style
-              [ ("font-size", "20pt")
-              , ("line-height", "1.25em")
-              , ("min-height", "24px")
+              [ ("min-height", "24px")
               , ("border", "1px solid")
               , ("border-radius", "3px")
               , ("margin", "12px")
@@ -75,14 +75,12 @@ view model =
                   "input" <|
                   Json.Decode.map EditText Events.targetValue
               , Attributes.style <|
-                  [ ("font-size", "inherit")
-                  , ("font-family", "inherit")
-                  , ("line-height", "inherit")
+                  [ ("font", "inherit")
                   , ("width", "100%")
                   , ("height", "100%")
                   , ("padding", "12px")
                   , ("border", "none")
-                  , ("margin", "0")
+                  , ("margin", "0px")
                   , ("position", "absolute")
                   , ("resize", "none")
                   , ("overflow", "hidden")
@@ -96,10 +94,12 @@ view model =
               , Attributes.autofocus True
               ]
               []
-          , Html.div
+          , Html.pre
               [ Attributes.style <|
-                  [ ("min-height", "1.25em")
+                  [ ("font", "inherit")
+                  , ("min-height", "1.25em")
                   , ("padding", "12px")
+                  , ("margin", "0px")
                   , ("white-space", "pre-wrap")
                   , ("word-wrap", "break-word")
                   , ("color", "transparent")
@@ -118,11 +118,9 @@ view model =
                 ]
                 [ Html.text "->" ]
             ]
-        , Html.div
+        , Html.pre
             [ Attributes.style <|
-                [ ("font-size", "20pt")
-                , ("line-height", "1.25em")
-                , ("min-height", "1.25em")
+                [ ("font", "inherit")
                 , ("width", "450px")
                 , ("padding", "12px")
                 , ("border", "1px solid black")
