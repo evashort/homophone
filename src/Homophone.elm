@@ -35,11 +35,11 @@ import WordCosts exposing (WordCosts)
 -- goal is changed, knapsacks with peaks before the first changed phoneme (not
 -- touching it) don't need their successors recalculated.
 
-adultWordLen : Int  -- once a word is shorter than adultWordLen, it's
-adultWordLen = 5    -- considered a "kid" and its cost stops decreasing in
-                    -- proportion to its length. this prevents uncommon words
-                    -- from slipping through the cracks because they're too
-                    -- short for the cost to be significant
+adultWordLen : Float  -- once a word is shorter than adultWordLen, it's
+adultWordLen = 4.75   -- considered a "kid" and its cost stops decreasing in
+                      -- proportion to its length. this prevents uncommon
+                      -- words from slipping through the cracks because
+                      -- they're too short for the cost to be significant
 
 type alias StateKey = (Int, String, Int, List Space, CBool, CBool)
 
@@ -356,5 +356,5 @@ toSuccessor
                 }
             , cost =
                 cost + boundaryCost +
-                  wordCost * toFloat (max adultWordLen <| tKLen + usedKLen)
+                  wordCost * max adultWordLen (toFloat <| tKLen + usedKLen)
             }

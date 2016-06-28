@@ -132,20 +132,20 @@ all =
     , test
         "It can choose the more expensive word to avoid a substitution" <|
         assertEqual
-          (Just (["cot"], t <| 2.0 * toFloat adultWordLen + sameWordCost + 2 * sameSpaceCost)) <|
+          (Just (["cot"], t <| 2.0 * adultWordLen + sameWordCost + 2 * sameSpaceCost)) <|
           homophoneExample
             [["cot"]]
             [("cat", 1.0), ("cot", 2.0)]
-            [("o", [("a", 2.0 * toFloat adultWordLen)])]
+            [("o", [("a", 2.0 * adultWordLen)])]
             []
     , test
         "It can make an expensive substitution to avoid the more exensive word" <|
         assertEqual
-          (Just (["cat"], t <| 2.0 * toFloat adultWordLen + sameWordCost + 2 * sameSpaceCost)) <|
+          (Just (["cat"], t <| 2.0 * adultWordLen + sameWordCost + 2 * sameSpaceCost)) <|
           homophoneExample
             [["cot"]]
             [("cat", 1.0), ("cot", 3.0)]
-            [("o", [("a", 1.0 * toFloat adultWordLen)])]
+            [("o", [("a", 1.0 * adultWordLen)])]
             []
     , test
         "It distinguishes puzzles by whether there is a space on the boundary" <|
@@ -374,7 +374,7 @@ all =
     , test
         "kid word costs are multiplied by adultWordLen" <|
         assertEqual
-          (Just (["a"], t <| 5.0 * toFloat adultWordLen + sameWordCost + 2 * sameSpaceCost)) <|
+          (Just (["a"], t <| 5.0 * adultWordLen + sameWordCost + 2 * sameSpaceCost)) <|
           homophoneExample
             [["a"]]
             [("a", 5.0)]
@@ -382,7 +382,7 @@ all =
             []
     , test
         "adult word costs are multiplied by the word's length" <|
-        let n = adultWordLen + 3 in
+        let n = truncate adultWordLen + 3 in
           assertEqual
             (Just ([String.repeat n "a"], t <| 5.0 * toFloat n + sameWordCost + 2 * sameSpaceCost)) <|
             homophoneExample
