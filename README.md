@@ -21,7 +21,8 @@ Note: `src/Main.elm` uses a
 [zero-width space character](https://en.wikipedia.org/wiki/Zero-width_space)
 to separate the loading dots so that they wrap correctly. To build or run
 tests on Windows, first run `chcp 65001` to switch your shell to the UTF-8
-[code page](https://en.wikipedia.org/wiki/Code_page).
+[code page](https://en.wikipedia.org/wiki/Code_page). `chcp 437` restores the
+default code page, MS-DOS Latin US.
 
 ## Running tests
 
