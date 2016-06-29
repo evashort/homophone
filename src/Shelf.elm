@@ -1,7 +1,8 @@
 module Shelf exposing
-  (Shelf, init, setGoal, goal, update, done, complete, cost, spelling, view)
+  (Shelf, init, setGoal, goal, update, done, complete, cost, viewGoal, view)
 
 import Html exposing (Html)
+import Html.Attributes as Attributes
 import String
 
 import CompletionDict
@@ -64,27 +65,38 @@ complete shelf = Homophone.complete shelf.homophone
 cost : Shelf -> Float
 cost shelf = Homophone.cost shelf.homophone
 
-spelling : Shelf -> String
-spelling shelf =
-  ( String.join
-      " " <|
-      List.map
-        (force << (flip CompletionDict.get) shelf.speller) <|
-        Homophone.pronunciation shelf.homophone
-  ) ++
-    if done shelf then "\n"
+viewGoal : Shelf -> List (Html msg)
+viewGoal shelf = List.map Molecule.view shelf.molecules ++ [ Html.text "\n" ]
+
+view : Shelf -> List (Html msg)
+view shelf =
+  [ if done shelf && not (complete shelf) then
+      Html.mark
+        [ Attributes.style
+            [ ("color", "darkgray")
+            , ("background-color", "inherit")
+            ]
+        ]
+        [ Html.text "No solution\n" ]
     else
-      String.repeat
-        (dotCount <| Homophone.remainingPhonemes shelf.homophone)
-        "​."
-      ++ "\n"
+      Html.text <|
+        ( String.join
+            " " <|
+            List.map
+              (force << (flip CompletionDict.get) shelf.speller) <|
+              Homophone.pronunciation shelf.homophone
+        ) ++
+          if done shelf then "\n"
+          else
+            String.repeat
+              (dotCount <| Homophone.remainingPhonemes shelf.homophone)
+              "​."
+            ++ "\n"
+  ]
 
 dotCount : Int -> Int
 dotCount remainingPhonemes =
   max 3 <| round <| 2.33 * toFloat remainingPhonemes
-
-view : Shelf -> List (Html msg)
-view shelf = List.map Molecule.view shelf.molecules ++ [ Html.text "\n" ]
 
 force : Maybe a -> a
 force maybeX =

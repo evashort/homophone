@@ -106,9 +106,7 @@ view model =
                   ] ++
                     if model.hidden then [("display", "none")] else []
               ] <|
-              case model.userText of
-                RawText text -> [ Html.text <| text ++ "\n" ]
-                Respelled rack -> Rack.view rack
+              viewGoal model.userText
           ]
         , Html.div [ Attributes.hidden True ]
             [ Html.button
@@ -119,7 +117,7 @@ view model =
                 [ Html.text "->" ]
             ]
         , Html.pre
-            [ Attributes.style <|
+            [ Attributes.style
                 [ ("font", "inherit")
                 , ("width", "450px")
                 , ("padding", "12px")
@@ -130,16 +128,9 @@ view model =
                 , ("overflow", "auto")
                 , ("white-space", "pre-wrap")
                 , ("word-wrap", "break-word")
-                ] ++
-                  case model.userText of
-                    RawText _ -> [ ("color", "darkgray") ]
-                    Respelled _ -> []
-            ]
-            [ Html.text <|
-                case model.userText of
-                  RawText _ ->  "Loading data..."
-                  Respelled rack -> Rack.spelling rack
-            ]
+                ]
+            ] <|
+            viewSolution model.userText
         ]
      , Html.a
          [ Attributes.href "https://github.com/evanshort73/homophone"
@@ -148,6 +139,26 @@ view model =
          [ Html.text "GitHub" ]
     , DataLoader.view model.dataLoader
     ]
+
+viewGoal : UserText -> List (Html msg)
+viewGoal userText =
+  case userText of
+    RawText text -> [ Html.text <| text ++ "\n" ]
+    Respelled rack -> Rack.viewGoal rack
+
+viewSolution : UserText -> List (Html msg)
+viewSolution userText =
+  case userText of
+    RawText _ ->
+      [ Html.mark
+          [ Attributes.style
+              [ ("color", "darkgray")
+              , ("background-color", "inherit")
+              ]
+          ]
+          [ Html.text "Loading data...\n" ]
+      ]
+    Respelled rack -> Rack.view rack
 
 type Msg
   = EditText String
@@ -198,11 +209,7 @@ update action model =
         Respelled rack ->
           let (newRack, _) = Rack.update 1 rack in
             ( { model | userText = Respelled newRack }
-            , if Rack.done newRack then
-                if Rack.complete newRack then Cmd.none
-                else
-                  Debug.crash <|
-                    "no solution for \"" ++ Rack.goal newRack ++ "\""
+            , if Rack.done newRack then Cmd.none
               else yieldAndThen RespellText
             )
         RawText _ -> Debug.crash "RespellText action before data loaded"
@@ -221,11 +228,7 @@ update action model =
                   Rack.init pronouncer speller dCosts sCosts wCosts
           in
             if Rack.done newRack then
-              if Rack.complete newRack then
-                ( { model | userText = Respelled newRack }, Cmd.none )
-              else
-                Debug.crash <|
-                  "no solution for \"" ++ Rack.goal newRack ++ "\""
+              ( { model | userText = Respelled newRack }, Cmd.none )
             else Debug.crash "still in progress after maxInt iterations"
         _ -> Debug.crash "RefreshText action before data loaded"
 

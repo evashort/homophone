@@ -25,7 +25,7 @@ view molecule =
     Html.mark
       [ Attributes.style
           [ ("border-radius", "3pt")
-          , ("color", "transparent")
+          , ("color", "inherit")
           , ("background-color", "#ffdddd")
           ]
       ]

@@ -1,5 +1,5 @@
 module Rack exposing
-  (Rack, init, setGoal, goal, update, done, complete, costs, spelling, view)
+  (Rack, init, setGoal, goal, update, done, complete, costs, viewGoal, view)
 
 import Html exposing (Html)
 import String
@@ -100,8 +100,8 @@ complete = List.foldl (&&) True << List.map Shelf.complete << .shelves
 costs : Rack -> List Float
 costs = List.map Shelf.cost << .shelves
 
-spelling : Rack -> String
-spelling = String.concat << List.map Shelf.spelling << .shelves
+viewGoal : Rack -> List (Html msg)
+viewGoal = List.concatMap Shelf.viewGoal << .shelves
 
 view : Rack -> List (Html msg)
 view = List.concatMap Shelf.view << .shelves
