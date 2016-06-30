@@ -18,6 +18,13 @@ import SubCosts exposing (SubCosts)
 -- the deletions and rabbits could be interleaved in an exponential number of
 -- equivalent ways.
 
+-- including deletions at the end of edits also avoids the problem of
+-- retroactive same-space penalties. for example, if the input is
+-- "scuba diver", then the output "scoop die for" should be penalized because
+-- the space after "scoop" corresponds to the space after "scuba". we need to
+-- know whether the "a" will be deleted at the time we make the "b" -> "p"
+-- edit in order to penalize the first word correctly
+
 type alias Edit =
   { value : String
   , kLen : Int
