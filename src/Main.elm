@@ -108,14 +108,20 @@ view model =
               ] <|
               viewGoal model.userText
           ]
-        , Html.div [ Attributes.hidden True ]
+        , Html.div [ Attributes.hidden True ] <|
             [ Html.button
                 [ Events.onClick RefreshText
                 , Attributes.style
                     [ ("padding", "10px 20px 10px 20px") ]
                 ]
                 [ Html.text "->" ]
-            ]
+            ] ++
+              case model.userText of
+                RawText _ -> []
+                Respelled rack ->
+                  List.map
+                    (Html.div [] << List.repeat 1 << Html.text << toString) <|
+                    Rack.costs rack
         , Html.pre
             [ Attributes.style
                 [ ("font", "inherit")
