@@ -1,9 +1,9 @@
 module BoundaryState exposing
-  (BoundaryState, sameSpaceCost, sameWordCost, initial, update, cost)
+  (sameSpaceCost, sameWordCost, BoundaryState, init, update)
 
-import List
+import Array exposing (Array)
 
-import Space exposing (Space)
+import Bead exposing (Bead)
 
 -- starting your word on a word boundary of the input incurs sameSpaceCost.
 -- ending your word on a word boundary of the input also incurs sameSpaceCost.
@@ -13,69 +13,63 @@ import Space exposing (Space)
 -- if your word starts on a boundary and ends on a boundary, and there are no
 -- boundaries in between, you get sameWordCost.
 
-type alias BoundaryState =
-  Maybe
-    { startSpace : Bool
-    , midSpace : Bool
-    , endSpace : Bool
-    }
-
 sameSpaceCost : Float
 sameSpaceCost = 2.0
 
 sameWordCost : Float
 sameWordCost = 10.0
 
-initial : BoundaryState
-initial = Nothing
+type alias BoundaryState = Int
 
-update : Int -> Maybe (List Space) -> BoundaryState -> BoundaryState
-update vLen spaces state =
-  case spaces of
-    Just ss ->
-      Just <|
-        case state of
-          Just b ->
-            { b
-            | midSpace = b.midSpace || b.endSpace ||
-                memberSatisfies (not << Space.endsWordAt (vLen - 1)) ss
-            , endSpace = memberSatisfies (Space.endsWordAt (vLen - 1)) ss
-            }
-          Nothing ->
-            { startSpace = memberSatisfies (Space.startsWordAt 0) ss
-            , midSpace =
-                memberSatisfies
-                  ( neither
-                      (Space.startsWordAt 0)
-                      (Space.endsWordAt (vLen - 1))
-                  )
-                  ss
-            , endSpace =
-                memberSatisfies
-                  ( firstOnly
-                      (Space.endsWordAt (vLen - 1))
-                      (Space.startsWordAt 0)
-                  )
-                  ss
-            }
-    Nothing -> state
+init : BoundaryState
+init = 0
 
-cost : Int -> BoundaryState -> Float
-cost wordLength state =
-  case state of
-    Just b ->
-      (if b.startSpace then sameSpaceCost else 0.0) +
-        (if b.endSpace then sameSpaceCost else 0.0) +
-        ( if b.startSpace && b.endSpace && not b.midSpace then sameWordCost
-          else 0.0
-        )
-    Nothing -> 0.0
+update : Bead -> (BoundaryState, Float) -> (BoundaryState, Float)
+update bead (state, cost) =
+  let (newState, summand) = lookup (lookup table state) bead in
+    if newState >= 0 && newState <= 11 then
+      (newState, cost + summand)
+    else
+      Debug.crash <|
+        "bad state transition: " ++ toString state ++ " -> " ++
+          toString bead ++ " -> " ++ toString newState
 
-memberSatisfies : (a -> Bool) -> List a -> Bool
-memberSatisfies predicate l = List.filter predicate l /= []
+table : Array (Array (BoundaryState, Float))
+table = Array.fromList <| List.map Array.fromList
+  [ [ (4, sameSpaceCost), (10, sameSpaceCost), (5, sameSpaceCost)
+    , (3, sameSpaceCost), (2, sameSpaceCost), (2, sameSpaceCost), (0, 0.0)
+    ]
+  , [ (9, 0.0), (7, 0.0), (9, 0.0), (5, sameSpaceCost), (2, sameSpaceCost)
+    , (6, 0.0), (1, 0.0)
+    ]
+  , [ (8, 0.0), (6, 0.0), (9, 0.0), (7, 0.0), (6, 0.0), (6, 0.0)
+    , (0, sameWordCost + sameSpaceCost)
+    ]
+  , [ (9, 0.0), (7, 0.0), (9, 0.0), (7, 0.0), (6, 0.0), (6, 0.0)
+    , (1, sameWordCost + sameSpaceCost)
+    ]
+  , [(4, 0.0), (-1, 0.0), (5, 0.0), (3, 0.0), (2, 0.0), (2, 0.0), (0, 0.0)]
+  , [(5, 0.0), (11, 0.0), (5, 0.0), (3, 0.0), (2, 0.0), (2, 0.0), (1, 0.0)]
+  , [ (8, 0.0), (6, 0.0), (9, 0.0), (7, 0.0), (6, 0.0), (6, 0.0)
+    , (0, sameSpaceCost)
+    ]
+  , [ (9, 0.0), (7, 0.0), (9, 0.0), (7, 0.0), (6, 0.0), (6, 0.0)
+    , (1, sameSpaceCost)
+    ]
+  , [(8, 0.0), (-1, 0.0), (9, 0.0), (7, 0.0), (6, 0.0), (6, 0.0), (0, 0.0)]
+  , [(9, 0.0), (7, 0.0), (9, 0.0), (7, 0.0), (6, 0.0), (6, 0.0), (1, 0.0)]
+  , [ (-1, 0.0), (10, 0.0), (-1, 0.0), (3, 0.0), (2, 0.0), (2, 0.0)
+    , (0, sameWordCost + sameSpaceCost)
+    ]
+  , [ (-1, 0.0), (11, 0.0), (-1, 0.0), (3, 0.0), (2, 0.0), (2, 0.0)
+    , (1, sameWordCost + sameSpaceCost)
+    ]
+  ]
 
-neither : (a -> Bool) -> (a -> Bool) -> a -> Bool
-neither predicate1 predicate2 x = not (predicate1 x || predicate2 x)
-
-firstOnly : (a -> Bool) -> (a -> Bool) -> a -> Bool
-firstOnly predicate1 predicate2 x = predicate1 x && not (predicate2 x)
+lookup : Array a -> Int -> a
+lookup a i =
+  case Array.get i a of
+    Just x -> x
+    Nothing ->
+      Debug.crash <| "index " ++ toString i ++ " out of bounds for " ++
+        toString a

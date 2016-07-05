@@ -8,8 +8,8 @@ import DAG exposing (DAG, Edge)
 import DeletionCosts exposing (DeletionCosts)
 import Deletion exposing (Deletion)
 import PeakedList exposing (PeakedList)
+import Bead exposing (Bead)
 import PricedString exposing (PricedString)
-import Space exposing (Space)
 import SubCosts exposing (SubCosts)
 
 -- an edit is either a replacement followed by zero or more deletions, or an
@@ -26,48 +26,45 @@ import SubCosts exposing (SubCosts)
 -- edit in order to penalize the first word correctly
 
 type alias Edit =
-  { value : String
+  { i : Int
+  , value : String
+  , beads : List Bead
   , kLen : Int
-  , spaces : Maybe (List Space)
-  , startSpace : Bool
-  , i : Int
   , cost : Float
   }
 
-getChoices :
-  DeletionCosts -> SubCosts -> DAG -> Bool -> Int -> PeakedList Edit
-getChoices dCosts sCosts dag startSpace i =
+getChoices : DeletionCosts -> SubCosts -> DAG -> Int -> PeakedList Edit
+getChoices dCosts sCosts dag i =
   let
     rest =
       PeakedList.concatMap
         i
-        (getChoicesHelper dCosts sCosts dag "" [startSpace]) <|
+        (getChoicesHelper dCosts sCosts dag "" [DAG.wordAt i dag]) <|
         DAG.get i dag
   in
     PeakedList.append
       ( List.map
-          (toRabbit startSpace i) <|
+          (toRabbit i) <|
           Maybe.withDefault [] <| CompletionDict.get "" sCosts
       )
       rest
 
-toRabbit : Bool -> Int -> PricedString -> Edit
-toRabbit startSpace i (value, cost) =
-  { value = value
+toRabbit : Int -> PricedString -> Edit
+toRabbit i (value, cost) =
+  { i = i
+  , value = value
+  , beads = []
   , kLen = 0
-  , spaces = Nothing
-  , startSpace = startSpace
-  , i = i
   , cost = cost
   }
 
 getChoicesHelper :
-  DeletionCosts -> SubCosts -> DAG -> String -> List Bool -> Edge ->
+  DeletionCosts -> SubCosts -> DAG -> String -> List Int -> Edge ->
     PeakedList Edit
-getChoicesHelper dCosts sCosts dag key rPins edge =
+getChoicesHelper dCosts sCosts dag key rWords edge =
   let
     newKey = key ++ String.fromChar edge.phoneme
-    newRPins = DAG.isSpace edge.dst dag :: rPins
+    newRWords = (DAG.wordAt edge.dst dag) :: rWords -- TODO: store this in dag
   in let
     rest =
       -- we don't have to modify startWith to account for identity subs
@@ -75,7 +72,7 @@ getChoicesHelper dCosts sCosts dag key rPins edge =
       if CompletionDict.startWith newKey sCosts then
         PeakedList.concatMap
           edge.dst
-          (getChoicesHelper dCosts sCosts dag newKey newRPins) <|
+          (getChoicesHelper dCosts sCosts dag newKey newRWords) <|
           DAG.get edge.dst dag
       else PeakedList.empty
   in
@@ -90,7 +87,7 @@ getChoicesHelper dCosts sCosts dag key rPins edge =
             peakedDeletions.peak <|
             PeakedList.append
               ( List.concatMap
-                  (toEdits dag rPins peakedDeletions.list edge.dst kLen)
+                  (toEdits dag rWords peakedDeletions.list edge.dst kLen)
                   valueChoices
               )
               rest
@@ -103,27 +100,18 @@ getValueChoices key sCosts =
   else CompletionDict.get key sCosts
 
 toEdits :
-  DAG -> List Bool -> List Deletion -> Int -> Int -> PricedString -> List Edit
-toEdits dag rPins deletions kEnd kLen pricedValue =
-  List.map (toEdit dag rPins pricedValue kEnd kLen) deletions
+  DAG -> List Int -> List Deletion -> Int -> Int -> PricedString -> List Edit
+toEdits dag rWords deletions kStop kLen pricedValue =
+  List.map (toEdit dag rWords pricedValue kStop kLen) deletions
 
-toEdit : DAG -> List Bool -> PricedString -> Int -> Int -> Deletion -> Edit
-toEdit dag rPins (value, cost) kEnd kLen deletion =
-  let startSpace = DAG.spaceInRange kEnd deletion.i dag in
-    { value = value
-    , kLen = kLen + deletion.kLen
-    , spaces =
-        Just <|
-          convertSpaces
-            (List.reverse <| startSpace :: rPins) <|
-            String.length value
-    , startSpace = startSpace
-    , i = deletion.i
-    , cost = cost + deletion.cost
-    }
-
-convertSpaces : List Bool -> Int -> List Space
-convertSpaces pins vLen =
-  List.map
-    (Space.fromKIndex (List.length pins - 1) vLen << fst) <|
-    List.filter snd <| List.indexedMap (,) pins
+toEdit : DAG -> List Int -> PricedString -> Int -> Int -> Deletion -> Edit
+toEdit dag rWords (value, cost) kStop kLen deletion =
+  { i = deletion.i
+  , value = value
+  , beads =
+      Bead.fromWords
+        (List.reverse <| DAG.wordAt deletion.i dag :: rWords) <|
+        String.length value
+  , kLen = kLen + deletion.kLen
+  , cost = cost + deletion.cost
+  }

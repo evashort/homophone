@@ -10,15 +10,14 @@ import Random
 import String
 
 import BoundaryState exposing (BoundaryState)
-import CBool exposing (CBool)
 import CompletionDict exposing (CompletionDict)
 import DAG exposing (DAG)
 import Deletion exposing (Deletion)
 import DeletionCosts exposing (DeletionCosts)
 import Edit exposing (Edit)
 import PeakedList exposing (PeakedList)
+import Bead exposing (Bead)
 import Search exposing (Priced, Knapsack, Search)
-import Space exposing (Space)
 import SubCosts exposing (SubCosts)
 import WordCosts exposing (WordCosts)
 
@@ -41,7 +40,7 @@ adultWordLen = 4.75   -- considered a "kid" and its cost stops decreasing in
                       -- words from slipping through the cracks because
                       -- they're too short for the cost to be significant
 
-type alias StateKey = (Int, String, Int, List Space, CBool, CBool)
+type alias StateKey = (Int, String, BoundaryState, List Bead, Int)
 
 type Goal
   = WordListsGoal
@@ -79,10 +78,10 @@ init dCosts sCosts wCosts =
                   (getSuccessors dCosts sCosts wCosts DAG.empty)
                   { word = Nothing
                   , i = -1
-                  , leftovers = ""
+                  , value = ""
+                  , boundaryState = BoundaryState.init
+                  , beads = []
                   , kLen = 0
-                  , spaces = Nothing
-                  , startSpace = False
                   }
             }
         , pronunciation = []
@@ -93,10 +92,10 @@ init dCosts sCosts wCosts =
 type alias State =
   { word : Maybe String
   , i : Int
-  , leftovers : String
+  , value : String
+  , boundaryState : BoundaryState
+  , beads : List Bead
   , kLen : Int
-  , spaces : Maybe (List Space)
-  , startSpace : Bool
   }
 
 setGoal : List (List String) -> Homophone -> Homophone
@@ -127,11 +126,11 @@ update iterations homophone =
             reusedWords =
               firstTrue <| List.map2 (/=) goal.wordLists homophone.wordLists
           in let
-            seaLevel = force <| DAG.getSpace reusedWords dag
+            seaLevel = force <| DAG.wordStart reusedWords dag
           in let
             reusedKnapsacks =
               Dict.filter
-                (curry <| (>=) seaLevel << fst6 << fst)
+                (curry <| (>=) seaLevel << fst5 << fst)
                 goal.knapsacks
           in
             Search.init
@@ -166,7 +165,7 @@ update iterations homophone =
             List.filterMap
               .word <|
               finalKnapsack.state :: finalKnapsack.ancestors
-      , remainingPhonemes = DAG.length dag - 1 - fst6 finalKey
+      , remainingPhonemes = DAG.length dag - 1 - fst5 finalKey
       , cost = finalKnapsack.cost
       }
     , remainingIterations
@@ -205,14 +204,14 @@ force maybeX =
     Just x -> x
     Nothing -> Debug.crash "expected Maybe to have a value"
 
-fst6 : (a, b, c, d, e, f) -> a
-fst6 (x, _, _, _, _, _) = x
+fst5 : (a, b, c, d, e) -> a
+fst5 (x, _, _, _, _) = x
 
 growPlants : Int -> Int -> Int
 growPlants seaLevel peak = if peak >= seaLevel then Random.maxInt else peak
 
 toFinalKey : Int -> StateKey
-toFinalKey i = (i, "", 0, [], CBool.cFalse, CBool.cTrue)
+toFinalKey i = (i, "", BoundaryState.init, [], 0)
 
 initialDeletions : DeletionCosts -> DAG -> PeakedList (Priced State)
 initialDeletions dCosts dag =
@@ -223,10 +222,10 @@ deletionToState deletion =
   { state =
       { word = Nothing
       , i = deletion.i
-      , leftovers = ""
+      , value = ""
+      , boundaryState = BoundaryState.init
+      , beads = []
       , kLen = deletion.kLen
-      , spaces = Nothing
-      , startSpace = True
       }
   , cost = deletion.cost
   }
@@ -234,50 +233,41 @@ deletionToState deletion =
 stateKey : State -> StateKey
 stateKey state =
   ( state.i
-  , state.leftovers
+  , state.value
+  , state.boundaryState
+  , state.beads
   , state.kLen
-  , Maybe.withDefault [] state.spaces
-  , CBool.cBool <| state.spaces /= Nothing
-  , CBool.cBool state.startSpace
   )
 
 getSuccessors :
   DeletionCosts -> SubCosts -> WordCosts -> DAG -> StateKey ->
     PeakedList (Priced State)
-getSuccessors
-  dCosts sCosts wCosts dag
-    (i, leftovers, kLen, ghostlySpaces, cHasKey, cStartSpace) =
+getSuccessors dCosts sCosts wCosts dag (i, value, bState, beads, kLen) =
   -- i == -1 is a special state where all successors consist of zero or more
   -- deletions. no other state can have a deletion that is not preceeded by a
   -- replacement. see comment in Edit.elm.
   if i == -1 then initialDeletions dCosts dag
   else
     let
-      spaces = if CBool.toBool cHasKey then Just ghostlySpaces else Nothing
-      startSpace = CBool.toBool cStartSpace
-      bState = BoundaryState.initial
-    in let
-      newBState = BoundaryState.update (String.length leftovers) spaces bState
-    in let
       rest =
-        if CompletionDict.startWith leftovers wCosts then
+        if CompletionDict.startWith value wCosts then
           let
-            peakedEdits = Edit.getChoices dCosts sCosts dag startSpace i
+            (newBState, cost) =
+              List.foldl BoundaryState.update (bState, 0.0) beads
+            peakedEdits = Edit.getChoices dCosts sCosts dag i
           in
             PeakedList.concatMap
               peakedEdits.peak
               ( getSuccessorsHelper
-                  dCosts sCosts wCosts dag leftovers newBState kLen i 0.0
+                  dCosts sCosts wCosts dag value newBState kLen i cost
               )
               peakedEdits.list
         else PeakedList.empty
     in
       PeakedList.append
         ( List.filterMap
-          ( toSuccessor
-              wCosts dag "" leftovers kLen spaces startSpace bState 0 i 0.0
-          )
-          [1..String.length leftovers]
+          (toSuccessor wCosts dag "" value bState beads 0 kLen i 0.0)
+          [1..String.length value]
         )
         rest
 
@@ -288,21 +278,19 @@ getSuccessorsHelper
   dCosts sCosts wCosts dag word bState tKLen i cost edit =
   let
     value = edit.value
+    beads = edit.beads
     kLen = edit.kLen
-    spaces = edit.spaces
-    startSpace = edit.startSpace
+    midCost = cost + edit.cost
   in let
     newWord = word ++ value
-    newBState = BoundaryState.update (String.length value) spaces bState
+    (newBState, newCost) =
+      List.foldl BoundaryState.update (bState, midCost) beads
     newTKLen = tKLen + kLen
     newI = edit.i
-    newCost = cost + edit.cost
   in let
     rest =
       if CompletionDict.startWith newWord wCosts then
-        let
-          peakedEdits = Edit.getChoices dCosts sCosts dag startSpace newI
-        in
+        let peakedEdits = Edit.getChoices dCosts sCosts dag newI in
           PeakedList.concatMap
             peakedEdits.peak
             ( getSuccessorsHelper
@@ -315,46 +303,44 @@ getSuccessorsHelper
     PeakedList.append
       ( List.filterMap
           ( toSuccessor
-              wCosts dag word value kLen spaces startSpace bState tKLen newI
-                newCost
+              wCosts dag word value bState beads tKLen kLen newI midCost
           )
           [1..String.length value]
       )
       rest
 
 toSuccessor :
-  WordCosts -> DAG -> String -> String -> Int -> Maybe (List Space) -> Bool ->
-    BoundaryState -> Int -> Int -> Float -> Int -> Maybe (Priced State)
-toSuccessor
-  wCosts dag word value kLen spaces startSpace bState tKLen i cost usedLen =
+  WordCosts -> DAG -> String -> String -> BoundaryState -> List Bead -> Int ->
+    Int -> Int -> Float -> Int -> Maybe (Priced State)
+toSuccessor wCosts dag word value bState beads tKLen kLen i cost usedLen =
   let newWord = word ++ String.left usedLen value in
     case CompletionDict.get newWord wCosts of
       Nothing -> Nothing
       Just wordCost ->
         let
-          leftovers = String.dropLeft usedLen value
-          newBState = BoundaryState.update usedLen spaces bState
+          newValue = String.dropLeft usedLen value
+          (newBState, newCost) =
+            BoundaryState.update Bead.finish <|
+              List.foldl
+                BoundaryState.update
+                (bState, cost)
+                (List.take usedLen beads)
+          newBeads = List.drop usedLen beads
           usedKLen =
             round <| toFloat (usedLen * kLen) / toFloat (String.length value)
         in let
-          newSpaces =
-            case (spaces, leftovers) of
-              (_, "") -> Nothing
-              (Just ss, _) -> Just <| List.filterMap (Space.minus usedLen) ss
-              (Nothing, _) -> Nothing
-          boundaryCost = BoundaryState.cost (tKLen + usedKLen) newBState
           leftoverKLen = kLen - usedKLen
         in
           Just
             { state =
                 { word = Just newWord
                 , i = i
-                , leftovers = leftovers
+                , value = newValue
+                , beads = newBeads
+                , boundaryState = newBState
                 , kLen = leftoverKLen
-                , spaces = newSpaces
-                , startSpace = startSpace
                 }
             , cost =
-                cost + boundaryCost +
+                newCost +
                   wordCost * max adultWordLen (toFloat <| tKLen + usedKLen)
             }

@@ -391,6 +391,24 @@ all =
               []
               []
     , test
+        "using just the last of 3 values for a 1-key still avoids sameSpaceCost and sameWordCost" <|
+        assertEqual
+          (Just (["bur", "rI"], t <| 3.5 * sameSpaceCost + 1.5 * sameWordCost)) <|
+          homophoneExample
+            [["bR"], ["I"]]
+            [("I", 0.0), ("bur", 0.0), ("rI", 0.5 * (sameSpaceCost + sameWordCost) / adultWordLen)]
+            [("R", [("ur", 0.0), ("urr", 0.0)])]
+            []
+    , test
+        "using just the first of 3 values for a 1-key still avoids sameSpaceCost and sameWordCost" <|
+        assertEqual
+          (Just (["Ir", "rub"], t <| 3.5 * sameSpaceCost + 1.5 * sameWordCost)) <|
+          homophoneExample
+            [["I"], ["Rb"]]
+            [("I", 0.0), ("Ir", 0.5 * (sameSpaceCost + sameWordCost) / adultWordLen), ("rub", 0.0)]
+            [("R", [("rru", 0.0), ("ru", 0.0)])]
+            []
+    , test
         "caahe" <|
         assertEqual
           [ Just (["bb"], t <| 2 * sameSpaceCost)

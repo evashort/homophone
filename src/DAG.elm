@@ -1,6 +1,6 @@
 module DAG exposing
-  ( DAG, Node, Edge, PathList, get, length, isSpace, spaceInRange, getSpace
-  , empty, fromPathLists
+  ( DAG, Node, Edge, PathList, get, length, wordAt, wordStart, empty
+  , fromPathLists
   )
 
 import Array exposing (Array)
@@ -50,20 +50,12 @@ get i dag = Maybe.withDefault [] <| Array.get i dag.nodes
 length : DAG -> Int
 length = Array.length << .nodes
 
-isSpace : Int -> DAG -> Bool
-isSpace i dag =
-  Maybe.withDefault
-    False <|
-    Maybe.map
-      ((==) i) <|
-      Array.get (Bisect.bisectLeft i dag.spaces) dag.spaces
+-- index of the word to the right of the given node
+wordAt : Int -> DAG -> Int
+wordAt nodeIndex dag = Bisect.bisectRight nodeIndex dag.spaces - 1
 
-spaceInRange : Int -> Int -> DAG -> Bool
-spaceInRange start end dag =
-  Bisect.bisectLeft start dag.spaces < Bisect.bisectRight end dag.spaces
-
-getSpace : Int -> DAG -> Maybe Int
-getSpace i dag = Array.get i dag.spaces
+wordStart : Int -> DAG -> Maybe Int
+wordStart i dag = Array.get i dag.spaces
 
 empty : DAG
 empty = { nodes = Array.fromList [[]], spaces = Array.fromList [0] }
