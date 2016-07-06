@@ -5,6 +5,7 @@ import Html.Attributes as Attributes
 import Json.Decode
 import Process
 import Random
+import Regex
 import Task
 
 import DataLoader
@@ -200,16 +201,17 @@ update action model =
                       Cmd.batch [ mappedSubEffect, yieldAndThen RespellText ]
                   )
               _ -> ({ model | dataLoader = newDataLoader }, mappedSubEffect)
-    EditText newUserText ->
-      case model.userText of
-        RawText _ ->
-          ( { model | userText = RawText newUserText }, Cmd.none )
-        Respelled rack ->
-          ( { model
-            | userText = Respelled <| Rack.setGoal newUserText rack
-            }
-          , if Rack.done rack then yieldAndThen RespellText else Cmd.none
-          )
+    EditText withCurlyApostrophes ->
+      let newUserText = replaceCurlyApostrophes withCurlyApostrophes in
+        case model.userText of
+          RawText _ ->
+            ( { model | userText = RawText newUserText }, Cmd.none )
+          Respelled rack ->
+            ( { model
+              | userText = Respelled <| Rack.setGoal newUserText rack
+              }
+            , if Rack.done rack then yieldAndThen RespellText else Cmd.none
+            )
     RespellText ->
       case model.userText of
         Respelled rack ->
@@ -237,6 +239,10 @@ update action model =
               ( { model | userText = Respelled newRack }, Cmd.none )
             else Debug.crash "still in progress after maxInt iterations"
         _ -> Debug.crash "RefreshText action before data loaded"
+
+replaceCurlyApostrophes : String -> String
+replaceCurlyApostrophes =
+  Regex.replace Regex.All (Regex.regex "’") <| always "'"
 
 yieldAndThen : msg -> Cmd msg
 yieldAndThen =
