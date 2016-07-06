@@ -14,7 +14,7 @@ import Bead exposing (Bead)
 -- boundaries in between, you get sameWordCost.
 
 sameSpaceCost : Float
-sameSpaceCost = 2.0
+sameSpaceCost = 1.4
 
 sameWordCost : Float
 sameWordCost = 10.0

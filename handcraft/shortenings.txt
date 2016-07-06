@@ -6,42 +6,78 @@
 // data/substitutions.txt and data/pronouncer.txt, and rerun getData.py.
 // data/speller.txt will be automatically deleted and regenerated as well.
 
-AA	a
-AE	q
-AH	u
-AO	o
-AW	x
-AY	I
-B	b
-CH	c
-D	d
-DH	D
-EH	e
-ER	R
-EY	A
-F	f
-G	g
-HH	h
-IH	i
-IY	E
-JH	j
-K	k
-L	l
-M	m
-N	n
-NG	N
-OW	O
-OY	Y
-P	p
-R	r
-S	s
-SH	S
-T	t
-TH	T
-UH	U
-UW	W
-V	v
-W	w
-Y	y
-Z	z
-ZH	Z
+AA0	' // sonar
+AE0	' // sumac
+EH0	' // libel
+IH0	' // panic
+AO0	' // writeoff
+AH0	' // forum
+UH0	' // superb
+EY0	'y // foray
+AW0	aw // pronoun
+IY0	Yy // lily
+AY0	'y // idea
+OW0	'w // info
+UW0	Ww // menu
+OY0	cy // envoy
+ER0	'r // user
+AO0 R	cr // acorn
+
+AA1	o // spa
+AE1	a // add
+EH1	e // set
+IH1	i // bit
+AO1	o // dog
+AH1	u // sun
+UH1	U // put
+EY1	ey // day
+AW1	aw // now
+IY1	Yy // see
+AY1	oy // tie
+OW1	uw // low
+UW1	Ww // new
+OY1	cy // boy
+ER1	Rr // per
+AO1 R	cr // orb
+
+AA2	o
+AE2	a
+EH2	e
+IH2	i
+AO2	o
+AH2	u
+UH2	I
+EY2	ey
+AW2	aw
+IY2	Yy
+AY2	oy
+OW2	uw
+UW2	Ww
+OY2	cy
+ER2	Rr
+AO2 R	cr
+
+B	b // boy
+CH	tS // each
+D	d // day
+DH	D // the
+F	f // for
+G	g // guy
+HH	h // how
+JH	dZ // joy
+K	k // key
+L	l // low
+M	m // may
+N	n // now
+NG	N // hang
+P	p // pay
+R	r // ray
+S	s // say
+SH	S // she
+T	t // tie
+TH	T // thaw
+V	v // eve
+W	w // way
+Y	y // you
+Z	z // zoo
+ZH	Z // asia

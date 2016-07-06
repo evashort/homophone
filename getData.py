@@ -3,8 +3,45 @@ import os
 import zipfile
 import math
 import sys
+import bisect
+import io
+import codecs
 from itertools import permutations
 from operator import itemgetter
+
+class CompletionDict:
+    def __init__(self, keys, values):
+        assert len(keys) == len(values)
+        assert all(keys[i] < keys[i + 1] for i in xrange(len(keys) - 1))
+        self.keys = keys
+        self.values = values
+    def startwith(self, key):
+        i = bisect.bisect_right(self.keys, key)
+        return i < len(self.keys) and self.keys[i].startswith(key)
+    def get(self, key, default = None):
+        i = bisect.bisect_left(self.keys, key)
+        found = i < len(self.keys) and self.keys[i] == key
+        return self.values[i] if found else default
+
+def translate(d, s):
+    tokens = s.split()
+    start = 0
+    while start < len(tokens):
+        stop = start + 1
+        word = tokens[start]
+        while stop < len(tokens) and d.startwith(word):
+            stop += 1
+            word = " ".join(tokens[start:stop])
+        newWord = d.get(word)
+        while newWord is None and stop > start + 1:
+            stop -= 1
+            word = " ".join(tokens[start:stop])
+            newWord = d.get(word)
+        if newWord is not None:
+            yield newWord
+        else:
+            raise KeyError(tokens[start])
+        start = stop
 
 def withoutComment(line):
     commentStart = line.find("//")
@@ -12,17 +49,16 @@ def withoutComment(line):
 
 def withoutComments(f):
     for line in f:
-        lineWithoutComment = withoutComment(line)
-        if lineWithoutComment and not lineWithoutComment.isspace():
+        lineWithoutComment = withoutComment(line).rstrip()
+        if lineWithoutComment:
             yield lineWithoutComment
 
 def loadShortener(shorteningsPath):
-    shortenings = {}
-    with open(shorteningsPath, "r") as shorteningsFile:
-        for line in withoutComments(shorteningsFile):
-            k, v = line.split()
-            shortenings[k] = v
-    f = lambda x: "".join(shortenings[t] for t in x.split())
+    with io.open(shorteningsPath, "r", encoding = "utf-8") as shorteningsFile:
+        d = (line.split("\t") for line in withoutComments(shorteningsFile))
+        d = sorted(d, key = itemgetter(0))
+    d = CompletionDict(*zip(*d))
+    f = lambda x: "".join(translate(d, x))
     return f
 
 COSTMULTIPLIER = 1000
@@ -37,24 +73,21 @@ def showMenu(menu):
     return " ".join(showMenuItem(menuItem) for menuItem in menu)
 
 def generateDeletions(groupsPath, shorteningsPath, deletionsPath):
-    shorten = loadShortener(shorteningsPath)
-
     deletions = {}
     currentCost = 1
-    with open(groupsPath, "r") as groupsFile:
+    with io.open(groupsPath, "r", encoding = "utf-8") as groupsFile:
         for line in withoutComments(groupsFile):
             try:
-                currentCost = float(line.strip())
+                currentCost = float(line)
             except ValueError:
-                group = [shorten(i) for i in line.split(",")]
-                for key, value in permutations(group, 2):
+                for key, value in permutations(line.split(" "), 2):
                     if not value:
                         oldCost = deletions.get(key, float("inf"))
                         deletions[key] = min(oldCost, currentCost)
 
     deletions = sorted(deletions.iteritems(), key = itemgetter(0))
 
-    with open(deletionsPath, "w") as deletionsFile:
+    with io.open(deletionsPath, "w", encoding = "utf-8") as deletionsFile:
         deletionsFile.writelines(showMenuItem(d) + "\n" for d in deletions)
 
 def generateSubs(groupsPath, shorteningsPath, subsPath):
@@ -62,13 +95,12 @@ def generateSubs(groupsPath, shorteningsPath, subsPath):
 
     subs = {}
     currentCost = 1
-    with open(groupsPath, "r") as groupsFile:
+    with io.open(groupsPath, "r", encoding = "utf-8") as groupsFile:
         for line in withoutComments(groupsFile):
             try:
-                currentCost = float(line.strip())
+                currentCost = float(line)
             except ValueError:
-                group = [shorten(i) for i in line.split(",")]
-                for key, value in permutations(group, 2):
+                for key, value in permutations(line.split(" "), 2):
                     if value:
                         menu = subs.setdefault(key, {})
                         oldCost = menu.get(value, float("inf"))
@@ -78,7 +110,7 @@ def generateSubs(groupsPath, shorteningsPath, subsPath):
         subs[key] = sorted(menu.iteritems(), key = itemgetter(0))
     subs = sorted(subs.iteritems(), key = itemgetter(0))
 
-    with open(subsPath, "w") as subsFile:
+    with io.open(subsPath, "w", encoding = "utf-8") as subsFile:
         subsFile.writelines(k + " " + showMenu(m) + "\n" for k, m in subs)
 
 def parseCMUSpelling(cmuSpelling):
@@ -91,13 +123,13 @@ def generatePronouncer(cmuPath, wordsPath, noPronouncePath, shorteningsPath,
     shorten = loadShortener(shorteningsPath)
 
     d = {}
-    with open(cmuPath, "r") as cmuFile:
+    with io.open(cmuPath, "r", encoding = "cp1252") as cmuFile:
         for line in cmuFile:
             if not line.startswith(";;;"):
-                s, p = line.split("\t")
-                d.setdefault(parseCMUSpelling(s), []).append(shorten(p))
+                s, p = line.split("  ")
+                d.setdefault(parseCMUSpelling(s), set()).add(shorten(p))
 
-    with open(noPronouncePath, "r") as noPronounceFile:
+    with io.open(noPronouncePath, "r", encoding = "utf-8") as noPronounceFile:
         for line in withoutComments(noPronounceFile):
             try:
                 s, p = line.split("\t")
@@ -106,27 +138,26 @@ def generatePronouncer(cmuPath, wordsPath, noPronouncePath, shorteningsPath,
             else:
                 d[parseCMUSpelling(s)].remove(shorten(p))
 
-    with open(wordsPath, "r") as wordsFile:
+    with io.open(wordsPath, "r", encoding = "utf-8") as wordsFile:
         for line in withoutComments(wordsFile):
             s, p = line.split("\t")
-            d.setdefault(parseCMUSpelling(s), []).append(shorten(p))
+            d.setdefault(parseCMUSpelling(s), set()).add(shorten(p))
 
-    for v in d.itervalues():
-        v.sort()
-    d = sorted(d.iteritems(), key = itemgetter(0))
+    d = [(k, sorted(v)) for k, v in d.iteritems()]
+    d.sort(key = itemgetter(0))
 
-    with open(pronouncerPath, "w") as pronouncerFile:
+    with io.open(pronouncerPath, "w", encoding = "utf-8") as pronouncerFile:
         pronouncerFile.writelines(s + "\t" + " ".join(v) + "\n" for s, v in d)
 
 def generateBook(gbookPath, cmuPath, wordsPath, bookPath):
     spellings = set()
-    with open(cmuPath, "r") as cmuFile:
+    with io.open(cmuPath, "r", encoding = "cp1252") as cmuFile:
         for line in cmuFile:
             if not line.startswith(";;;"):
-                s, _ = line.split("\t")
+                s, _ = line.split("  ")
                 spellings.add(parseCMUSpelling(s))
 
-    with open(wordsPath, "r") as wordsFile:
+    with io.open(wordsPath, "r", encoding = "utf-8") as wordsFile:
         for line in withoutComments(wordsFile):
             s, _ = line.split("\t")
             spellings.add(parseCMUSpelling(s))
@@ -136,24 +167,24 @@ def generateBook(gbookPath, cmuPath, wordsPath, bookPath):
     lastAdornment = None
     lastCount = 0
     with zipfile.ZipFile(gbookPath, "r") as gbookZipFile:
-        gbookFile = gbookZipFile.open(gbookZipFile.namelist()[0], "r")
-        for line in gbookFile:
-            cap, _, countString, _, _ = line.split("\t")
-            if cap != lastCap:
-                if lastAdornment != None:
-                    book.append((lastAdornment, lastCount))
-                lastCap = cap
-                lastAdornment = None
-                for adornment in cap, "'" + cap, cap + "'", cap + ".":
-                    if adornment.lower() in spellings:
-                        lastAdornment = adornment
-                        break
-                lastCount = 0
-            lastCount += int(countString)
+        with gbookZipFile.open(gbookZipFile.namelist()[0], "r") as gbookFile:
+            for line in codecs.iterdecode(gbookFile, 'utf8'):
+                cap, _, countString, _, _ = line.split("\t")
+                if cap != lastCap:
+                    if lastAdornment != None:
+                        book.append((lastAdornment, lastCount))
+                    lastCap = cap
+                    lastAdornment = None
+                    for adornment in cap, "'" + cap, cap + "'", cap + ".":
+                        if adornment.lower() in spellings:
+                            lastAdornment = adornment
+                            break
+                    lastCount = 0
+                lastCount += int(countString)
     if lastAdornment != None:
         book.append((lastAdornment, lastCount))
 
-    with open(bookPath, "w") as bookFile:
+    with io.open(bookPath, "w", encoding = "utf-8") as bookFile:
         bookFile.writelines(a + "\t" + str(c) + "\n" for a, c in book)
 
 CAPITALMULTIPLIER = 0.1
@@ -170,7 +201,7 @@ def generateSpeller(pronouncerPath, totalPath, noSpellPath, shorteningsPath,
 
     counts = {}
     for bookPath in bookPaths:
-        with open(bookPath, "r") as bookFile:
+        with io.open(bookPath, "r", encoding = "utf-8") as bookFile:
             for line in withoutComments(bookFile):
                 cap, countString = line.split("\t")
                 menu = counts.setdefault(cap.lower(), {})
@@ -178,7 +209,7 @@ def generateSpeller(pronouncerPath, totalPath, noSpellPath, shorteningsPath,
                 menu[cap] = float(countString)
 
     total = 0.0
-    with open(totalPath, "r") as totalFile:
+    with io.open(totalPath, "r", encoding = "utf-8") as totalFile:
         next(totalFile)
         for line in totalFile:
             _, subTotal, _, _ = line.split("\t")
@@ -187,12 +218,12 @@ def generateSpeller(pronouncerPath, totalPath, noSpellPath, shorteningsPath,
                  for m in counts.itervalues() for cap, n in m.iteritems())
 
     pronouncer = {}
-    with open(pronouncerPath, "r") as pronouncerFile:
+    with io.open(pronouncerPath, "r", encoding = "utf-8") as pronouncerFile:
         for line in withoutComments(pronouncerFile):
             s, v = line.split("\t")
             pronouncer[s] = v.split()
 
-    with open(noSpellPath, "r") as noSpellFile:
+    with io.open(noSpellPath, "r", encoding = "utf-8") as noSpellFile:
         for line in withoutComments(noSpellFile):
             try:
                 s, p = line.split("\t")
@@ -218,7 +249,7 @@ def generateSpeller(pronouncerPath, totalPath, noSpellPath, shorteningsPath,
 
     speller = sorted(speller.iteritems(), key = itemgetter(0))
 
-    with open(spellerPath, "w") as spellerFile:
+    with io.open(spellerPath, "w", encoding = "utf-8") as spellerFile:
         spellerFile.writelines(p + "\t" + s + "\t" + showCost(e) + "\n" \
                                for p, (s, e) in speller)
 
@@ -269,8 +300,8 @@ words = os.path.join(os.getcwd(), "handcraft", "words.txt")
 noPronounce = os.path.join(os.getcwd(), "handcraft", "noPronounce.txt")
 noSpell = os.path.join(os.getcwd(), "handcraft", "noSpell[Explicit].txt")
 
-cmuURL = "http://svn.code.sf.net/p/cmusphinx/code/trunk/cmudict/sphinxdict/cmudict_SPHINX_40"
-cmu = os.path.join(os.getcwd(), "cache", "cmudict_SPHINX_40")
+cmuURL = "http://svn.code.sf.net/p/cmusphinx/code/trunk/cmudict/cmudict-0.7b"
+cmu = os.path.join(os.getcwd(), "cache", "cmudict-0.7b")
 totalURL = "http://storage.googleapis.com/books/ngrams/books/googlebooks-eng-us-all-totalcounts-20090715.txt"
 total = os.path.join(os.getcwd(), "cache",
                      "googlebooks-eng-us-all-totalcounts-20090715.txt")

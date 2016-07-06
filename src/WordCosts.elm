@@ -8,7 +8,7 @@ import CompletionDict exposing (CompletionDict)
 import ParseUtils
 
 costMultiplier : Float
-costMultiplier = 1.5 / 25784.0
+costMultiplier = 1.9 / 25784.0
 
 type alias Speller = CompletionDict String
 type alias WordCosts = CompletionDict Float

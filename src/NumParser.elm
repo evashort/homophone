@@ -19,7 +19,7 @@ parseDecimal atoms =
       if isDigits block then
         Just <|
           ( { spelling = "." ++ block
-            , pathLists = ["pYnt"] :: parseRawDigits block
+            , pathLists = ["pcynt"] :: parseRawDigits block
             }
           , rest
           )
@@ -38,16 +38,16 @@ parseInteger atoms =
                 (parseMultiplier first, List.map parseTriplet afterFirst)
               of
                 (Just m, [Just b1, Just b2, Just b3, Just b4]) ->
-                  m ++ [["trilyun"]] ++ say b1 ["bilyun"] ++
-                    say b2 ["milyun"] ++ say b3 ["Txzund", "Txzun"] ++ b4
+                  m ++ [["trily'n"]] ++ say b1 ["bily'n"] ++
+                    say b2 ["mily'n"] ++ say b3 ["Tawz'n", "Tawz'nd"] ++ b4
                 (Just m, [Just b1, Just b2, Just b3]) ->
-                  m ++ [["bilyun"]] ++ say b1 ["milyun"] ++
-                    say b2 ["Txzund", "Txzun"] ++ b3
+                  m ++ [["bily'n"]] ++ say b1 ["mily'n"] ++
+                    say b2 ["Tawz'n", "Tawz'nd"] ++ b3
                 (Just m, [Just b1, Just b2]) ->
-                  m ++ [["milyun"]] ++ say b1 ["Txzund", "Txzun"] ++ b2
+                  m ++ [["mily'n"]] ++ say b1 ["Tawz'n", "Tawz'nd"] ++ b2
                 (Just m, [Just b1]) ->
                   if String.length first > 1 then
-                    m ++ [["Txzund", "Txzun"]] ++ b1
+                    m ++ [["Tawz'n", "Tawz'nd"]] ++ b1
                   else parseDigits <| String.concat blocks
                 _ -> List.concatMap parseDigits blocks
           in
@@ -89,14 +89,13 @@ parseMultiplier block =
 parseHundredsDigit : Char -> Maybe (List (List String))
 parseHundredsDigit digit =
   case parseDigit digit of
-    Just pathList ->
-      Just [pathList, ["hundrud", "hundrid", "hunRd", "hundRd"]]
+    Just pathList -> Just [pathList, ["hun'rd", "hund'rd", "hundr'd"]]
     Nothing -> Nothing
 
 parseDigits : String -> List (List String)
 parseDigits block =
   case String.toList block of
-    ['0'] -> [["zirO", "zErO"]]
+    ['0'] -> [["zYyr'w"]]
     [tens, ones] -> force <| parseTwoDigits tens ones
     ['0', _, _] -> parseRawDigits block
     [hundreds, '0', '0'] -> force <| parseHundredsDigit hundreds
@@ -104,15 +103,15 @@ parseDigits block =
       force (parseDigit hundreds) :: force (parseTwoDigits tens ones)
     ['0', _, _, _] -> parseRawDigits block
     [thousands, '0', '0', '0'] ->
-      [force <| parseDigit thousands, ["Txzund", "Txzun"]]
+      [force <| parseDigit thousands, ["Tawz'n", "Tawz'nd"]]
     [thousands, '0', '0', ones] ->
       [ force <| parseDigit thousands
-      , ["Txzund", "Txzun"]
+      , ["Tawz'n", "Tawz'nd"]
       , force <| parseDigit ones
       ]
     [thousands, hundreds, '0', '0'] ->
       force (parseTwoDigits thousands hundreds) ++
-        [["hundrud", "hundrid", "hunRd", "hundRd"]]
+        [["hun'rd", "hund'rd", "hundr'd"]]
     [thousands, hundreds, tens, ones] ->
       force (parseTwoDigits thousands hundreds) ++
         force (parseTwoDigits tens ones)
@@ -125,16 +124,16 @@ parseTwoDigits : Char -> Char -> Maybe (List (List String))
 parseTwoDigits tens ones =
   case (tens, ones) of
     ('1', '0') -> Just [["ten"]]
-    ('1', '1') -> Just [["ilevun", "Elevun"]]
+    ('1', '1') -> Just [["'lev'n", "Yyl'v'n"]]
     ('1', '2') -> Just [["twelv"]]
-    ('1', '3') -> Just [["TRtEn"]]
-    ('1', '4') -> Just [["fortEn"]]
-    ('1', '5') -> Just [["fiftEn"]]
-    ('1', '6') -> Just [["sikstEn"]]
-    ('1', '7') -> Just [["sevuntEn"]]
-    ('1', '8') -> Just [["AtEn"]]
-    ('1', '9') -> Just [["nIntEn"]]
-    ('0', '0') -> Just [["O"], ["O"]]
+    ('1', '3') -> Just [["TRrtYyn"]]
+    ('1', '4') -> Just [["fcrtYyn"]]
+    ('1', '5') -> Just [["f'ftYyn", "fiftYyn"]]
+    ('1', '6') -> Just [["s'kstYyn", "sikstYyn"]]
+    ('1', '7') -> Just [["sev'ntYyn"]]
+    ('1', '8') -> Just [["'ytYyn", "eytYyn"]]
+    ('1', '9') -> Just [["noyntYyn"]]
+    ('0', '0') -> Just [["uw"], ["uw"]]
     (tens, '0') -> Maybe.map list1 <| parseTens tens
     (tens, ones) -> Maybe.map2 list2 (parseTens tens) (parseDigit ones)
 
@@ -181,28 +180,28 @@ isDigits token =
 parseDigit : Char -> Maybe (List String)
 parseDigit digit =
   case digit of
-    '0' -> Just ["O"]
-    '1' -> Just ["wun", "hwun"]
-    '2' -> Just ["tW"]
-    '3' -> Just ["TrE"]
-    '4' -> Just ["for"]
-    '5' -> Just ["fIv"]
+    '0' -> Just ["uw"]
+    '1' -> Just ["hwun", "wun"]
+    '2' -> Just ["tWw"]
+    '3' -> Just ["TrYy"]
+    '4' -> Just ["fcr"]
+    '5' -> Just ["foyv"]
     '6' -> Just ["siks"]
-    '7' -> Just ["sevun"]
-    '8' -> Just ["At"]
-    '9' -> Just ["nIn"]
+    '7' -> Just ["sev'n"]
+    '8' -> Just ["eyt"]
+    '9' -> Just ["noyn"]
     _ -> Nothing
 
 parseTens : Char -> Maybe (List String)
 parseTens digit =
   case digit of
-    '0' -> Just ["O"]
-    '2' -> Just ["twentE", "twenE"]
-    '3' -> Just ["TRdE", "TRtE"]
-    '4' -> Just ["fortE"]
-    '5' -> Just ["fiftE"]
-    '6' -> Just ["sikstE"]
-    '7' -> Just ["sevuntE", "sevunE"]
-    '8' -> Just ["AtE"]
-    '9' -> Just ["nIntE"]
+    '0' -> Just ["uw"]
+    '2' -> Just ["twentYy"]
+    '3' -> Just ["TRrdYy"]
+    '4' -> Just ["fcrtYy"]
+    '5' -> Just ["fiftYy"]
+    '6' -> Just ["sikstYy"]
+    '7' -> Just ["sev'ntYy"]
+    '8' -> Just ["eytYy"]
+    '9' -> Just ["noyntYy"]
     _ -> Nothing

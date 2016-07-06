@@ -1,89 +1,84 @@
- h=1000 u=10000
-A Ay=0 E=2000 e=1000
-Ay A=0
-D DD=0 T=1000
-DD D=0
-E A=2000 Ey=0 i=1000 u=2000
-Ey E=0
-I Iy=0 i=2000
-Ir R=2000
-Iy I=0
-N NN=0 n=1000
-NN N=0
-O Ow=0 u=1000
-Ow O=0
-R Ir=2000 Rr=0 Ur=1000 Wr=1000 ar=1000 er=1000 ir=1000 or=1000 qr=1000 r=1000 u=2000 ur=1000
-Rr R=0 r=1000
-S SS=0 Z=1000 c=1000 dS=1000 tS=1000 tc=1000
-SS S=0
-St st=2000
-T D=1000 TT=0
-TT T=0
-U i=2000 o=2000 u=1000
-Ur R=1000
-W Ww=0 u=2000
-Wr R=1000
-Ww W=0
-Y Yy=0
-Yy Y=0
-Z S=1000 ZZ=0
-ZZ Z=0
-a i=2000 o=1000 u=1000
-ar R=1000
-b bb=0 bp=1000 p=1000 pb=1000
-bb b=0
-bp b=1000 p=1000 pb=1000
-c S=1000 j=1000 tS=1000 tc=1000
-d dd=0 dt=1000 t=1000 td=1000
-dS S=1000
-dd d=0
-dj j=1000
-dt d=1000 t=1000 td=1000
-e A=1000 i=1000 q=2000 u=1000
-er R=1000
-f ff=0 pf=2000 v=1000
-ff f=0
-g gg=0 gk=1000 k=1000 kg=1000
-gg g=0
-gk g=1000 k=1000 kg=1000
-i E=1000 I=2000 U=2000 a=2000 e=1000 q=2000 u=1000
-ir R=1000
-j c=1000 dj=1000
-k g=1000 gk=1000 kg=1000 kk=0
-kg g=1000 gk=1000 k=1000
-kk k=0
+ '=11000 h=250
+' R=1000 U=1000 e=1700 u=1000
+D DD=1000 DT=1000 T=1000 TD=1000 TT=1000 d=13000 t=13000
+DD D=1000 DT=1000 T=1000 TD=1000 TT=1000
+DT D=1000 DD=1000 T=1000 TD=1000 TT=1000
+N Nn=3000 n=3000
+Ng Nk=1000 ng=0 nk=1000
+Nk Ng=1000 ng=1000 nk=0
+Nm m=3000 nm=3000
+Nn N=3000 n=3000
+R '=1000 c=3000
+S SS=0 SZ=0 Z=1000 ZS=0 ZZ=1000
+SS S=0 SZ=0 Z=1000 ZS=0 ZZ=1000
+SZ S=0 SS=0 Z=0 ZS=0 ZZ=0
+T D=1000 DD=1000 DT=1000 TD=1000 TT=1000 d=13000 t=13000
+TD D=1000 DD=1000 DT=1000 T=1000 TT=1000
+TT D=1000 DD=1000 DT=1000 T=1000 TD=1000
+U '=1000
+Yy i=2700
+Yyr ir=0
+Z S=1000 SS=1000 SZ=0 ZS=0 ZZ=0
+ZS S=0 SS=0 SZ=0 Z=0 ZZ=0
+ZZ S=1000 SS=1000 SZ=0 Z=0 ZS=0
+b bb=0 bp=0 p=1000 pb=0 pp=1000
+bb b=0 bp=0 p=1000 pb=0 pp=1000
+bp b=0 bb=0 p=0 pb=0 pp=0
+c R=3000
+d D=13000 T=13000 dd=0 dt=0 t=1000 td=0 tt=1000
+dd d=0 dt=0 t=1000 td=0 tt=1000
+dt d=0 dd=0 t=0 td=0 tt=0
+e '=1700
+f ff=0 fv=0 v=1000 vf=0 vv=1000
+ff f=0 fv=0 v=1000 vf=0 vv=1000
+fv f=0 ff=0 v=0 vf=0 vv=0
+g gg=0 gk=0 k=1000 kg=0 kk=1000
+gg g=0 gk=0 k=1000 kg=0 kk=1000
+gk g=0 gg=0 k=0 kg=0 kk=0
+i Yy=2700
+ir Yyr=0
+k g=1000 gg=1000 gk=0 kg=0 kk=0
+kg g=0 gg=0 gk=0 k=0 kk=0
+kk g=1000 gg=1000 gk=0 k=0 kg=0
 l ll=0
 ll l=0
-m mm=0
+m Nm=3000 mm=0 nm=3000
 mm m=0
-n N=1000 nd=2000 nn=0 nt=2000
-nd n=2000 nt=2000
+mn n=3000
+n N=3000 Nn=3000 mn=3000 nn=0
+ng Ng=0 Nk=1000 nk=1000
+nk Ng=1000 Nk=0 ng=1000
+nm Nm=3000 m=3000
 nn n=0
-nt n=2000 nd=2000
-o U=2000 a=1000 q=2000 u=1000 wo=1000 x=2000
-or R=1000
-p b=1000 bp=1000 pb=1000 pp=0
-pb b=1000 bp=1000 p=1000
-pf f=2000
-pp p=0
-q e=2000 i=2000 o=2000 u=1000
-qr R=1000
-r R=1000 Rr=1000 rr=0
+p b=1000 bb=1000 bp=0 pb=0 pp=0
+pb b=0 bb=0 bp=0 p=0 pp=0
+pp b=1000 bb=1000 bp=0 p=0 pb=0
+r rr=0
 rr r=0
-s ss=0 z=1000
-ss s=0
-st St=2000
-t d=1000 dt=1000 td=1000 tt=0
-tS S=1000 c=1000 tc=1000
-tc S=1000 c=1000 tS=1000
-td d=1000 dt=1000 t=1000
-tt t=0
-u E=2000 O=1000 R=2000 U=1000 W=2000 a=1000 e=1000 i=1000 o=1000 q=1000
-ur R=1000
-v f=1000 vv=0
-vv v=0
-wo o=1000
-x o=2000 xw=0
-xw x=0
-z s=1000 zz=0
-zz z=0
+s ss=0 sz=0 z=1000 zs=0 zz=1000
+sdZ stS=1000 stdZ=1000 sttS=1000 sty=1000 zdZ=1000 zdy=1000 ztS=1000
+ss s=0 sz=0 z=1000 zs=0 zz=1000
+stS sdZ=1000 stdZ=1000 sttS=1000 sty=1000 zdZ=1000 zdy=1000 ztS=1000
+stdZ sdZ=1000 stS=1000 sttS=1000 sty=1000 zdZ=1000 zdy=1000 ztS=1000
+sttS sdZ=1000 stS=1000 stdZ=1000 sty=1000 zdZ=1000 zdy=1000 ztS=1000
+sty sdZ=1000 stS=1000 stdZ=1000 sttS=1000 zdZ=1000 zdy=1000 ztS=1000
+sz s=0 ss=0 z=0 zs=0 zz=0
+t D=13000 T=13000 d=1000 dd=1000 dt=0 td=0 tt=0
+td d=0 dd=0 dt=0 t=0 tt=0
+tt d=1000 dd=1000 dt=0 t=0 td=0
+u '=1000
+v f=1000 ff=1000 fv=0 vf=0 vv=0
+vf f=0 ff=0 fv=0 v=0 vv=0
+vv f=1000 ff=1000 fv=0 v=0 vf=0
+w ww=0
+ww w=0
+y yy=0
+ytS yty=1000
+yty ytS=1000
+yy y=0
+z s=1000 ss=1000 sz=0 zs=0 zz=0
+zdZ sdZ=1000 stS=1000 stdZ=1000 sttS=1000 sty=1000 zdy=1000 ztS=1000
+zdy sdZ=1000 stS=1000 stdZ=1000 sttS=1000 sty=1000 zdZ=1000 ztS=1000
+zs s=0 ss=0 sz=0 z=0 zz=0
+ztS sdZ=1000 stS=1000 stdZ=1000 sttS=1000 sty=1000 zdZ=1000 zdy=1000
+zz s=1000 ss=1000 sz=0 z=0 zs=0
