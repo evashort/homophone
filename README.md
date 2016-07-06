@@ -12,7 +12,7 @@ Try it out at http://homophone.me/
 1. Run `git clone https://github.com/evanshort73/elm-pairing-heap.git` so that
 `elm-pairing-heap` and `homophone` are side-by-side in the same directory
 
-1. Run `elm-make src/Main.elm --output elm.js`
+1. Run `elm-make src/Main.elm --output elm.js --warn`
 
 1. Open `index.html` in Firefox (Chrome prevents it from loading the data
 files)
@@ -28,7 +28,7 @@ default code page, MS-DOS Latin US.
 
 1. Install [Node.js v4.x.x LTS](https://nodejs.org/en/)
 
-1. Run `elm-make tests/Tests.elm --output tests.js`
+1. Run `elm-make tests/Tests.elm --output tests.js --warn`
 
 1. Run `node tests.js`
 

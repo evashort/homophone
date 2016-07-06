@@ -27,8 +27,7 @@ init = 0
 update : Bead -> (BoundaryState, Float) -> (BoundaryState, Float)
 update bead (state, cost) =
   let (newState, summand) = lookup (lookup table state) bead in
-    if newState >= 0 && newState <= 11 then
-      (newState, cost + summand)
+    if newState >= 0 && newState <= 11 then (newState, cost + summand)
     else
       Debug.crash <|
         "bad state transition: " ++ toString state ++ " -> " ++
