@@ -67,8 +67,16 @@ S SS Z ZZ
 t d T D
 
 1
-sty stS sdZ sttS stdZ zdy zdZ ztS
-yty ytS // TODO: not getting used?
+sty stS sttS ztS
+zdy zdZ stdZ sdZ
+4
+sty stS sttS ztS zdy zdZ stdZ sdZ
+
+1
+yty ytS
+ydy ydZ
+4
+yty ytS ydy ydZ
 
 0.25
  h

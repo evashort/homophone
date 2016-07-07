@@ -56,12 +56,12 @@ pp b=1000 bb=1000 bp=0 p=0 pb=0
 r rr=0
 rr r=0
 s ss=0 sz=0 z=1000 zs=0 zz=1000
-sdZ stS=1000 stdZ=1000 sttS=1000 sty=1000 zdZ=1000 zdy=1000 ztS=1000
+sdZ stS=4000 stdZ=1000 sttS=4000 sty=4000 zdZ=1000 zdy=1000 ztS=4000
 ss s=0 sz=0 z=1000 zs=0 zz=1000
-stS sdZ=1000 stdZ=1000 sttS=1000 sty=1000 zdZ=1000 zdy=1000 ztS=1000
-stdZ sdZ=1000 stS=1000 sttS=1000 sty=1000 zdZ=1000 zdy=1000 ztS=1000
-sttS sdZ=1000 stS=1000 stdZ=1000 sty=1000 zdZ=1000 zdy=1000 ztS=1000
-sty sdZ=1000 stS=1000 stdZ=1000 sttS=1000 zdZ=1000 zdy=1000 ztS=1000
+stS sdZ=4000 stdZ=4000 sttS=1000 sty=1000 zdZ=4000 zdy=4000 ztS=1000
+stdZ sdZ=1000 stS=4000 sttS=4000 sty=4000 zdZ=1000 zdy=1000 ztS=4000
+sttS sdZ=4000 stS=1000 stdZ=4000 sty=1000 zdZ=4000 zdy=4000 ztS=1000
+sty sdZ=4000 stS=1000 stdZ=4000 sttS=1000 zdZ=4000 zdy=4000 ztS=1000
 sz s=0 ss=0 z=0 zs=0 zz=0
 t D=13000 T=13000 d=1000 dd=1000 dt=0 td=0 tt=0
 td d=0 dd=0 dt=0 t=0 tt=0
@@ -73,12 +73,14 @@ vv f=1000 ff=1000 fv=0 v=0 vf=0
 w ww=0
 ww w=0
 y yy=0
-ytS yty=1000
-yty ytS=1000
+ydZ ydy=1000 ytS=4000 yty=4000
+ydy ydZ=1000 ytS=4000 yty=4000
+ytS ydZ=4000 ydy=4000 yty=1000
+yty ydZ=4000 ydy=4000 ytS=1000
 yy y=0
 z s=1000 ss=1000 sz=0 zs=0 zz=0
-zdZ sdZ=1000 stS=1000 stdZ=1000 sttS=1000 sty=1000 zdy=1000 ztS=1000
-zdy sdZ=1000 stS=1000 stdZ=1000 sttS=1000 sty=1000 zdZ=1000 ztS=1000
+zdZ sdZ=1000 stS=4000 stdZ=1000 sttS=4000 sty=4000 zdy=1000 ztS=4000
+zdy sdZ=1000 stS=4000 stdZ=1000 sttS=4000 sty=4000 zdZ=1000 ztS=4000
 zs s=0 ss=0 sz=0 z=0 zz=0
-ztS sdZ=1000 stS=1000 stdZ=1000 sttS=1000 sty=1000 zdZ=1000 zdy=1000
+ztS sdZ=4000 stS=1000 stdZ=4000 sttS=1000 sty=1000 zdZ=4000 zdy=4000
 zz s=1000 ss=1000 sz=0 z=0 zs=0
