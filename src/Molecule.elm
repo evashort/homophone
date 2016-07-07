@@ -9,6 +9,7 @@ import Atom
 import CompletionDict
 import NumParser
 import Pronouncer exposing (Pronouncer)
+import Regex
 
 -- Molecules map substrings of user input to one or more dictionary words,
 -- which in turn have one or more pronunciations. Molecule boundaries are
@@ -65,7 +66,7 @@ parseNAtoms :
   Pronouncer -> List String -> Int -> Maybe (Molecule, List String)
 parseNAtoms pronouncer atoms n =
   let spelling = String.concat <| List.take n atoms in
-    case CompletionDict.get (String.toLower spelling) pronouncer of
+    case CompletionDict.get (normalize spelling) pronouncer of
       Nothing -> Nothing
       Just pathList ->
         Just
@@ -80,7 +81,11 @@ maxMoleculeSizeHelper : Int -> Pronouncer -> List String -> Int
 maxMoleculeSizeHelper knownGood pronouncer atoms =
   if knownGood < List.length atoms &&
     CompletionDict.startWith
-      (String.toLower <| String.concat <| List.take knownGood atoms)
+      (normalize <| String.concat <| List.take knownGood atoms)
       pronouncer
   then maxMoleculeSizeHelper (knownGood + 1) pronouncer atoms
   else knownGood
+
+normalize : String -> String
+normalize =
+  Regex.replace Regex.All (Regex.regex "’") (always "'") << String.toLower

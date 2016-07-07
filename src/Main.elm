@@ -5,7 +5,6 @@ import Html.Attributes as Attributes
 import Json.Decode
 import Process
 import Random
-import Regex
 import Task
 
 import DataLoader
@@ -179,39 +178,35 @@ update: Msg -> Model -> (Model, Cmd Msg)
 update action model =
   case action of
     DataLoaded subMsg ->
-      case DataLoader.update subMsg model.dataLoader of
-        ( newDataLoader, subEffect ) ->
-          let mappedSubEffect = Cmd.map DataLoaded subEffect in
-            case (DataLoader.data newDataLoader, model.userText) of
-              ( Just (pronouncer, speller, dCosts, sCosts, wCosts)
-              , RawText text
-              ) ->
-                let
-                  rack =
-                    Rack.setGoal
-                      text <|
-                      Rack.init pronouncer speller dCosts sCosts wCosts
-                in
-                  ( { model
-                    | dataLoader = newDataLoader
-                    , userText = Respelled rack
-                    }
-                  , if Rack.done rack then mappedSubEffect
-                    else
-                      Cmd.batch [ mappedSubEffect, yieldAndThen RespellText ]
-                  )
-              _ -> ({ model | dataLoader = newDataLoader }, mappedSubEffect)
-    EditText withCurlyApostrophes ->
-      let newUserText = replaceCurlyApostrophes withCurlyApostrophes in
-        case model.userText of
-          RawText _ ->
-            ( { model | userText = RawText newUserText }, Cmd.none )
-          Respelled rack ->
+      let
+        (newDataLoader, subEffect) = DataLoader.update subMsg model.dataLoader
+      in let
+        mappedSubEffect = Cmd.map DataLoaded subEffect
+      in case
+        (DataLoader.data newDataLoader, model.userText)
+      of
+        (Just (pronouncer, speller, dCosts, sCosts, wCosts), RawText text) ->
+          let
+            rack =
+              Rack.setGoal
+                text <|
+                Rack.init pronouncer speller dCosts sCosts wCosts
+          in
             ( { model
-              | userText = Respelled <| Rack.setGoal newUserText rack
+              | dataLoader = newDataLoader
+              , userText = Respelled rack
               }
-            , if Rack.done rack then yieldAndThen RespellText else Cmd.none
+            , if Rack.done rack then mappedSubEffect
+              else Cmd.batch [ mappedSubEffect, yieldAndThen RespellText ]
             )
+        _ -> ({ model | dataLoader = newDataLoader }, mappedSubEffect)
+    EditText newUserText ->
+      case model.userText of
+        RawText _ -> ( { model | userText = RawText newUserText }, Cmd.none )
+        Respelled rack ->
+          ( { model | userText = Respelled <| Rack.setGoal newUserText rack }
+          , if Rack.done rack then yieldAndThen RespellText else Cmd.none
+          )
     RespellText ->
       case model.userText of
         Respelled rack ->
@@ -239,10 +234,6 @@ update action model =
               ( { model | userText = Respelled newRack }, Cmd.none )
             else Debug.crash "still in progress after maxInt iterations"
         _ -> Debug.crash "RefreshText action before data loaded"
-
-replaceCurlyApostrophes : String -> String
-replaceCurlyApostrophes =
-  Regex.replace Regex.All (Regex.regex "’") <| always "'"
 
 yieldAndThen : msg -> Cmd msg
 yieldAndThen =
