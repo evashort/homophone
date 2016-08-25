@@ -9,9 +9,6 @@ Try it out at http://homophone.me/
 
 1. Install [Elm Platform 0.17](http://elm-lang.org/install)
 
-1. Run `git clone https://github.com/evanshort73/elm-pairing-heap.git` so that
-`elm-pairing-heap` and `homophone` are side-by-side in the same directory
-
 1. Run `elm-make src/Main.elm --output elm.js --warn`
 
 1. Open `index.html` in Firefox (Chrome prevents it from loading the data
