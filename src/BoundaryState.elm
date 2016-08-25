@@ -70,5 +70,5 @@ lookup a i =
   case Array.get i a of
     Just x -> x
     Nothing ->
-      Debug.crash <| "index " ++ toString i ++ " out of bounds for " ++
-        toString a
+      Debug.crash <|
+        "index " ++ toString i ++ " out of bounds for " ++ toString a
