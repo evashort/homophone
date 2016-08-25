@@ -25,7 +25,7 @@ default code page, MS-DOS Latin US.
 
 1. Install [Node.js v4.x.x LTS](https://nodejs.org/en/)
 
-1. Run `elm-make tests/Tests.elm --output tests.js --warn`
+1. `cd tests` and run `elm-make Tests.elm --output tests.js --warn`
 
 1. Run `node tests.js`
 

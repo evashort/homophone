@@ -1,3 +1,6 @@
+cache/
+elm.js
+tests/tests.js
 
 # Created by https://www.gitignore.io/api/windows,elm
 
@@ -36,8 +39,3 @@ repl-temp-*
 __pycache__/
 *.py[cod]
 *$py.class
-
-
-cache/
-elm.js
-tests.js
