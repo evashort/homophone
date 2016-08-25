@@ -23,16 +23,14 @@ dagTest =
           , ('z', [])
           ]
     , test
-        "It can merge redundant branches of the DAG" <|
+        "It can merge different branches of the subtree rooted at 'a' at different times" <|
         assertEqual
-          (flattenDAG <| DAG.fromPathLists [["pile", "bale", "po"]]) <|
-          [ ('a', ['l'])
-          , ('b', ['a'])
-          , ('e', [])
-          , ('i', ['l'])
-          , ('l', ['e'])
-          , ('o', [])
-          , ('p', ['i', 'o'])
+          (flattenDAG <| DAG.fromPathLists [["axyz", "az", "bxyz"]]) <|
+          [ ('a', ['x', 'z'])
+          , ('b', ['x'])
+          , ('x', ['y'])
+          , ('y', ['z'])
+          , ('z', [])
           ]
     ]
 
@@ -50,7 +48,8 @@ insertEdge edge dict =
     else if oldDst == Just edge.dst then dict
     else
       Debug.crash <|
-        "duplicate phoneme " ++ toString edge.phoneme ++ " in test case"
+        "two edges labeled " ++ toString edge.phoneme ++
+          " lead to different nodes"
 
 lookup : Array a -> Int -> a
 lookup a i =
