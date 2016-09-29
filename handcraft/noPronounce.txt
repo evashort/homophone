@@ -67,3 +67,16 @@ UTHE
 WHOA	HH OW1
 NICE	N IY1 S
 DÉJÀ
+// no word has more than 4 pronunciations, and almost all of the words with 4
+// pronunciations fit the pattern A+(B or C)+D+(E or F)+G. If a word doesn't
+// fit the pattern, we delete one of its pronunciations.
+DIDN'T	D IH1 D N T
+DIRECTLY	D IH0 R EH1 K L IY0
+DIRECTNESS	D IH0 R EH1 K N AH0 S
+FIRSTHAND	F ER1 S T HH AE0 N D
+FIRSTHAND	F ER1 S HH AE0 N D
+GATOS	G EY1 T OW2 S
+GATOS	G EY1 T OW0 S
+ROCARD	R AH0 K AA1 R D
+TRACOR	T R EH1 K ER0
+UNNATURALLY	AH0 N AE1 CH ER0 L IY0

@@ -15,12 +15,19 @@ AH0	' // forum
 UH0	' // superb
 EY0	'y // foray
 AW0	aw // pronoun
+AW0 W	aw // (doesn't occur)
 IY0	Yy // lily
+IY0 Y	Yy // reuse
 AY0	'y // idea
+AY0 Y	'y // kumbaya
 OW0	'w // info
+OW0 W	'w // microwaved
 UW0	Ww // menu
+UW0 W	Ww // annualize
 OY0	cy // envoy
+OY0 Y	cy // (doesn't occur)
 ER0	'r // user
+ER0 R	'r // overrun
 AO0 R	cr // acorn
 
 AA1	o // spa
@@ -31,13 +38,21 @@ AO1	o // dog
 AH1	u // sun
 UH1	U // put
 EY1	ey // day
+EY1 Y	ey // Vallejo
 AW1	aw // now
+AW1 W	aw // trowel
 IY1	Yy // see
+IY1 Y	Yy // three-year
 AY1	oy // tie
+AY1 Y	oy // highyield
 OW1	uw // low
+OW1 W	uw // no-one
 UW1	Ww // new
+UW1 W	Ww // newwave
 OY1	cy // boy
+OY1 Y	cy // Jolla
 ER1	Rr // per
+ER1 R	Rr // sirs
 AO1 R	cr // orb
 
 AA2	o
@@ -48,13 +63,21 @@ AO2	o
 AH2	u
 UH2	I
 EY2	ey
+EY2 Y	ey
 AW2	aw
+AW2 W	aw
 IY2	Yy
+IY2 Y	Yy
 AY2	oy
+AY2 Y	oy // (doesn't occur)
 OW2	uw
+OW2 W	uw
 UW2	Ww
+UW2 W	Ww
 OY2	cy
+OY2 Y	cy
 ER2	Rr
+ER2 R	Rr
 AO2 R	cr
 
 B	b // boy

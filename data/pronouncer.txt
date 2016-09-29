@@ -31,7 +31,7 @@ a's	eyz
 a.	ey
 a.'s	eyz
 a.s	eyz
-a42128	eyfcrtWwwuntWweyt
+a42128	eyfcrtWwuntWweyt
 aa	eyey
 aaa	trip'ley
 aaberg	ob'rg
@@ -1523,7 +1523,7 @@ afshar	afS'r
 afshar's	afS'rz
 aft	aft
 after	aft'r
-after-room	aft'rrWwm
+after-room	aft'rWwm
 afterall	aft'rol
 afterburner	aft'rbRrn'r
 afterburners	aft'rbRrn'rz
@@ -2083,7 +2083,7 @@ akira	'kYyr'
 akita	'kYyt'
 akita's	'kYyt'z
 akiva	'kYyv'
-akiyama	'kYyyom'
+akiyama	'kYyom'
 akkadian	'keydYy'n
 akkerman	ak'rm'n
 akre	ak'r
@@ -2341,8 +2341,8 @@ alehouse	eylhaws
 aleichem	'leh'm 'leyh'm
 alejandre	'l'yyondr'y
 alejandro	'l'yhondr'w 'l'yyondr'w
-alejo	'leyy'w
-alejos	'leyy'wz
+alejo	'ley'w
+alejos	'ley'wz
 aleksander	al'ksand'r
 aleksandr	al'ksand'r
 alem	'lem
@@ -2729,7 +2729,7 @@ allow	'law
 allowable	'law'b'l
 allowance	'law'ns
 allowances	'law'ns'z
-alloway	al'wwey
+alloway	al'wey
 allowed	'lawd
 allowing	'law'N
 allows	'lawz
@@ -4044,8 +4044,8 @@ annoyed	'ncyd
 annoying	'ncy'N
 annoys	'ncyz
 annual	anyWw'l
-annualize	anyWww'loyz
-annualized	anyWww'loyzd
+annualize	anyWw'loyz
+annualized	anyWw'loyzd
 annually	anyWw'lYy
 annuals	anWw'lz
 annuit	'nWw't
@@ -5008,7 +5008,7 @@ arguelles	'rgeyl's
 arguello	'rgel'w
 argues	orgyWwz
 argueta	'rgeyt'
-arguijo	'rgwYyy'w
+arguijo	'rgwYy'w
 arguing	orgyWw'N
 argument	orgy'm'nt
 argument's	orgy'm'nts
@@ -5160,7 +5160,7 @@ armfield	ormfYyld
 armida	'rmYyd'
 armies	ormYyz
 armiger	orm'g'r
-armijo	'rmYyy'w
+armijo	'rmYy'w
 armilla	'rmil'
 armin	orm'n
 armina	'rmYyn'
@@ -5331,7 +5331,7 @@ arrow	ar'w er'w
 arrow's	ar'wz er'wz
 arrowhead	ar'whed er'whed
 arrowheads	ar'whedz er'whedz
-arrowood	ar'wwId
+arrowood	ar'wId
 arrowroot	er'wrWwt
 arrows	ar'wz er'wz
 arrowsmith	ar'wsmiT er'wsmiT
@@ -6432,8 +6432,8 @@ autos	ot'wz
 autospa	otuwsp'
 autotote	ot'wtuwt
 autotrophic	ot'truwf'k
-autoworker	ot'ww'rk'r
-autoworkers	ot'ww'rk'rz
+autoworker	ot'w'rk'r
+autoworkers	ot'w'rk'rz
 autrey	otrYy
 autry	otrYy
 autumn	ot'm
@@ -6718,7 +6718,7 @@ aytes	eyts
 ayuso	'yWws'w
 ayyad	oyad oyod
 ayyad's	oyadz oyodz
-ayyash	oyyaS
+ayyash	oyaS
 azactam	'zakt'm
 azalea	'zeyly'
 azaleas	'zeyly'z
@@ -8559,7 +8559,7 @@ bautch	bawtS
 bautista	b'tYyst'
 bautz	bots
 bautzer	bawts'r
-bauwens	baww'nz
+bauwens	baw'nz
 bauxite	boks'yt
 bauza	bawz'
 bava	bov'
@@ -8624,7 +8624,7 @@ baynham	beynh'm
 bayog	beyog
 bayonet	bey'net
 bayonets	bey'nets
-bayonne	beyyuwn
+bayonne	beyuwn
 bayou	boyWw
 bayous	boyWwz
 bayouth	boyWwT
@@ -11049,7 +11049,7 @@ bitterman's	bit'rm'nz
 bittermann	bit'rm'n
 bittermann's	bit'rm'nz
 bitterness	bit'rn's
-bitterroot	bit'rrWwt
+bitterroot	bit'rWwt
 bitters	bit'rz
 bittersweet	bit'rswYyt
 bittick	bit'k
@@ -12722,7 +12722,7 @@ borrello	bcrel'w
 borrero	bcrer'w
 borris	bcr's
 borroff	bcr'f
-borror	bo'rr
+borror	bo'r
 borrow	boruw
 borrowed	boruwd
 borrower	bor'w'r
@@ -12941,7 +12941,7 @@ boughton	bawt'n
 bougie	bWwZYy
 bouie	bWwYy
 bouillabaise	bWwly'beys
-bouillon	bWwwil'n
+bouillon	bWwil'n
 bouknight	bawkn'yt
 boulais	bWwley
 boulalas	bWwl'l's
@@ -13063,7 +13063,7 @@ bovino	b'wvYyn'w
 bow	baw buw
 bowar	buw'r
 boward	buw'rd
-bowater	bawut'r buwot'r buwwot'r
+bowater	bawut'r buwot'r
 bowcan	buwk'n
 bowden	bawd'n buwd'n
 bowdish	buwd'S
@@ -14496,7 +14496,7 @@ brouse	braws
 broussard	brWwsord
 brousseau	brWwsuw
 brousset	brWws't
-brouwer	braww'r
+brouwer	braw'r
 brow	braw
 broward	braw'rd
 browbeat	brawbYyt
@@ -14765,7 +14765,7 @@ brzozowski	br'zofskYy
 brzycki	britskYy
 bt	bYytYy
 bta	bYytYyey
-bua	bYyyWwey byWw'
+bua	bYyWwey byWw'
 bub	bub
 bubar	bWwb'r
 bubb	bub
@@ -15020,7 +15020,7 @@ buffy	bufYy
 bufkin	bufk'n
 buford	byWwf'rd
 bug	bug
-buga	bYyyWwdZYyey byWwg'
+buga	bYyWwdZYyey byWwg'
 bugaboo	bug'bWw
 bugai	byWwg'y
 bugai's	byWwg'yz
@@ -15946,7 +15946,7 @@ bystanders	boystand'rz
 bystrom	bistr'm
 byte	boyt
 bytes	boyts
-byu	bYywoyyWw
+byu	bYywoyWw
 byun	byun
 byus	boy's
 bywater	boywot'r
@@ -16343,8 +16343,8 @@ calle	keyl
 callebs	keylebz
 called	kold
 callegari	k'l'gorYy
-calleja	k'leyy'
-callejas	k'leyy'z
+calleja	k'ley'
+callejas	k'ley'z
 callen	kal'n
 callender	k'lend'r
 callens	kol'nz
@@ -16377,7 +16377,7 @@ calloused	kal'st
 callously	kal'slYy
 callousness	kal'sn's
 callow	kal'w
-calloway	kal'wwey
+calloway	kal'wey
 calls	kolz
 callula	kalWwl'
 callum	kal'm
@@ -16408,7 +16408,7 @@ calor	kal'r
 caloric	k'lcr'k
 calorie	kalcrYy
 calories	kalcrYyz
-caloway	kal'wwey
+caloway	kal'wey
 calpers	kalp'rz
 calpers's	kalp'rz'z
 calpis	kalp's
@@ -16489,7 +16489,7 @@ camden's	kamd'nz
 camdessus	k'mdes's
 came	keym
 cameco	kam'k'w
-camejo	k'meyy'w
+camejo	k'mey'w
 camel	kam'l
 camel's	kam'lz
 camelot	kam'lot
@@ -17818,7 +17818,7 @@ castiglia	k'stYyglYy'
 castiglione	k'stYyglYyuwnYy
 castilla	k'stil'
 castille	kast'l
-castilleja	k'stYyleyy'
+castilleja	k'stYyley'
 castillo	kastYy'w kastil'w
 castillon	kast'l'n
 castine	k'stYynYy
@@ -18231,7 +18231,7 @@ ceco	sYyk'w
 cecola	s'kuwl'
 cecos	sYyk'ws
 cedar	sYyd'r
-cedar-rapids	sYyd'rap'dz sYyd'rrap'dz
+cedar-rapids	sYyd'rap'dz
 cedars	sYyd'rz
 cede	sYyd
 ceded	sYyd'd
@@ -18255,7 +18255,7 @@ cefalu	tS'folWw
 cegielski	tS'gYylskYy
 ceiling	sYyl'N
 ceilings	sYyl'Nz
-ceja	seyy'
+ceja	sey'
 cejka	tSeyk'
 cel	sYyYyel sel
 cela	sel'
@@ -18359,7 +18359,7 @@ cemp	semp
 cencall	sensel
 cenci	tSentSYy
 cencor	senkcr
-cendejas	s'yndeyy'z
+cendejas	s'yndey'z
 cenergy	sen'rdZYy
 ceniceros	s'ynYyser'wz
 cenith	sen'T
@@ -19419,7 +19419,7 @@ chide	tSoyd
 chided	tSoyd'd
 chides	tSoydz
 chidester	tSid'st'r
-chideya	tS'dYyy' tS'deyy'
+chideya	tS'dYy' tS'dey'
 chiding	tSoyd'N
 chidsey	tSidzYy
 chief	tSYyf
@@ -20176,7 +20176,7 @@ cirone	s'ruwn
 ciros	siruwz
 cirque	sRrk
 cirrhosis	s'ruws's
-cirrincione	s'rrYyntSuwnYy
+cirrincione	s'rYyntSuwnYy
 cirrus	sir's
 cisar	s'sor
 cisco	siskuw
@@ -20871,7 +20871,7 @@ cloverleaf	kluwv'rlYyf
 cloves	kluwvz
 clovis	kluwv's
 clow	kluw
-cloward	kluww'rd
+cloward	kluw'rd
 clowdus	klawd's
 clower	klaw'r
 clowers	klaw'rz
@@ -20958,9 +20958,9 @@ co-op	kuwop
 co-operative	kuwopRr't'v kuwopr't'v
 co-opt	k'wopt
 co-opted	k'wopt'd
-co-wife	kuwwoyf
-co-worker	kuwwRrk'r
-co-workers	kuwwRrk'rz
+co-wife	kuwoyf
+co-worker	kuwRrk'r
+co-workers	kuwRrk'rz
 co.	kup'nYy kuw
 coach	kuwtS
 coach's	kuwtS'z
@@ -21332,7 +21332,7 @@ coitsville	kcytsv'l
 coitus	kcyt's
 cojimar	kuwdZ'mor
 cojimar's	kuwdZ'morz
-cojuangco	k'wdZwaNk'w k'wwoNk'w
+cojuangco	k'wdZwaNk'w k'woNk'w
 coke	kuwk
 coke's	kuwks
 coker	kuwk'r
@@ -21657,7 +21657,7 @@ colosseum	kol'sYy'm
 colossus	k'los's
 colour	kul'r
 coloured	kul'rd
-colouring	kul'rriN
+colouring	kul'riN
 colpepper	kulpep'r
 colpitts	kuwlp'ts
 colquitt	kuwlkw't
@@ -22237,7 +22237,7 @@ computerworld	k'mpyWwt'rwRrld
 computes	k'mpyWwts
 computing	k'mpyWwt'N
 computrac	kompyWwtrak
-compuware	kompyWwwer
+compuware	kompyWwer
 comrade	komrad
 comrades	komradz
 comrie	kom'rYy
@@ -23630,7 +23630,7 @@ corne	kcrn
 cornea	kcrnYy'
 corneal	kcrnYyl
 corneas	kcrnYy'z
-cornejo	k'rneyy'w
+cornejo	k'rney'w
 cornel	kcrn'l
 cornela	k'rnel'
 cornelia	kcrnYyly'
@@ -23687,7 +23687,7 @@ corny	kcrnYy
 corolla	k'rol'
 corollaries	kcr'lerYyz
 corollary	kcr'lerYy
-corologis	k'rrol'dZ's
+corologis	k'rol'dZ's
 corona	k'ruwn'
 corona's	k'ruwn'z
 coronado	k'r'wnod'w
@@ -24149,9 +24149,9 @@ counterproductive	kawn'rpr'dukt'v kawnt'rpr'dukt'v
 counterproposal	kawnt'rpr'puwz'l
 counterproposals	kawnt'rpr'puwz'lz
 counterpunch	kawnt'rpuntS
-counterrevolt	kawnt'rrYyvuwlt
-counterrevolution	kawnt'rr'v'lWwS'n
-counterrevolutionary	kawnt'rr'v'lWwS'nerYy
+counterrevolt	kawnt'rYyvuwlt
+counterrevolution	kawnt'r'v'lWwS'n
+counterrevolutionary	kawnt'r'v'lWwS'nerYy
 counters	kawnt'rz
 countersue	kawnt'rsWw
 countersued	kawnt'rsWwd
@@ -24382,8 +24382,8 @@ cowlings	kawl'Nz
 cowlings'	kawl'Nz
 cowlings's	kawl'Nz'z
 cowman	kawm'n
-coworker	kuwwRrk'r
-coworkers	kuwwRrk'rz
+coworker	kuwRrk'r
+coworkers	kuwRrk'rz
 cowper	kWwp'r kawp'r
 cowperthwaite	kawp'rTweyt
 cowries	kawrYyz
@@ -25719,7 +25719,7 @@ curvin	kRrv'n
 curving	kRrv'N
 curvy	kRrvYy
 curzio	kRrzYy'w
-cus	kus sYyyWwes
+cus	kus sYyWwes
 cusack	kyWwz'k
 cusano	kWwson'w
 cush	kUS kuS
@@ -27698,7 +27698,7 @@ deines	dYynz
 deininger	doyn'N'r
 deinstitutionalization	dYyinst'tWwS'n'l'zeyS'n
 deinstitutionalize	dYyinst'tWwS'n'loyz
-deion	dYy'n dYyy'n
+deion	dYy'n
 deirdre	dYyrdr'
 deis	dYyz dey'z
 deisher	dYy'S'r
@@ -29041,7 +29041,7 @@ determinist	d'tRrm'n'st
 deterministic	d'tRrm'nist'k
 deterred	d'tRrd
 deterrence	d'tRr'ns
-deterrent	d'tRrr'nt
+deterrent	d'tRr'nt
 deterrents	d'tRr'nts
 deterring	d'tRr'N
 deters	d'tRrz
@@ -29307,7 +29307,7 @@ dewolf	d'wUlf
 dewolfe	d'wUlf
 dewoody	d'wUdYy
 dews	dWwz
-dewulf	dWwwulf
+dewulf	dWwulf
 dewy	dWwYy
 dex	deks
 dexfenfluramine	deks'nflcr'mYyn
@@ -29572,7 +29572,7 @@ didier	didYy'r
 didinium	d'dinYy'm
 didion	didYy'n
 didion's	didYy'nz
-didn't	did'n did'nt didnt dint
+didn't	did'n did'nt dint
 dido	doyd'w
 didomenico	d'd'wmen'kuw
 didonato	d'd'wnotuw
@@ -30077,8 +30077,8 @@ directionless	d'rekS'nl's d'yrekS'nl's dYyrekS'nl's
 directions	d'rekS'nz d'yrekS'nz dYyrekS'nz
 directive	d'rekt'v d'yrekt'v dYyrekt'v
 directives	d'rekt'vz d'yrekt'vz dYyrekt'vz
-directly	d'reklYy d'rektlYy d'yreklYy dYyreklYy
-directness	d'rekn's d'rektn's d'yrekn's dYyrekn's
+directly	d'rektlYy d'yreklYy dYyreklYy
+directness	d'rektn's d'yrekn's dYyrekn's
 director	d'rekt'r d'yrekt'r dYyrekt'r
 director's	d'rekt'rz d'yrekt'rz dYyrekt'rz
 directoral	d'rekt'r'l
@@ -30282,7 +30282,7 @@ discount	d'skawnt diskawnt
 discountable	diskawnt'b'l
 discounted	diskawn'd diskawnt'd
 discounter	diskawnt'r
-discounters	d'skawnt'rz diskawn'rrz
+discounters	d'skawnt'rz diskawn'rz
 discounting	diskawn'N diskawnt'N
 discounts	d'skawnts diskawnts
 discourage	d'skRr'dZ
@@ -32548,9 +32548,9 @@ duhart	duh'rt
 duhe	dWwh
 duhon	dWwh'n
 duhr	dRr
-dui	dYyyWwoy
+dui	dYyWwoy
 duignan	d'gnan
-duis	dWw'z dYyyWwoyz
+duis	dWw'z dYyWwoyz
 duisburg	dWwsb'rg
 duitsman	dWwtsm'n
 duk	duk
@@ -32923,8 +32923,8 @@ duvall	dWwvol
 duve	dWwv
 duvernay	d'vRrn'y
 duvrees	dWwvrYyz
-duwayne	dWwweyn
-duwe	dWww
+duwayne	dWweyn
+duwe	dWw
 dux	duks
 duzan	dWwz'n
 dvd	dYyvYydYy
@@ -33632,7 +33632,7 @@ edsall	'dsol
 edsel	eds'l
 edson	eds'n
 edstrom	edstr'm
-edu	YydYyyWw edyWw
+edu	YydYyWw edyWw
 eduard	edw'rd
 eduardo	'dword'w
 educate	edZ'keyt edZyWwkeyt
@@ -34181,7 +34181,7 @@ elektrizitaetswerk	el'ktriz'tatsw'rk
 elektron	'lektr'n
 element	el'm'nt
 elemental	el'men'l el'ment'l
-elementary	el'ment'rrYy el'mentSrYy el'mentrYy
+elementary	el'ment'rYy el'mentSrYy el'mentrYy
 elements	el'm'nts
 elena	el'n' eleyn'
 elena's	el'n'z
@@ -34636,8 +34636,8 @@ emelita	'm'lYyt'
 emelyne	em'l'yn
 emens	em'nz
 emera	'mer'
-emerald	em'rr'ld emr'ld
-emeralds	em'rr'ldz emr'ldz
+emerald	em'r'ld emr'ld
+emeralds	em'r'ldz emr'ldz
 emerant	'ymer'nt
 emeraude	em'rawd
 emerge	'mRrdZ Yym'rdZ
@@ -36005,7 +36005,7 @@ espe	esp
 especial	'speS'l
 especially	'speS'lYy 'speSlYy
 espectador	'spekt'dcr
-espejo	'yspeyy'w
+espejo	'yspey'w
 espeland	esp'l'nd
 espenschied	esp'nSYyd
 espenshade	esp'nS'd esp'nS'yd
@@ -36455,7 +36455,7 @@ everage	ev'r'dZ
 everard	ev'r'rd
 everbach	ev'rbok
 everding	ev'rd'N
-eveready	ev'rredYy
+eveready	ev'redYy
 evered	ev'rd
 everest	ev'r'st evr'st
 everest's	ev'r'sts evr'sts
@@ -39308,8 +39308,8 @@ firewood	foy'rwId foyrwId
 firework	foyrwRrk
 fireworks	foyrwRrks
 firfer	fRrf'r
-firing	foy'rr'N foyr'N
-firings	foy'rr'Nz foyr'Nz
+firing	foy'r'N foyr'N
+firings	foy'r'Nz foyr'Nz
 firino	f'rYyn'w
 firkins	fRrk'nz
 firkus	fRrk's
@@ -39337,7 +39337,7 @@ first-rate	fRrstreyt
 firstar	fRrstor
 firstborn	fRrstbcrn
 firstfed	fRrstfed
-firsthand	f'rshand f'rsthand fRrsh'nd fRrsth'nd
+firsthand	f'rshand f'rsthand fRrshand fRrsthand
 firstier	fRrstYy'r fRrsty'r
 firstly	fRrstlYy
 firsts	fRrsts
@@ -39777,7 +39777,7 @@ fletcher	fletS'r
 flett	flet
 fleur	flRr
 fleurette	flRret
-fleuri	flRrrYy flUrYy
+fleuri	flRrYy flUrYy
 fleury	flUrYy
 flew	flWw
 flewellen	flWwel'n
@@ -40389,7 +40389,7 @@ forbes's	fcrbz'z
 forbeses	fcrbz'z
 forbess	fcrbes
 forbid	f'bid f'rbid
-forbidden	f'rrbid'n fcrb'd'n
+forbidden	f'rbid'n fcrb'd'n
 forbidding	f'bid'N f'rbid'N
 forbids	f'bidz f'rbidz
 forbis	fcrb's
@@ -40632,7 +40632,7 @@ fornoff	fcrn'f
 fornwalt	fcrnw'lt
 forquer	fcrk'r
 forr	fcr
-forrer	fo'rr
+forrer	fo'r
 forrest	fcr'st
 forrestal	fcr'st'l
 forrester	fcr'st'r
@@ -41793,12 +41793,12 @@ fujita	fWwdZYyt'
 fujitsu	fWwdZitsWw
 fujitsu's	fWwdZitsWwz
 fujiwara	fWwdZYywor'
-fujiya	fWwdZYyy'
-fujiyama	fWwdZYyyom'
+fujiya	fWwdZYy'
+fujiyama	fWwdZYyom'
 fuke	fWwk
 fuklah	fWwkl'
 fuklah's	fWwkl'z
-fukowoka	fWwk'wwok'
+fukowoka	fWwk'wok'
 fukuda	fWwkWwd'
 fukui	fWwkWwYy
 fukumoto	fWwkWwmuwt'w
@@ -42418,8 +42418,8 @@ galloped	gal'pt
 galloping	gal'p'N
 gallos	gal'wz
 gallow	gal'w
-galloway	gal'wwey
-galloways	gal'wweyz
+galloway	gal'wey
+galloways	gal'weyz
 gallows	gal'wz
 galls	golz
 gallstone	golstuwn
@@ -42824,7 +42824,7 @@ garron's	ger'nz
 garros	ger'ws
 garrott	gar't
 garrow	ger'w
-garroway	gar'wwey
+garroway	gar'wey
 garroz	gar'z
 garrulous	ger'l's
 garry	garYy gerYy
@@ -42986,7 +42986,7 @@ gatoil	g'tcyl
 gator	geyt'r
 gatorade	gat'reyd
 gators	geyt'rz
-gatos	gatuws geyt'ws geytuws gotuws
+gatos	gatuws gotuws
 gatrell	gatr'l
 gatsby	gatsbYy
 gatson	gats'n
@@ -43585,7 +43585,7 @@ geotek	gYy'wtek
 geothermal	dZYy'wTRrm'l
 geotropic	dZYy'trop'k
 geotropism	dZYyotr'piz'm
-geoworks	dZYy'ww'rks
+geoworks	dZYy'w'rks
 gephardt	gephort
 gephardt's	gephorts
 gephart	geph'rt
@@ -45558,7 +45558,7 @@ gout	gawt
 goutal	gWwt'l
 gouty	gawtYy
 gouvea	gWwvey'
-gouveia	gWwveyy'
+gouveia	gWwvey'
 gov	guv
 govan	guwv'n
 gove	guwv
@@ -45592,7 +45592,7 @@ govs	gov'rn'rz govz
 gow	gaw
 gowan	gaw'n
 gowans	gaw'nz
-goward	guww'rd
+goward	guw'rd
 gowdy	gawdYy
 gowell	gow'l
 gowen	gaw'n
@@ -45698,9 +45698,9 @@ gradual	gradZWw'l
 gradualism	gradZ'w'liz'm
 gradualist	gradZ'w'l'st
 gradually	gradZWw'lYy gradZWwlYy
-graduate	gradZ'w't gradZ'weyt gradZWweyt gradZWww't
+graduate	gradZ'w't gradZ'weyt gradZWw't gradZWweyt
 graduated	gradZ'weyt'd gradZWweyt'd
-graduates	gradZ'w'ts gradZ'weyts gradZWweyts gradZWww'ts
+graduates	gradZ'w'ts gradZ'weyts gradZWw'ts gradZWweyts
 graduating	gradZ'weyt'N gradZWweyt'N
 graduation	gradZ'weyS'n gradZWweyS'n
 graduations	gradZ'weyS'nz gradZWweyS'nz
@@ -46171,7 +46171,7 @@ greenpeace	grYynpYys
 greenpeace's	grYynpYys'z
 greens	grYynz
 greens'	grYynz
-greensboro	grYynzb'rr'w
+greensboro	grYynzb'r'w
 greensburg	grYynzb'rg
 greenshield	grYynSYyld
 greenshields	grYynSYyldz
@@ -46388,7 +46388,7 @@ grigory	grYyg'rYy greg'rYy
 grigoryant	gr'gcry'nt
 grigoryants	gr'gcry'nts
 grigsby	grigzbYy
-grijalva	grYyyolv'
+grijalva	grYyolv'
 grill	gril
 grille	gril
 grilled	grild
@@ -46926,7 +46926,7 @@ gudino	gWwdYyn'w
 gudmundson	gudm'nds'n
 gue	gyWw
 guedry	gedrYy
-guei-yuan	gweyyWwon
+guei-yuan	gweyWwon
 guel	gel
 guenette	g'net
 guenna	geyn'
@@ -47057,7 +47057,7 @@ guillette	g'let
 guilliams	gwYylYy'mz
 guillory	gil'rYy
 guillot	g'luw
-guillotine	gYyy'tYyn gil'tYyn
+guillotine	gYy'tYyn gil'tYyn
 guillotte	g'lot
 guilmartin	g'lmort'n
 guilmette	g'lmet
@@ -47934,7 +47934,7 @@ hallmarks	holmorks
 hallock	hal'k
 halloran	hal'r'n
 hallow	hal'w
-halloway	hal'wwey
+halloway	hal'wey
 hallowe'en	hal'wYyn
 hallowed	hal'wd
 halloween	hal'wYyn
@@ -48800,7 +48800,7 @@ harron	har'n
 harrop	her'p
 harroun	h'rWwn
 harrow	har'w
-harrower	har'ww'r
+harrower	har'w'r
 harrowing	her'w'N
 harry	herYy
 harry's	herYyz
@@ -50338,8 +50338,8 @@ herbs	Rrbz
 herbst	hRrbst
 herbster	hRrbst'r
 herceg	hRrs'g
-hercegovina	hRrrts'g'wvYyn' herts'g'wvYyn'
-hercegovina's	hRrrts'g'wvYyn'z herts'g'wvYyn'z
+hercegovina	hRrts'g'wvYyn' herts'g'wvYyn'
+hercegovina's	hRrts'g'wvYyn'z herts'g'wvYyn'z
 herculean	h'rkyWwlYy'n
 hercules	hRrky'lYyz
 herczeg	hRrtS'g
@@ -50644,7 +50644,7 @@ hevner	hevn'r
 hew	hyWw
 heward	hyWw'rd
 hewe	hyWw
-hewell	hew'l hyWww'l
+hewell	hew'l hyWw'l
 hewer	hyWw'r
 hewes	hyWwz
 hewett	hyWw't
@@ -50857,7 +50857,7 @@ hightower's	hoytaw'rz
 highway	hoywey
 highway's	hoyweyz
 highways	hoyweyz
-highyield	hoyyYyld
+highyield	hoyYyld
 higinbotham	hig'nb'T'm
 higley	higlYy
 higman	higm'n
@@ -51746,7 +51746,7 @@ hollopeter	hol'pYyt'r
 holloran	hol'r'n
 hollow	hol'w
 hollow's	hol'wz
-holloway	hol'wwey
+holloway	hol'wey
 hollowed	hol'wd
 hollowell	hol'w'l
 hollowing	hol'w'N
@@ -52216,7 +52216,7 @@ hord	hcrd
 horde	hcrd
 hordes	hcrdz
 horehound	horhawnd
-horejsi	hcreyysYy
+horejsi	hcreysYy
 horelick	hcr'l'k
 horen	hcr'n
 horenstein	hcr'nst'yn hcr'nstYyn
@@ -53307,7 +53307,7 @@ hutzell	hutz'l
 hutzelman	huts'lm'n
 hutzler	hutsl'r
 huval	hWwval
-huwe	hWww
+huwe	hWw
 hux	huks
 huxford	huksf'rd
 huxley	hukslYy
@@ -54963,7 +54963,7 @@ infotech	inf'wtek
 infotechnology	inf'wt'knol'dZYy
 infotron	inf'wtron
 infotron's	inf'wtronz
-infoworld	inf'wwRrld
+infoworld	inf'wRrld
 infra	infr'
 infraction	infrakS'n
 infractions	infrakS'nz
@@ -55751,13 +55751,13 @@ interprets	intRrpr'ts
 interprovincial	int'rpr'wvinS'l
 interpublic	int'rpubl'k
 interpublic's	int'rpubl'ks
-interracial	int'rreyS'l
-interrante	int'rrontYy
+interracial	int'reyS'l
+interrante	int'rontYy
 interred	intRrd
-interregnum	int'rregn'm
-interrelate	int'rr'leyt
-interrelated	int'rr'leyt'd
-interrelationship	int'rrYyleyS'nS'p
+interregnum	int'regn'm
+interrelate	int'r'leyt
+interrelated	int'r'leyt'd
+interrelationship	int'rYyleyS'nS'p
 interrent	int'rent
 interrogate	inter'geyt
 interrogated	inter'geyt'd
@@ -55770,7 +55770,7 @@ interrogators	inter'geyt'rz
 interrogatory	int'rog'tcrYy
 interrupt	int'rupt
 interrupted	int'rupt'd
-interruptible	int'rrupt'b'l
+interruptible	int'rupt'b'l
 interrupting	int'rupt'N
 interruption	int'rupS'n
 interruptions	int'rupS'nz
@@ -57271,7 +57271,7 @@ jerrell	dZer'l y'reyl
 jerri	dZerYy
 jerrico	dZer'kuw
 jerrie	dZerYy
-jerris	dZRrr's
+jerris	dZRr's
 jerritts	dZer'ts
 jerrold	dZer'ld
 jerrome	dZ'ruwm y'ruwm'y
@@ -57634,7 +57634,7 @@ jolie	dZuwlYy
 joliet	dZuwlYyet
 jolin	dZuwl'n
 jolivette	Zol'v't
-jolla	dZuwl' hcyy'
+jolla	dZuwl' hcy'
 jolley	dZolYy
 jollie	dZolYy
 jollier	dZolYy'r
@@ -58656,7 +58656,7 @@ kasha	koS'
 kashiwagi	kaS'wagYy
 kashiwahara	koSYyw'hor'
 kashiwahara's	koSYyw'hor'z
-kashiyama	koSYyyom'
+kashiyama	koSYyom'
 kashmir	kaSm'r kaSmYyr
 kashmiri	k'SmYyrYy
 kashner	kaSn'r
@@ -60455,7 +60455,7 @@ kluttz	kluts
 klutz	kluts
 klutznick	klutsn'k
 kluver	klWwv'r
-kluwer	klWww'r
+kluwer	klWw'r
 klux	kluks
 klym	klim
 klynveld	klinveld
@@ -61865,7 +61865,7 @@ kumagai	kWwm'goYy
 kumar	kWwmor
 kumaratunga	kWwmor'tung'
 kumarisami	kWwmor'somYy
-kumbaya	kImb'yyu
+kumbaya	kImb'yu
 kumble	kumb'l
 kume	kyWwm
 kumho	kumh'w
@@ -62010,12 +62010,12 @@ kutuzovsky	kWwt'zovskYy
 kutz	kuts
 kutzer	kutz'r
 kuvin	kWwv'n
-kuwahara	kWww'hor'
-kuwait	kWwweyt
-kuwait's	kWwweyts
-kuwaiti	kWwweytYy
-kuwaitis	kWwweytYyz
-kuwam	kyWww'm
+kuwahara	kWw'hor'
+kuwait	kWweyt
+kuwait's	kWweyts
+kuwaiti	kWweytYy
+kuwaitis	kWweytYyz
+kuwam	kyWw'm
 kuykendall	koyk'ndol
 kuyper	koyp'r
 kuzara	kyWwzor'
@@ -64185,7 +64185,7 @@ leigh	lYy
 leight	leyt
 leighton	leyt'n
 leighty	leytYy
-leija	lYyy'
+leija	lYy'
 leikam	loyk'm
 leiken	loyk'n
 leiker	loyk'r
@@ -64246,7 +64246,7 @@ leitz	lYyts
 leitzel	loytz'l
 leitzke	loytskYy
 leiva	lYyv'
-leja	leyy'
+leja	ley'
 lejeune	leycyn
 lek	lek
 lekachman	lekokm'n
@@ -66039,10 +66039,10 @@ loesser	les'r los'r
 loew	loWw luw
 loewe	loWw luw
 loewen	loWw'n
-loewenson	luww'ns'n
+loewenson	luw'ns'n
 loewenstein	luw'nst'yn luw'nstYyn
 loewenthal	luw'nT'l
-loewi	luwwYy
+loewi	luwYy
 loews	luwz
 loewy	luwYy
 lofaro	l'wfor'w
@@ -67910,7 +67910,7 @@ magnussen	magn's'n
 magnusson	magn's'n
 magoon	m'gWwn
 magouirk	m'gwRrk
-magowan	m'guww'n
+magowan	m'guw'n
 magpie	magpoy
 magpies	magpoyz
 magrane	magreyn
@@ -68830,7 +68830,7 @@ maputo	m'pWwt'w
 maputo's	m'pWwt'wz
 maquila	m'kwYyl'
 maquiladora	makw'lad'r'
-maquiladoras	m'kYyy'dcr's
+maquiladoras	m'kYy'dcr's
 maquilas	makw'l's
 mar	mor
 mara	mor'
@@ -69162,7 +69162,7 @@ maritimes	mar'toymz
 maritz	mar'ts
 mariucci	merYyWwtSYy
 marius	morYy's
-mariusa	m'rYyyWws'
+mariusa	m'rYyWws'
 marjai	mordZ'y
 marje	mordZ
 marjie	mordZYy
@@ -69263,8 +69263,8 @@ marland	morl'nd
 marlar	morl'r
 marlatt	morl't
 marlboro	morlb'r'w
-marlboro's	morlb'rr'wz
-marlboros	morlb'rr'wz
+marlboro's	morlb'r'wz
+marlboros	morlb'r'wz
 marlborough	morlb'r'w
 marleen	m'rlYyn
 marleene	m'rlYyn
@@ -69295,7 +69295,7 @@ marmara	m'rmor'
 marmer	morm'r
 marmion	mormYy'n
 marmo	morm'w
-marmolejo	m'rm'wleyy'w
+marmolejo	m'rm'wley'w
 marmon	morm'n
 marmor	morm'r
 marmoset	morm'zet
@@ -69840,7 +69840,7 @@ mate	meyt
 matecki	m'tekYy
 mated	meyt'd
 mateer	m'tir
-mateja	m'teyy'
+mateja	m'tey'
 matejka	m'teyk'
 matell	m'tel
 matelski	m'telskYy
@@ -70757,7 +70757,7 @@ mcelhinny	mak'lhinYy
 mcelhone	mak'lhuwn
 mcelligott	m'kel'g't
 mcelmurray	mak'lmRrYy
-mcelmurry	mak'lmRrrYy
+mcelmurry	mak'lmRrYy
 mcelrath	m'kelraT mak'lraT
 mcelravy	mak'lreyvYy
 mcelreath	mak'lraT
@@ -71767,7 +71767,7 @@ meitz	mYyts
 meitzler	moytsl'r
 meixner	mYyksn'r
 meiyuh	m'yyWw
-mejia	meyyYy'
+mejia	meyYy'
 mejias	m'yyYy'z
 mekeel	mekYyl
 mekong	meyk'N
@@ -72857,11 +72857,11 @@ microtel	moykr'wtel
 microtubule	moykruwtWwbyWwl
 microtubules	moykruwtWwbyWwlz
 microvax	moykr'wvaks
-microware	moykruwwer
-microwavable	moykr'wweyv'b'l
+microware	moykruwer
+microwavable	moykr'weyv'b'l
 microwave	moykr'weyv
-microwaved	moykr'wweyvd
-microwaves	moykr'wweyvz
+microwaved	moykr'weyvd
+microwaves	moykr'weyvz
 microwaving	moykr'weyv'N
 microx	mikr'ks
 micucci	mYykWwtSYy
@@ -73042,7 +73042,7 @@ mihm	mim
 mihn	min
 mihn's	minz
 mihok	mih'k
-mijares	mYyyor's
+mijares	mYyor's
 mika	mYyk'
 mikado	m'kod'w
 mikael	m'keyl
@@ -73725,8 +73725,8 @@ miscarriage	m'sker'dZ
 miscarriages	m'sker'dZ'z
 miscast	m'skast
 miscavige	m'skavidZ
-miscayuna	misk'yyWwn'
-miscayuna's	misk'yyWwn'z
+miscayuna	misk'yWwn'
+miscayuna's	misk'yWwn'z
 miscellaneous	mis'leynYy's
 miscellany	mis'leynYy
 misch	miS
@@ -74118,16 +74118,16 @@ mixtures	mikstS'rz
 mixup	miks'p
 mixups	miks'ps
 miyagawa	mYy'gow'
-miyahara	mYyy'hor'
-miyake	mYyyok'y
+miyahara	mYy'hor'
+miyake	mYyok'y
 miyako	mYyukuw
 miyamori	mYy'mcrYy
-miyamoto	mYyy'muwt'w
-miyasaki	mYyy'sokYy
-miyasato	mYyy'sot'w
-miyashiro	mYyy'Sir'w
-miyazaki	mYyy'zokYy
-miyazawa	mYyy'zow'
+miyamoto	mYy'muwt'w
+miyasaki	mYy'sokYy
+miyasato	mYy'sot'w
+miyashiro	mYy'Sir'w
+miyazaki	mYy'zokYy
+miyazawa	mYy'zow'
 miyazawa's	mYy'zow'z
 mizar	moyzor
 mizar's	moyzorz
@@ -74864,7 +74864,7 @@ montiel	m'wntYyel
 montien	montYy'n
 montier	monty'r
 montieth	montYy'T
-montijo	m'wntYyy'w
+montijo	m'wntYy'w
 montini	m'wntYynYy
 montjoy	montdZcy
 montmartre	monmartr'
@@ -75285,7 +75285,7 @@ moscom	mosk'm
 moscoso	m'wskuws'w
 moscow	moskaw moskuw
 moscow's	moskawz moskuwz
-moscowane	mosk'ww'yn
+moscowane	mosk'w'yn
 moscowitz	mosk'w'ts
 mose	muwz
 mosel	muws'l
@@ -75472,7 +75472,7 @@ motzko	motsk'w
 moua	maw'
 moudry	muwdrYy
 moudy	mawdYy
-moueix	mWwwoyks
+moueix	mWwoyks
 moul	mawl
 mould	muwld
 moulden	muwld'n
@@ -75553,7 +75553,7 @@ mouthy	mawTYy
 mouton	mWwt'n
 moutray	mWwtrey
 moutse	mWwtsYy
-mouw	maww
+mouw	maw
 mouzon	mWwzon
 movable	mWwv'b'l
 move	mWwv
@@ -75913,11 +75913,11 @@ multitask	multYytask
 multitasking	multYytask'N
 multitude	mult'tWwd mult'tyWwd
 multitudes	mult'tyWwdz
-multiuser	multYyyWwz'r
+multiuser	multYyWwz'r
 multivalve	multYyv'lv
 multivision	multYyviZ'n
 multivitamin	multYyvoytum'n
-multiyear	multYyyYyr
+multiyear	multYyYyr
 multnomah	mulnuwm'
 mulvaney	mulveynYy
 mulvany	mulveynYy
@@ -75936,7 +75936,7 @@ mumbling	mumb'l'N mumbl'N
 mumbo	mumb'w
 mumby	mumbYy
 mumford	mumf'rd
-mumia	m'mYyy'
+mumia	m'mYy'
 mumm	mum
 mumma	mum'
 mumme	mum
@@ -76043,7 +76043,7 @@ murali	m'rolYy
 murals	myUr'lz
 muramatsu	mWwr'motsWw
 muramoto	m'r'muwt'w
-muranaga	m'rr'nog'
+muranaga	m'r'nog'
 murano	m'ron'w
 muraoka	m'r'uwk'
 murase	myRr'yz
@@ -76112,7 +76112,7 @@ murphy	mRrfYy
 murphy's	mRrfYyz
 murphys	mRrfYyz
 murr	mRr
-murrah	m'rro
+murrah	m'ro
 murray	mRrYy murYy
 murray's	mRrYyz
 murree	mRrYy
@@ -76969,9 +76969,9 @@ naylor	neyl'r
 nays	neyz
 naysayer	neysey'r
 naysayers	neysey'rz
-nayyar	neyyor
+nayyar	neyor
 nazar	n'zor
-nazarbayev	noz'rboyy'v
+nazarbayev	noz'rboy'v
 nazareth	naz'r'T
 nazarian	n'zerYy'n
 nazario	n'zorYy'w
@@ -77557,7 +77557,7 @@ neutrogena	nWwtr'dZYyn'
 neutron	nWwtron
 neutrons	nWwtronz
 neuville	nWwvil
-neuwirth	nWww'rT
+neuwirth	nWw'rT
 neuzil	nWwz'l
 neva	neyv'
 nevada	n'vad' n'vod'
@@ -77774,7 +77774,7 @@ newtowne	nWwtawn
 newts	nWwts
 newvector	nWwvekt'r
 newville	nWwvil
-newwave	nWwweyv
+newwave	nWweyv
 nex	neks
 nexgen	neksdZen
 nexis	neks's
@@ -78189,7 +78189,7 @@ nishimo	n'SYym'w
 nishimoto	nYySYymuwt'w
 nishimura	nYySYymUr'
 nishioka	nYySYyuwk'
-nishiyama	nYySYyyom'
+nishiyama	nYySYyom'
 nishizawa	nYyS'zow'
 niskanen	nisk'n'n
 nisley	nizlYy
@@ -78273,8 +78273,8 @@ no's	nuwz
 no-brainer	nuwbreyn'r
 no-go	nuwguw
 no-good	nuwgId
-no-one	nuww'n
-no-one's	nuww'nz
+no-one	nuw'n
+no-one's	nuw'nz
 no-show	nuwSuw
 noa	nuw'
 noaa	enuweyey nuw'
@@ -79156,7 +79156,7 @@ nowak	nuwv'k
 nowakowski	naw'kofskYy
 nowell	nuw'l
 nowels	naw'lz
-nowhere	nuwhwer nuwwer
+nowhere	nuwer nuwhwer
 nowicki	nawitskYy
 nowinski	nawinskYy
 nowlan	nawl'n
@@ -79614,7 +79614,7 @@ obedience	'wbYydYy'ns
 obedient	'wbYydYy'nt
 obediently	'wbYydYy'ntlYy 'wbYydy'ntlYy
 obeid	'wboyd
-obeirne	'wbRrrn
+obeirne	'wbRrn
 obeisance	'wbeys'ns
 obelia	'wbelYy'
 obenchain	ob'nk'yn
@@ -81348,7 +81348,7 @@ ostermann	ost'rm'n
 ostermeier	ost'rm'y'r
 ostermeyer	ostRrmoy'r
 ostermiller	ost'rm'l'r
-osterreichische	ost'rroyk'SYy
+osterreichische	ost'royk'SYy
 ostertag	ost'rt'g
 osthoff	osth'f
 ostia	ostYy'
@@ -81461,7 +81461,7 @@ ouellette	oWwl't
 ought	ot
 oughta	ot'
 oughtn't	ot'nt
-oui	WwwYy wYy
+oui	WwYy wYy
 ouimet	wYymet
 ouimette	wYymet
 ounce	awns
@@ -81860,7 +81860,7 @@ overfunding	uwv'rfund'N
 overgaard	uwv'rgord
 overgenerous	uwv'rdZen'r's
 overgrazing	uwv'rgreyz'N
-overgrowing	uwv'rgruww'N
+overgrowing	uwv'rgruw'N
 overgrown	uwv'rgruwn
 overgrowth	uwv'rgr'wT
 overhang	uwv'rhaN
@@ -81958,40 +81958,40 @@ overprotection	uwv'rpr'tekS'n
 overprotective	uwv'rpr'tekt'v
 overqualified	uwv'rkwol'foyd
 overqualify	uwv'rkwol'foy
-overran	uwv'rran
-overrate	uwv'rreyt
-overrated	uwv'rreyt'd
-overrates	uwv'rreyts
-overrating	uwv'rreyt'N
-overreach	uwv'rrYytS
-overreached	uwv'rrYytSt
-overreaches	uwv'rrYytS'z
-overreaching	uwv'rrYytS'N
-overreact	uwv'rrYyakt
-overreacted	uwv'rrYyakt'd
-overreacting	uwv'rrYyakt'N
-overreaction	uwv'rrYyakS'n
-overreacts	uwv'rrYyakts
-overregulate	uwv'rregy'leyt
-overregulated	uwv'rregy'leyt'd
-overregulates	uwv'rregy'leyts
-overregulation	uwv'rregy'leyS'n
-overreliance	uwv'rr'loy'ns
-overrepresent	uwv'rrepr'zent
-overrepresented	uwv'rrepr'zent'd
-overridden	uwv'rrid'n
-override	uwv'rroyd
-overrides	uwv'rroydz
-overriding	uwv'rroyd'N
-overripe	uwv'rroyp
-overrode	uwv'rruwd
-overrule	uwv'rrWwl
-overruled	uwv'rrWwld
-overrules	uwv'rrWwlz
-overruling	uwv'rrWwl'N
-overrun	uwv'rrun
-overrunning	uwv'rrun'N
-overruns	uwv'rrunz
+overran	uwv'ran
+overrate	uwv'reyt
+overrated	uwv'reyt'd
+overrates	uwv'reyts
+overrating	uwv'reyt'N
+overreach	uwv'rYytS
+overreached	uwv'rYytSt
+overreaches	uwv'rYytS'z
+overreaching	uwv'rYytS'N
+overreact	uwv'rYyakt
+overreacted	uwv'rYyakt'd
+overreacting	uwv'rYyakt'N
+overreaction	uwv'rYyakS'n
+overreacts	uwv'rYyakts
+overregulate	uwv'regy'leyt
+overregulated	uwv'regy'leyt'd
+overregulates	uwv'regy'leyts
+overregulation	uwv'regy'leyS'n
+overreliance	uwv'r'loy'ns
+overrepresent	uwv'repr'zent
+overrepresented	uwv'repr'zent'd
+overridden	uwv'rid'n
+override	uwv'royd
+overrides	uwv'roydz
+overriding	uwv'royd'N
+overripe	uwv'royp
+overrode	uwv'ruwd
+overrule	uwv'rWwl
+overruled	uwv'rWwld
+overrules	uwv'rWwlz
+overruling	uwv'rWwl'N
+overrun	uwv'run
+overrunning	uwv'run'N
+overruns	uwv'runz
 overs	uwv'rz
 oversaw	uwv'rso
 oversea	uwv'rsYy
@@ -82102,12 +82102,12 @@ overwork	uwv'rwRrk
 overworked	uwv'rwRrkt
 overworking	uwv'rwRrk'N
 overworks	uwv'rwRrks
-overwrite	uwv'rroyt
-overwrites	uwv'rroyts
-overwriting	uwv'rroyt'N
-overwritten	uwv'rrit'n
-overwrote	uwv'rruwt
-overwrought	uwv'rrot
+overwrite	uwv'royt
+overwrites	uwv'royts
+overwriting	uwv'royt'N
+overwritten	uwv'rit'n
+overwrote	uwv'ruwt
+overwrought	uwv'rot
 overy	uwv'rYy
 overzealous	uwv'rzel's
 overzealously	uwv'rzel'slYy
@@ -82464,7 +82464,7 @@ pais	peyz
 paisley	peyzlYy
 paisley's	peyzlYyz
 pait	peyt
-paiute	poyyWwt
+paiute	poyWwt
 paiva	peyv'
 paiz	peyz
 pajak	poydZ'k
@@ -83676,7 +83676,7 @@ paustian	poztS'n
 pautler	pawt'l'r pawtl'r
 pautsch	pawtS
 pautz	pots
-pauwels	paww'lz
+pauwels	paw'lz
 pavao	povaw
 pavarotti	pav'rotYy
 pavarotti's	pav'rotYyz
@@ -84675,43 +84675,43 @@ perplexing	p'rpleks'N
 perplexity	p'rpleks'tYy
 perquisite	pRrkw'z't
 perquisites	pRrkw'z'ts
-perra	pRrr'
-perras	pRrr'z
+perra	pRr'
+perras	pRr'z
 perrault	p'rolt per'lt
-perreault	p'rruw
-perreira	p'rrer'
-perrell	p'rreyl
-perrella	p'rrel'
-perrelli	p'rrelYy
-perren	pRrr'n
-perret	pRrr't
-perrett	pRrr't
-perretta	p'rret'
-perretti	p'rretYy
-perri	pRrrYy
-perricone	p'rrYykuwnYy
-perriello	p'rrYyel'w
+perreault	p'ruw
+perreira	p'rer'
+perrell	p'reyl
+perrella	p'rel'
+perrelli	p'relYy
+perren	pRr'n
+perret	pRr't
+perrett	pRr't
+perretta	p'ret'
+perretti	p'retYy
+perri	pRrYy
+perricone	p'rYykuwnYy
+perriello	p'rYyel'w
 perrier	perYy'r perYyey
-perrigo	p'rrYyg'w
+perrigo	p'rYyg'w
 perrin	per'n
-perrine	p'rrYynYy
-perrino	p'rrYyn'w
+perrine	p'rYynYy
+perrino	p'rYyn'w
 perrins	per'nz
-perritt	pRrr't
-perro	pRrr'w
-perrodin	pRrr'd'n
+perritt	pRr't
+perro	pRr'w
+perrodin	pRr'd'n
 perron	per'n
-perrone	p'rruwnYy
-perrot	pRrr't
-perrott	p'rrot
-perrotta	p'rruwt'
-perrotti	p'rruwtYy
-perrotto	p'rruwt'w
-perrow	pRrr'w
+perrone	p'ruwnYy
+perrot	pRr't
+perrott	p'rot
+perrotta	p'ruwt'
+perrotti	p'ruwtYy
+perrotto	p'ruwt'w
+perrow	pRr'w
 perry	perYy
 perry's	perYyz
-perryman	pRrrYym'n
-perryn	pRrr'n
+perryman	pRrYym'n
+perryn	pRr'n
 pers	pRrs
 persall	pRrs'l
 persaud	pRrs'd
@@ -85512,7 +85512,7 @@ picas	poyk'z
 picasso	p'kos'w
 picasso's	p'kos'wz
 picassos	p'kos'ws
-picayune	pikYyyWwn
+picayune	pikYyWwn
 picazo	pYykoz'w
 piccadilly	pik'dilYy
 picchi	pikYy
@@ -86512,7 +86512,7 @@ plett	plet
 pletz	plets
 pleurisy	plUr'sYy
 pleuritides	plIrid'tYyz
-pleuritis	plIroyt's plYyy'royt's
+pleuritis	plIroyt's plYy'royt's
 pleva	pleyv'
 plew	plWw
 plewa	plWw'
@@ -87763,8 +87763,8 @@ powley	pawlYy
 pownall	pawn'l
 pows	puwz
 powter	pawt'r
-powwow	pawwaw
-powwows	pawwawz
+powwow	pawaw
+powwows	pawawz
 pox	poks
 poyer	pcy'r
 poyner	pcyn'r
@@ -89494,7 +89494,7 @@ puerto	pcrt' pcrt'r pwertuw
 puerto rican	pcrt'rYyk'n pwertuwrYyk'n
 puerto ricans	pcrt'rYyk'nz pwertuwrYyk'nz
 puerto rico	pcrt'rYyk'w pwertuwrYyk'w
-puerto-rico	pcrt'rYyk'w pcrt'rrYyk'w pwertuwrYyk'w
+puerto-rico	pcrt'rYyk'w pwertuwrYyk'w
 puett	pWwt
 puetz	pWwts
 pufahl	pyWwf'l
@@ -90218,8 +90218,8 @@ quievoni	kw'vonYy
 quigg	kwig
 quiggle	kwig'l
 quigley	kwiglYy
-quijada	kwYyyod'
-quijano	kwYyyon'w
+quijada	kwYyod'
+quijano	kwYyon'w
 quik	kwik
 quiksilver	kwiksilv'r
 quilali	kw'lolYy
@@ -94067,9 +94067,9 @@ reunites	rYyWwnoyts
 reuniting	rYyWwnoyt'N
 reusable	rYyWwz'b'l
 reusch	rcyS
-reuse	rYyyWws rYyyWwz
+reuse	rYyWws rYyWwz
 reused	rYyWwzd
-reusing	rYyyWwz'N
+reusing	rYyWwz'N
 reuss	rWws
 reusser	rcys'r
 reust	rWwst
@@ -95098,7 +95098,7 @@ rivlin	rivl'n
 rix	riks
 riyad	rYyad rYyod
 riyadh	rYyad rYyod
-riyals	rYyyolz
+riyals	rYyolz
 riz	riz
 rizer	royz'r
 rizk	rizk
@@ -95272,7 +95272,7 @@ robyn	rob'n
 roc	rok
 roca	ruwk'
 rocap	ruwkap
-rocard	r'kord ruwSord ruwk'rd ruwkord
+rocard	ruwSord ruwk'rd ruwkord
 rocca	rok'
 roccaforte	r'wk'fcrtYy
 roccas	rok's
@@ -95551,9 +95551,9 @@ rohrman	rcrm'n
 rohrs	rcrz
 rohs	ruwz
 rohstoff	ruwst'f
-rohwedder	ruww'd'r
-rohweder	ruww'd'r
-rohwer	ruww'r
+rohwedder	ruw'd'r
+rohweder	ruw'd'r
+rohwer	ruw'r
 rohypnol	ruwhoypnol
 roi	rcy
 roig	rcyg
@@ -95835,7 +95835,7 @@ rorick	rcr'k
 rorie	rcrYy
 rork	rcrk
 rorke	rcrk
-rorrer	ro'rr
+rorrer	ro'r
 rorschach	rcrSo rcrSotS
 rory	rcrYy
 ros	ros
@@ -96256,8 +96256,8 @@ rowdy	rawdYy
 rowe	ruw
 rowe's	ruwz
 rowed	ruwd
-rowell	ruww'l
-rowen	ruww'n
+rowell	ruw'l
+rowen	ruw'n
 rowena	r'wYyn'
 rowenta	ruwent'
 rower	ruw'r
@@ -96881,7 +96881,7 @@ rutzen	rutz'n
 ruud	rWwd
 ruvalcaba	rWwv'lkob'
 ruvolo	rWwvuwl'w
-ruwe	rWww
+ruwe	rWw
 rux	ruks
 ruxpin	ruksp'n
 ruxpin's	ruksp'nz
@@ -98028,7 +98028,7 @@ sarokin	ser'k'n
 sarong	s'roN
 sarongs	s'roNz
 saros	sor'ws
-sarowiwa	sar'wwYyw'
+sarowiwa	sar'wYyw'
 sarra	soro
 sarraj	soroy
 sarratt	sRrat
@@ -98196,7 +98196,7 @@ saundra's	sondr'z
 saunier	sonYy'r
 saunter	sont'r
 saur	scr
-saurer	saw'rr
+saurer	saw'r
 sauro	scr'w
 saus	soz
 sausage	sos'dZ
@@ -98340,7 +98340,7 @@ sayad	soy'd
 sayad's	soy'dz
 saybrook	seybrIk
 saye	sey
-sayed	seyd seyyid soyed
+sayed	seyd seyid soyed
 sayegh	sey'g
 sayer	sey'r
 sayers	sey'rz
@@ -98596,7 +98596,7 @@ schaffert	Saf'rt
 schaffler	Safl'r
 schaffner	Safn'r
 schaible	skeyb'l
-schairer	Soy'rr
+schairer	Soy'r
 schaja	SodZ'
 schake	Seyk
 schalk	Sok
@@ -98699,7 +98699,7 @@ scheiman	Soym'n
 schein	Soyn
 scheinberg	Soynb'rg
 scheiner	Soyn'r
-scheirer	Soy'rr
+scheirer	Soy'r
 scheler	SYyl'r
 schelin	Sel'n
 schell	skel
@@ -100371,8 +100371,8 @@ seivert	soyv'rt
 seiwert	soyw'rt
 seix	sYyks
 seixas	sYyks's
-seiyaku	seyyokWw
-seiyu	sYyyWw
+seiyaku	seyokWw
+seiyu	sYyWw
 seize	sYyz
 seized	sYyzd
 seizes	sYyz'z
@@ -102009,7 +102009,7 @@ shirell	S'rel
 shirelle	S'rel
 shireman	S'reym'n
 shiremanstown	Soyrm'nztawn
-shirer	Soy'rr
+shirer	Soy'r
 shires	Soyrz
 shirey	SoyrYy
 shirin	Sir'n
@@ -102508,8 +102508,8 @@ shuttlesworth	Sut'lzwRrT
 shuttleworth	Sut'lwRrT
 shuttling	Sut'l'N Sutl'N
 shutts	Suts
-shuwa	SWww'
-shuwa's	SWww'z
+shuwa	SWw'
+shuwa's	SWw'z
 shy	Soy
 shying	Soy'N
 shyjan	SoydZan
@@ -103211,7 +103211,7 @@ sirota	s'ruwt'
 sirowitz	sir'w'ts
 sirri	sirYy
 sirrine	s'rYynYy
-sirs	sRrrz
+sirs	sRrz
 sis	sis
 sisco	sYysk'w
 siscoe	sisk'w
@@ -104693,7 +104693,7 @@ sojourner	suwdZ'rn'r
 sojourners	suwdZ'rn'rz
 sojourning	suwdZ'rn'N
 sok	sok
-sokaiya	s'koyy'
+sokaiya	s'koy'
 sokol	suwk'l
 sokolik	s'kuwl'k
 sokolin	sok'l'n
@@ -104802,7 +104802,7 @@ solliday	solYyd'y
 sollie	solYy
 sollinger	sol'N'r
 sollish	sol'S
-solloway	sol'wwey
+solloway	sol'wey
 solly	solYy
 solo	suwluw
 solodar	sol'd'r
@@ -104819,7 +104819,7 @@ solorzano	s'wlcrzon'w
 solos	suwl'wz
 soloviev	sol'wvYyv
 solow	sol'w
-soloway	suwl'wwey
+soloway	suwl'wey
 solstice	solst's
 solstices	solst's's
 solt	suwlt
@@ -104897,8 +104897,8 @@ sommer	sum'r
 sommerfeld	som'rf'ld
 sommerfeldt	som'rf'lt
 sommerfield	s'mRrfYyld
-sommers	sum'rrz
-sommersby	sum'rrzbYy
+sommers	sum'rz
+sommersby	sum'rzbYy
 sommerville	som'rv'l
 somnolence	somn'l'ns
 somnolent	somn'l'nt
@@ -105962,7 +105962,7 @@ sporleder	spcrl'd'r
 sporn	spcrn
 sporophyte	spcrfoyt
 sporophytes	spcrfoyts
-sporrer	spo'rr
+sporrer	spo'r
 sport	spcrt
 sport's	spcrts
 sported	spcrt'd
@@ -106683,7 +106683,7 @@ star's	storz
 starace	st'rotSYy
 starbird	storbRrd
 starboard	storb'rd
-starboards	storb'rrdz storbcrdz
+starboards	storb'rdz storbcrdz
 starbuck	storbuk
 starbuck's	storbuks
 starbucks	storbuks
@@ -107942,7 +107942,7 @@ stowed	stuwd
 stowell	stow'l
 stower	stuw'r
 stowers	stuw'rz
-stowing	stuww'N
+stowing	stuw'N
 stoy	stcy
 stoyer	stcy'r
 stracener	strasYyn'r
@@ -108951,7 +108951,7 @@ suggests	s'dZests
 suggs	sugz
 sugihara	sWwgYyhor'
 sugimoto	sWwgYymuwt'w
-sugiyama	sWwgYyyom'
+sugiyama	sWwgYyom'
 sugrue	sugrWw
 suh	su
 suharto	sWwhort'w
@@ -109336,9 +109336,9 @@ superpower	sWwp'rpaw'r
 superpowers	sWwp'rpaw'rz
 superpowers'	sWwp'rpawrz
 superpremium	sWwp'rprYymYy'm sWwp'rprYymy'm
-superregional	sWwp'rrYydZ'n'l
-superregionals	sWwp'rrYydZ'n'lz
-superregionals'	sWwp'rrYydZ'n'lz
+superregional	sWwp'rYydZ'n'l
+superregionals	sWwp'rYydZ'n'lz
+superregionals'	sWwp'rYydZ'n'lz
 supers	sWwp'rz
 supersaver	sWwp'rseyv'r
 supersecret	sWwp'rsYykr't
@@ -110496,7 +110496,7 @@ taitt	teyt
 taiwan	toywon
 taiwan's	toywonz
 taiwanese	toyw'nYyz
-taiyo	toyy'w
+taiyo	toy'w
 taj	toZ
 tajik	todZ'k
 tajikistan	todZYyk'stan
@@ -112506,7 +112506,7 @@ three-dimensional	TrYyzd'menS'n'l
 three-hour	TrYyaw'r
 three-quarters	TrYykwcrt'rz
 three-way	TrYywey
-three-year	TrYyyir
+three-year	TrYyir
 threefold	TrYyfuwld
 threemonth	TrYym'nT
 threes	TrYyz
@@ -112564,7 +112564,7 @@ through	TrWw
 throughout	TrWwawt
 throughput	TrWwpIt
 throughs	TrWwz
-throughway	TrWwwey
+throughway	TrWwey
 throve	Truwv
 throw	Truw
 throwaway	Truw'wey
@@ -112583,7 +112583,7 @@ thruster	Trust'r
 thrusters	Trust'rz
 thrusting	Trust'N
 thrusts	Trusts
-thruway	TrWwwey
+thruway	TrWwey
 thud	Tud
 thug	Tug
 thuggery	Tug'rYy
@@ -112619,8 +112619,8 @@ thundered	Tund'rd
 thundering	Tund'r'N
 thunderous	Tund'r's
 thunders	Tund'rz
-thundershower	Tund'rSaww'r
-thundershowers	Tund'rSaww'rz
+thundershower	Tund'rSaw'r
+thundershowers	Tund'rSaw'rz
 thunderstorm	Tund'rstcrm
 thunderstorms	Tund'rstcrmz
 thunderstruck	Tund'rstruk
@@ -112816,7 +112816,7 @@ tigon	tig'n
 tigrean	t'grYyn
 tigris	toygr's
 tigue	tYyg
-tijerina	tYyy'rYyn'
+tijerina	tYy'rYyn'
 tijuana	t'won'
 tike	toyk
 tikes	toyks
@@ -113925,7 +113925,7 @@ tracker	trak'r
 trackers	trak'rz
 tracking	trak'N
 tracks	traks
-tracor	trakcr trek'r treykcr treys'r
+tracor	trakcr treykcr treys'r
 tract	trakt
 tractable	trakt'b'l
 tractebel	trakt'b'l
@@ -114411,7 +114411,7 @@ treiber	troyb'r
 treichel	troyk'
 treichler	troyk'l'r troykl'r
 treinen	troyn'n
-trejo	treyy'w
+trejo	trey'w
 trek	trek
 trekked	trekt
 trekking	trek'N
@@ -114858,7 +114858,7 @@ trovatore	truwv'tcr
 trove	truwv
 trow	truw
 trowbridge	truwbr'dZ
-trowel	traww'l
+trowel	traw'l
 trowell	trow'l
 trower	traw'r
 troxel	troks'l
@@ -115528,7 +115528,7 @@ two's	tWwz
 two-day	tWwdey
 two-dimensional	tWwd'menS'n'l
 two-thirds	tWwTRrdz
-two-way	tWwwey
+two-way	tWwey
 twofold	tWwfuwld
 twohig	twuwh'g
 twombly	twWwmblYy
@@ -115664,7 +115664,7 @@ udverhye	WwdverhYy yWwdverhYy
 udverhye's	WwdverhYyz yWwdverhYyz
 udy	yWwdYy
 uebel	Ub'l
-ueberroth	yWwb'rroT
+ueberroth	yWwb'roT
 uecker	Uk'r
 ueckert	Uk'rt
 ueda	Wweyd' wed'
@@ -116182,13 +116182,13 @@ underprice	und'rproys
 underpriced	und'rproyst
 underpricing	und'rproys'N
 underpriviledged	und'rprivl'dZd
-underrate	und'rreyt
-underrated	und'rreyt'd
-underreport	und'rr'pcrt
-underreported	und'rr'pcrt'd
-underreporting	und'rr'pcrt'N
-underrepresent	und'rrepr'zent
-underrepresented	'nd'rrepr'zent'd
+underrate	und'reyt
+underrated	und'reyt'd
+underreport	und'r'pcrt
+underreported	und'r'pcrt'd
+underreporting	und'r'pcrt'N
+underrepresent	und'repr'zent
+underrepresented	'nd'repr'zent'd
 underscore	und'rskcr
 underscored	und'rskcrd
 underscores	und'rskcrz
@@ -116257,16 +116257,16 @@ underwithholding	und'rwiThuwld'N
 underwood	und'rwId
 underwoods	und'rwIdz
 underworld	und'rwRrld
-underwrite	und'rroyt
-underwriter	und'rroyt'r
-underwriter's	und'rroyt'rz
-underwriters	und'rroyt'rz
-underwriters'	und'rroyt'rz
-underwrites	und'rroyts
-underwriting	und'rroyt'N
-underwritings	und'rroyt'Nz
-underwritten	und'rrit'n
-underwrote	und'rruwt
+underwrite	und'royt
+underwriter	und'royt'r
+underwriter's	und'royt'rz
+underwriters	und'royt'rz
+underwriters'	und'royt'rz
+underwrites	und'royts
+underwriting	und'royt'N
+underwritings	und'royt'Nz
+underwritten	und'rit'n
+underwrote	und'ruwt
 undeserved	und'zRrvd
 undeserving	und'zRrv'N
 undesirable	und'zoyr'b'l
@@ -116654,7 +116654,7 @@ unmolested	unm'lest'd
 unmoved	'nmWwvd
 unnamed	'nneymd
 unnatural	'nnatS'r'l
-unnaturally	'natS'rlYy 'nnatS'r'lYy 'nnatS'rlYy 'nnatSr'lYy
+unnaturally	'nnatS'r'lYy 'nnatS'rlYy 'nnatSr'lYy
 unnecessarily	'nnes'ser'lYy
 unnecessary	'nnes'serYy
 unneeded	'nnYyd'd
@@ -117159,7 +117159,7 @@ urias	y'rYy'z
 uribe	y'rYybYy
 uric	yRr'k
 urich	yRr'k
-urick	yRrr'k
+urick	yRr'k
 urie	yRrYy
 uriegas	y'rYyg'z
 urinalysis	yRr'nal's's
@@ -117299,11 +117299,11 @@ utz	uts
 utzinger	utz'N'r
 uva	yWwv' yWwvYyey
 uwe	yWw
-uy	WwYy yWwwoy
+uy	WwYy yWwoy
 uyeda	'yYyd'
 uyehara	Wwy'yhor'
 uyeno	'yeyn'w
-uys	yWwYyz yWwwoyes
+uys	yWwYyz yWwoyes
 uzbek	Wwzb'k
 uzbekistan	Wwzbek'stan
 uzbeks	Wwzb'ks
@@ -117500,8 +117500,8 @@ valle	veyl
 valleau	v'luw
 vallee	valYy
 vallegrande	valYygrand valYygrandYy
-vallejo	v'leyy'w
-vallejos	v'leyy'wz
+vallejo	v'ley'w
+vallejos	v'ley'wz
 vallely	valYy veylYy
 vallery	val'rYy
 valles	veylz
@@ -119490,9 +119490,9 @@ voyager's	vcy'dZ'rz
 voyagers	vcy'dZ'rz
 voyages	vcy'dZ'z
 voyer	vcy'r
-voyeur	vcyyWwr
-voyeurism	vcyyWwr'z'm
-voyeuristic	vcyy'rist'k
+voyeur	vcyWwr
+voyeurism	vcyWwr'z'm
+voyeuristic	vcy'rist'k
 voyles	vcylz
 voynavich	vcyn'v'tS
 voytek	vcyt'k
@@ -120270,7 +120270,7 @@ wasik	vos'k
 wasil	wos'l
 wasilewski	v's'lefskYy
 wasinger	wos'ndZ'r
-wasiyu	w'sYyyWw
+wasiyu	w'sYyWw
 waskiewicz	vosk'v'tS
 wasko	vosk'w
 waskow	vosk'w
@@ -120334,7 +120334,7 @@ watchword	wotSwRrd
 watchwords	wotSwRrdz
 water	wot'r
 water's	wot'rz
-water-repellent	wot'rr'pel'nt
+water-repellent	wot'r'pel'nt
 waterbed	wot'rbed
 waterbeds	wot'rbedz
 waterborne	wot'rbcrn
@@ -120624,8 +120624,8 @@ wedlock	wedlok
 wednesday	wenzdYy wenzdey
 wednesday's	wenzdYyz wenzdeyz
 wednesdays	wenzdYyz wenzdeyz
-wedowee	w'dawwYy
-wedowee's	w'dawwYyz
+wedowee	w'dawYy
+wedowee's	w'dawYyz
 wedtech	wedtek
 wedtech's	wedteks
 wee	wYy
@@ -121335,7 +121335,7 @@ whatley	hwutlYy wutlYy
 whatnot	hwutnot wutnot
 whats	hw'ts w'ts
 whatsoever	hwuts'wev'r wuts'wev'r
-whay-yu	hweyyWw weyyWw
+whay-yu	hweyWw weyWw
 wheat	hwYyt wYyt
 wheaten	hwYyt'n wYyt'n
 wheatie	hwYytYy wYytYy
@@ -123090,9 +123090,9 @@ wormwood	wRrmwId
 worn	wcrn
 worner	wcrn'r
 woronoff	wcr'n'f
-worrall	wRrr'l
-worrel	wRrr'l
-worrell	wRrr'l
+worrall	wRr'l
+worrel	wRr'l
+worrell	wRr'l
 worried	wRrYyd
 worrier	wRrYy'r
 worriers	wRrYy'rz
@@ -123702,7 +123702,7 @@ ybarra	Yybor'
 ydstie	idstYy
 ydstie's	idstYyz
 ye	yYy ye
-ye-yi	yeyyYy
+ye-yi	yeyYy
 yea	yey
 yeadon	yed'n
 yeager	yeyg'r
@@ -124904,7 +124904,7 @@ zoss	zos
 zoster	zost'r
 zotos	zuwt'wz
 zotter	zot'r
-zouabri	zWwwobrYy
+zouabri	zWwobrYy
 zoucha	zWwh'
 zounds	zawndz
 zovirax	zuwv'r'ks
