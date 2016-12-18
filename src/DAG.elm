@@ -154,3 +154,80 @@ tieUpLooseEnd looseEnd nodes =
         looseEnd.src
         ({ phoneme = looseEnd.phoneme, dst = Array.length nodes } :: node)
         nodes
+
+fLabel : List String -> (List (Int, String), Array Node)
+fLabel = List.foldl fLabelHelper ([], Array.repeat 1 [])
+
+fLabelHelper :
+  String -> (List (Int, String), Array Node) ->
+    (List (Int, String), Array Node)
+fLabelHelper path (paths, nodes) =
+  case paths of
+    (prevStart, prev) :: rest ->
+      let (start, current) = getFork 0 path nodes in
+        if start == prevStart then
+          let
+            (handle, prevTine, tine) = combineStart prev current
+          in let
+            (newNodes, newStart) = insertPath prevStart handle nodes
+            newPaths = (newStart, tine) :: (newStart, prevTine) :: rest
+          in
+            (newPaths, newNodes)
+        else ((start, current) :: paths, nodes) -- start < prevStart
+    [] -> ([(0, path)], nodes)
+
+combineStart : String -> String -> (String, String, String)
+combineStart path1 path2 =
+  case (String.uncons path1, String.uncons path2) of
+    (Just (first1, rest1), Just (first2, rest2)) ->
+      if first1 == first2 then
+        let (handle, tine1, tine2) = combineStart rest1 rest2 in
+          (String.cons first1 handle, tine1, tine2)
+      else ("", path1, path2)
+    _ -> ("", path1, path2)
+
+getFork : Int -> String -> Array Node -> (Int, String)
+getFork start path nodes =
+  case Maybe.andThen (Array.get start nodes) List.head of
+    Nothing -> (start, path)
+    Just edge ->
+      case String.uncons path of
+        Nothing -> (start, path)
+        Just (_, "") -> (start, path)
+        Just (start, path) ->
+          if edge.phoneme == phoneme then getFork edge.dst newPath nodes
+          else (start, path)
+
+insertPath : Int -> String -> Array Node -> (Array Node, Int)
+insertPath start path nodes =
+  case String.uncons path of
+    Nothing -> (nodes, start)
+    Just (first, rest) ->
+      let next = Array.length nodes in
+        insertPath
+          next
+          rest <|
+          addEdge start first next <| Array.push [] nodes
+
+addEdge : Int -> Char -> Int -> Array Node -> Array Node
+addEdge src phoneme dst nodes =
+  let node = Maybe.withDefault [] <| Array.get src nodes in
+    Array.set src ({ phoneme = phoneme, dst = dst } :: node) nodes
+
+reverseNodes : Array Node -> Array Node
+reverseNodes
+  Array.foldr addReverseEdges Array.empty
+  List.foldl (addReverseEdge i) newNodes edges
+
+bLabel : List (String, Int) -> (List (Int, String, Int), Array Node)
+bLabel = List.foldl bLabelHelper ([], Array.initialize 1 <| always [])
+
+addReverseEdges : Int -> List Edge -> Array Node -> Array Node
+addReverseEdges edgeCount edges nodes =
+  Array.push
+    [] <|
+    List.foldl (addReverseEdge edgeCount <| Array.length nodes) nodes edges
+
+addReverseEdge : Int -> Edge -> Array Node -> Array Node
+addReverseEdge edgeCount src edge =
+  addEdge (edgeCount - 1 - edge.dst) edge.phoneme src

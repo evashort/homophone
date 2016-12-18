@@ -32,6 +32,45 @@ dagTest =
           , ('y', ['z'])
           , ('z', [])
           ]
+    , test
+        "It can merge branches in the middle" <|
+        assertEqual
+          ( flattenDAG <|
+              DAG.fromPathLists
+                [ [ "ambnc", "ambnz", "amync", "amynz"
+                  , "xmbnc", "xmbnz", "xmync", "xmynz"
+                  ]
+                ]
+          ) <|
+          [ ('a', ['m'])
+          , ('b', ['n'])
+          , ('c', [])
+          , ('m', ['b', 'y'])
+          , ('n', ['c', 'z'])
+          , ('x', ['m'])
+          , ('y', ['n'])
+          , ('z', [])
+          ]
+    , test
+        "It can merge branches in the middle when they have different lengths" <|
+        assertEqual
+          ( flattenDAG <| DAG.fromPathLists
+              [ [ "abcd", "abcyzd", "abwxcd", "abwxcyzd"
+                , "auvbcd", "auvbcyzd", "auvbwxcd", "auvbwxcyzd"
+                ]
+              ]
+          ) <|
+          [ ('a', ['b', 'u'])
+          , ('b', ['c', 'w'])
+          , ('c', ['d', 'y'])
+          , ('d', [])
+          , ('u', ['v'])
+          , ('v', ['b'])
+          , ('w', ['x'])
+          , ('x', ['c'])
+          , ('y', ['z'])
+          , ('z', ['d'])
+          ]
     ]
 
 flattenDAG : DAG -> List (Char, List Char)
