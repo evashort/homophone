@@ -31,7 +31,7 @@ default code page, MS-DOS Latin US.
 
 ## Generating data files
 
-1. Install [Python 2.7](https://www.python.org/downloads/)
+1. Install [Python 3](https://www.python.org/downloads/)
 
 1. Run `python getData.py` to populate the `cache/` directory. The total size
 will be 1.17 GB. If it gets interrupted, delete whichever file it was in the

@@ -1,4 +1,5 @@
-import urllib
+import urllib.request
+import shutil
 import os
 import zipfile
 import math
@@ -12,7 +13,7 @@ from operator import itemgetter
 class CompletionDict:
     def __init__(self, keys, values):
         assert len(keys) == len(values)
-        assert all(keys[i] < keys[i + 1] for i in xrange(len(keys) - 1))
+        assert all(keys[i] < keys[i + 1] for i in range(len(keys) - 1))
         self.keys = keys
         self.values = values
     def startwith(self, key):
@@ -85,7 +86,7 @@ def generateDeletions(groupsPath, shorteningsPath, deletionsPath):
                         oldCost = deletions.get(key, float("inf"))
                         deletions[key] = min(oldCost, currentCost)
 
-    deletions = sorted(deletions.iteritems(), key = itemgetter(0))
+    deletions = sorted(deletions.items(), key = itemgetter(0))
 
     with io.open(deletionsPath, "w", encoding = "utf-8") as deletionsFile:
         deletionsFile.writelines(showMenuItem(d) + "\n" for d in deletions)
@@ -106,9 +107,9 @@ def generateSubs(groupsPath, shorteningsPath, subsPath):
                         oldCost = menu.get(value, float("inf"))
                         menu[value] = min(oldCost, currentCost)
 
-    for key, menu in subs.iteritems():
-        subs[key] = sorted(menu.iteritems(), key = itemgetter(0))
-    subs = sorted(subs.iteritems(), key = itemgetter(0))
+    for key, menu in subs.items():
+        subs[key] = sorted(menu.items(), key = itemgetter(0))
+    subs = sorted(subs.items(), key = itemgetter(0))
 
     with io.open(subsPath, "w", encoding = "utf-8") as subsFile:
         subsFile.writelines(k + " " + showMenu(m) + "\n" for k, m in subs)
@@ -143,7 +144,7 @@ def generatePronouncer(cmuPath, wordsPath, noPronouncePath, shorteningsPath,
             s, p = line.split("\t")
             d.setdefault(parseCMUSpelling(s), set()).add(shorten(p))
 
-    d = [(k, sorted(v)) for k, v in d.iteritems()]
+    d = [(k, sorted(v)) for k, v in d.items()]
     d.sort(key = itemgetter(0))
 
     with io.open(pronouncerPath, "w", encoding = "utf-8") as pronouncerFile:
@@ -215,7 +216,7 @@ def generateSpeller(pronouncerPath, totalPath, noSpellPath, shorteningsPath,
             _, subTotal, _, _ = line.split("\t")
             total += float(subTotal)
     total += sum(adjustCount(n, cap) - n \
-                 for m in counts.itervalues() for cap, n in m.iteritems())
+                 for m in counts.values() for cap, n in m.items())
 
     pronouncer = {}
     with io.open(pronouncerPath, "r", encoding = "utf-8") as pronouncerFile:
@@ -233,21 +234,20 @@ def generateSpeller(pronouncerPath, totalPath, noSpellPath, shorteningsPath,
                 pronouncer[parseCMUSpelling(s)].remove(shorten(p))
 
     speller = {}
-    for s, v in pronouncer.iteritems():
+    for s, v in pronouncer.items():
         for p in v:
             menu = speller.setdefault(p, {})
             menu.update(counts.get(s, {s: 0.0}))
     del pronouncer
     del counts
 
-    for p, menu in speller.iteritems():
-        adjustedMenu = \
-            ((cap, adjustCount(n, cap)) for cap, n in menu.iteritems())
+    for p, menu in speller.items():
+        adjustedMenu = ((cap, adjustCount(n, cap)) for cap, n in menu.items())
         bestCap, bestCount = max(adjustedMenu, key = itemgetter(1))
         entropy = -math.log((bestCount + COUNTOFFSET) / total)
         speller[p] = bestCap, entropy
 
-    speller = sorted(speller.iteritems(), key = itemgetter(0))
+    speller = sorted(speller.items(), key = itemgetter(0))
 
     with io.open(spellerPath, "w", encoding = "utf-8") as spellerFile:
         spellerFile.writelines(p + "\t" + s + "\t" + showCost(e) + "\n" \
@@ -255,13 +255,13 @@ def generateSpeller(pronouncerPath, totalPath, noSpellPath, shorteningsPath,
 
 def fileExists(path):
     if os.path.isdir(path):
-        print "unexpected dir", path
+        print("unexpected dir", path)
         sys.exit(1)
     return os.path.isfile(path)
 
 def assertFileExists(path):
     if not fileExists(path):
-        print "missing file", path
+        print("missing file", path)
         sys.exit(1)
 
 def invalidateFile(path):
@@ -270,7 +270,7 @@ def invalidateFile(path):
 
 def dirExists(path):
     if os.path.isfile(path):
-        print "unexpected file", path
+        print("unexpected file", path)
         sys.exit(1)
     return os.path.isdir(path)
 
@@ -279,20 +279,25 @@ def ensureDirExists(path):
     if not dirExists(dirPath):
         os.makedirs(dirPath)
 
+def downloadFile(url, outputPath):
+    with urllib.request.urlopen(url) as response, \
+         open(outputPath, 'wb') as outputFile:
+        shutil.copyfileobj(response, outputFile)
+
 def ifNotExists(outputPath, f, *inputPaths, **kwargs):
     invalidating = kwargs.get("invalidating", [])
     if not fileExists(outputPath):
-        print "generating", os.path.basename(outputPath)
+        print("generating", os.path.basename(outputPath))
         for inputPath in inputPaths:
             if not inputPath.startswith("http:"):
                 assertFileExists(inputPath)
         ensureDirExists(outputPath)
         f(*(inputPaths + (outputPath,)))
-        print "\tdone"
+        print("\tdone")
         for downstreamPath in invalidating:
             invalidateFile(downstreamPath)
     else:
-        print "found", os.path.basename(outputPath)
+        print("found", os.path.basename(outputPath))
 
 shortenings = os.path.join(os.getcwd(), "handcraft", "shortenings.txt")
 groups = os.path.join(os.getcwd(), "handcraft", "groups.txt")
@@ -309,9 +314,9 @@ gbookURLPrefix = "http://storage.googleapis.com/books/ngrams/books/"
 gbooks = [os.path.join(os.getcwd(), "cache",
                        "googlebooks-eng-us-all-1gram-20090715-" + str(i) + \
                            ".csv.zip") \
-          for i in xrange(10)]
+          for i in range(10)]
 books = [os.path.join(os.getcwd(), "cache", "book" + str(i) + ".txt") \
-         for i in xrange(10)]
+         for i in range(10)]
 counts = os.path.join(os.getcwd(), "cache", "counts.txt")
 
 deletions = os.path.join(os.getcwd(), "data", "deletions.txt")
@@ -321,14 +326,13 @@ speller = os.path.join(os.getcwd(), "data", "speller.txt")
 
 ifNotExists(deletions, generateDeletions, groups, shortenings)
 ifNotExists(subs, generateSubs, groups, shortenings)
-ifNotExists(cmu, urllib.urlretrieve, cmuURL,
-            invalidating = [pronouncer] + books)
+ifNotExists(cmu, downloadFile, cmuURL, invalidating = [pronouncer] + books)
 ifNotExists(pronouncer, generatePronouncer, cmu, words, noPronounce,
             shortenings, invalidating = [speller])
-ifNotExists(total, urllib.urlretrieve, totalURL, invalidating = [speller])
+ifNotExists(total, downloadFile, totalURL, invalidating = [speller])
 for gbook, book in zip(gbooks, books):
     gbookURL = gbookURLPrefix + os.path.basename(gbook)
-    ifNotExists(gbook, urllib.urlretrieve, gbookURL, invalidating = [book])
+    ifNotExists(gbook, downloadFile, gbookURL, invalidating = [book])
 for gbook, book in zip(gbooks, books):
     ifNotExists(book, generateBook, gbook, cmu, words,
                 invalidating = [speller])

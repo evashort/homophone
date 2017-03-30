@@ -2162,7 +2162,7 @@
 'lzad'w	alzado	19178
 'lzen'	Alzena	22033
 'lzod'w	alzado	19178
-'m	'm	25678
+'m	'em	25678
 'm'don	Amadon	20082
 'm'lYynYy	Emmaline	18675
 'm'lYynd'	amelinda	25678
@@ -4926,7 +4926,7 @@
 'wYySYy	Oishi	18845
 'wbRr'l	o'berle	25678
 'wbRrg	o'berg	25678
-'wbRrn	o'byrne	25678
+'wbRrn	o'beirne	25678
 'wbWwkawskYy	Obuchowski	21273
 'wbWwtSuwskYy	Obuchowski	21273
 'wbYydYy'ns	obedience	11026
@@ -4938,7 +4938,7 @@
 'wban'n	Obannon	22436
 'wband'w	Obando	18861
 'wbany'n	Obanion	22556
-'wbcyl	oboyle	25678
+'wbcyl	o'boyle	25678
 'wbelYy'	Obelia	19375
 'wberYy	Oberry	23169
 'wbey	obey	11183
@@ -4973,7 +4973,7 @@
 'wdYycrnYy	Odiorne	18996
 'wdYylYy'	Odilia	20392
 'wdZibw'	Ojibwa	17288
-'wdawd	odowd	25678
+'wdawd	o'dowd	25678
 'wdel	Odell	16377
 'wdel'	Odella	20985
 'wdelYy	Odele	22328
@@ -4990,7 +4990,7 @@
 'wdon'hWw	ODonoghue	23838
 'wdon'hyWw	ODonoghue	23838
 'wdon'l	ODonnell	21447
-'wdon'ld	odonald	25678
+'wdon'ld	o'donald	25678
 'wdon'lz	o'donnell's	25678
 'wdon'v'n	ODonovan	23677
 'wdoz	audas	21416
@@ -5035,11 +5035,11 @@
 'wgreydYyz	o'grady's	25678
 'wguwnYy	Ogoni	19179
 'wguwny'k	Ogonyok	20383
-'wgwin	oguinn	25678
+'wgwin	o'guinn	25678
 'wh'neZ'n	Ohanesian	22805
 'whRr'	Oharra	23210
 'whRrn	Ohern	21793
-'whal'r'n	o'halloron	25678
+'whal'r'n	o'hallaron	25678
 'whanl'n	o'hanlon	25678
 'wher	ohair	19082
 'wher'	Ohara	18802
@@ -5079,14 +5079,14 @@
 'wkeyn	okane	19273
 'wkeyz'n	okasan	19517
 'wkikYy	o'kicki	25678
-'wklRr	oclair	25678
+'wklRr	o'clair	25678
 'wkler	Auclair	19539
 'wko	OCAW	20277
 'wkob'y	Okabe	19269
 'wkod'	Okada	17555
 'wkon'l	OConnell	22397
 'wkon'r	oconnor	20051
-'wkon'rz	oconner's	25678
+'wkon'rz	o'conner's	25678
 'wkon'w	Okano	19450
 'wkonyefskYy	Okoniewski	22004
 'wkosYy'w	Ocasio	21053
@@ -5142,10 +5142,10 @@
 'wlm'rt	Olmert	20031
 'wlmeyd'	Olmeda	21136
 'wlmeyd'w	Olmedo	18112
-'wlokl'n	olaughlin	25678
+'wlokl'n	o'laughlin	25678
 'wloy'n	Olayan	21139
 'wlver'	Olvera	18883
-'wm'huwnYy	o'mahony	25678
+'wm'huwnYy	o'mahoney	25678
 'wm'whWwndr'w	Omohundro	20038
 'wmWwr'	Ohmura	21263
 'wmYyd	omead	25678
@@ -5201,11 +5201,11 @@
 'wpoyn'N	opining	16920
 'wpoynd	opined	14649
 'wpoynz	opines	16068
-'wrcrk	oroark	25678
+'wrcrk	o'roark	25678
 'wrird'n	oriordan	25678
 'wroy'n	Orion	15762
 'wroy'nz	Orion's	18279
-'wroylYy	oriley	25678
+'wroylYy	o'reilly	25678
 'ws'yger'	Oseguera	21655
 'wsWwn'	Osuna	18431
 'wscrYy'w	Osorio	17771
@@ -8787,7 +8787,7 @@ Zonb'ptist	JeanBaptiste	19555
 Zonb'rtrond	JeanBertrand	22321
 Zondorm	gendarme	14897
 ZonlWwYy	JeanLouis	20509
-Zonm'Sel	jean-michele	25678
+Zonm'Sel	jean-michel	25678
 Zonr'	genre	11879
 Zonr'z	genres	12941
 ZoyrWw'rd	Girouard	19107
@@ -9144,7 +9144,7 @@ admon'tcrYy	admonitory	15572
 admr'b'l	admirable	11425
 adn'n	Adnan	18432
 adnYy	Adney	19625
-adnozYy'm	ad-nauseum	25678
+adnozYy'm	ad-nauseam	25678
 adr'sYy	addressee	14323
 adres	address	9672
 adres'z	addresses	11096
@@ -9306,7 +9306,7 @@ ag'rd	Agard	19000
 ag'sYy	Agassi	18881
 ag't	agate	14180
 ag'tS	Agache	21000
-ag'tS'z	agaches	25678
+ag'tS'z	agache's	25678
 ag'ts	agates	15956
 ag'wom	Agawam	18303
 ag'zode	Aghazadeh	22025
@@ -16779,7 +16779,7 @@ boydl'r	Beidler	18993
 boyduw'	Baidoa	21072
 boyduw'n	baidoan	25678
 boyduw'nz	baidoan's	25678
-boyduw'z	baidoas	25678
+boyduw'z	baidoa's	25678
 boyel'wruS'	Byelorussia	18372
 boyf'rkeyS'n	bifurcation	13645
 boyf'rkeyt	bifurcate	15695
@@ -17080,7 +17080,7 @@ brWws	Bruce	13675
 brWws't	Brousset	23289
 brWws'w	Bruso	21784
 brWws'z	Bruce's	17075
-brWwset	brusette	25678
+brWwset	brusett	25678
 brWwsk'w	brusco	19110
 brWwskYy	Bruschi	20326
 brWwsord	BROUSSARD	17687
@@ -19692,7 +19692,7 @@ d'keydz	decades	10706
 d'keyt'r	Decatur	15530
 d'keyz	decays	13787
 d'klRrk	DeClercq	20814
-d'klRrks	declerque's	25678
+d'klRrks	declerck's	25678
 d'klas'foy	declassify	17922
 d'klas'foyd	declassified	15574
 d'kler	declare	10976
@@ -24172,8 +24172,8 @@ dandZ'luw	d'angelo	25678
 dandZ'luwz	d'angelo's	25678
 dandZ's	danjus	25678
 dandZWw	danju	25678
-dandZWwb	danjube	25678
-dandZWwbz	danjube's	25678
+dandZWwb	danjub	25678
+dandZWwbz	danjub's	25678
 dandZWwz	danju's	25678
 dandr'dZ	Dandridge	17502
 dandr'f	dandruff	15192
@@ -34760,7 +34760,7 @@ g'rnuw	Garneau	19333
 g'roZ	garage	12177
 g'roZ'z	garages	14170
 g'roZd'	Gorazde	20247
-g'roZd'z	gorazde's	25678
+g'roZd'z	garajda's	25678
 g'robr'nt	Garrabrant	20970
 g'rolskYy	Goralski	21096
 g'ron	Garon	19289
@@ -35672,7 +35672,7 @@ gcrnYy	Gorney	19474
 gcrnYy'k	Gorniak	22375
 gcrnt'w	Gornto	22161
 gcroZd'	Gorazde	20247
-gcroZd'z	gorazde's	25678
+gcroZd'z	garajda's	25678
 gcrodz'	Goradze	23677
 gcrs'tS	Gorsuch	18062
 gcrskYy	Gorski	18335
@@ -43376,7 +43376,7 @@ huwltsm'n	Holtzman	17523
 huwltz'N'r	Holtzinger	21004
 huwltz'p'l	Holtzapple	21367
 huwltz'r	Holtzer	19446
-huwlv's	holvis'	25678
+huwlv's	holvis	25678
 huwlv's'z	holvis's	25678
 huwlw'g'r	Holweger	23144
 huwlz	holes	10807
@@ -44242,7 +44242,7 @@ ilYygal'tYyz	illegalities	16524
 ilYyn	Ilene	18335
 ilYyn'	illina	21786
 ilYyon'w	iliano	21786
-ilal's	ilalis'	25678
+ilal's	ilalis	25678
 ilal's's	ilalis's	25678
 ilb'w	Ilbo	19400
 ildZ'n	Iljin	21501
@@ -50974,7 +50974,7 @@ kcrt'ks	cortex	11367
 kcrt'lyWw	Cortelyou	18149
 kcrt'm	Kortum	20160
 kcrt'n	cortin	17618
-kcrt'nz	cortens'	25678
+kcrt'nz	cortens	25678
 kcrt'r	courter	19715
 kcrt'rz	Courter's	23137
 kcrt's	Courtis	17982
@@ -54911,7 +54911,7 @@ kreg'r	Kraeger	20902
 kreg'w	Crego	20019
 kreh'n	Crehan	19884
 krek	Krech	18478
-krek'w	krecko	25678
+krek'w	creko	25678
 krel	Krell	18435
 krel'n	Crellin	20056
 krem'n	Cremin	18248
@@ -59919,7 +59919,7 @@ lilYy'nz	Lillian's	18196
 lilYyan'	Liliana	18680
 lilYybel	Lilybell	23406
 lilYyham'r	Lillehammer	19216
-lilYyham'rz	lillehammer's	25678
+lilYyham'rz	lillehamer's	25678
 lilYynT'l	Lilienthal	16940
 lilYyz	lilies	12808
 lildZ'd'l	Liljedahl	21124
@@ -62970,7 +62970,7 @@ m'rsYylYy	Marsili	20095
 m'rsYylYy'w	Marcilio	21156
 m'rsYyn	Marcin	19512
 m'rsYyol	Marcial	18527
-m'rsek'	marseka	25678
+m'rsek'	marceca	25678
 m'rsek'z	marseca's	25678
 m'rsel	Marcel	14928
 m'rsel'	Marcella	16735
@@ -65691,7 +65691,7 @@ mel'nYy	Melanie	15686
 mel'nYyZ'n	Melanesian	17090
 mel'nYyZ'nz	Melanesians	17930
 mel'nb'k'r	Mehlenbacher	21733
-mel'nbYy	mellonby	25678
+mel'nbYy	melanby	25678
 mel'nd	Meland	19596
 mel'nd'r	Melander	18955
 mel'nkol'k	melancholic	14373
@@ -69144,7 +69144,7 @@ n'npcyz'n's	nonpoisonous	16719
 n'npey'N	nonpaying	16899
 n'npeym'nt	nonpayment	14459
 n'npleyn'r	nonplanar	16797
-n'nplus	nonpluss	25678
+n'nplus	non-pluss	25678
 n'nplust	nonplussed	15088
 n'nport'z'n	nonpartisan	14310
 n'npr'feS'n'lz	nonprofessionals	15485
@@ -69177,7 +69177,7 @@ n'nstort'r	nonstarter	17708
 n'nstort'rz	nonstarters	19293
 n'nstr'tYydZ'k	nonstrategic	17224
 n'ntRrb'w	nonturbo	21459
-n'ntRrb'wz	nonturbos	25678
+n'ntRrb'wz	non-turbos	25678
 n'ntaks'b'l	nontaxable	15509
 n'ntekn'k'l	nontechnical	14656
 n'ntend'w	Nintendo	17631
@@ -71128,8 +71128,8 @@ nonrez'denS'l	nonresidential	15147
 nons	nonce	14955
 nons'kterYy'n	nonsectarian	15257
 nons'ns	nonsense	11690
-nonsekw't'r	non-sequitur	25678
-nonsekw't'rz	non-sequiturs	25678
+nonsekw't'r	non-sequitor	25678
+nonsekw't'rz	non-sequitors	25678
 nonsmuwk'N	nonsmoking	15080
 nonsmuwk'rz	non-smokers'	25678
 nonsp'sif'k	nonspecific	12846
@@ -72729,7 +72729,7 @@ ormstroN	Armstrong	14289
 ormstroNz	Armstrong's	16898
 ormtSer	armchair	13162
 ormtSerz	armchairs	14624
-ormtek	armtek	25678
+ormtek	armtec	25678
 ormteks	armtek's	25678
 ormuwld	Armold	22718
 ormwId	Armwood	21407
@@ -75765,12 +75765,12 @@ pcrt'r	porter	12666
 pcrt'r'dZ'z	porterages	21689
 pcrt'rYyk'n	puerto rican	25678
 pcrt'rYyk'nz	puerto ricans	25678
-pcrt'rYyk'w	puerto-rico	25678
+pcrt'rYyk'w	puerto rico	25678
 pcrt'rfYyld	Porterfield	17706
 pcrt'rz	porters	13354
 pcrt's	portis	17154
 pcrt'w	Porto	15077
-pcrt'wprins	port-au-prince	25678
+pcrt'wprins	port au prince	25678
 pcrtS	porch	11613
 pcrtS'g'l	Portugal	13915
 pcrtS'g'lz	Portugal's	17396
@@ -79763,7 +79763,7 @@ pubz	pubs	14171
 pud'l	puddle	13721
 pud'lz	puddles	14251
 pudZYy	pudgy	14923
-pudZYyz	pudgies	25678
+pudZYyz	pudgie's	25678
 pudl'w	Pudlo	22447
 puf	puff	13040
 puf'N	puffing	13574
@@ -80098,7 +80098,7 @@ pwent's	puentes	18490
 pwertuw	Puerto	13659
 pwertuwrYyk'n	puerto rican	25678
 pwertuwrYyk'nz	puerto ricans	25678
-pwertuwrYyk'w	puerto-rico	25678
+pwertuwrYyk'w	puerto rico	25678
 pweybl'	Puebla	15844
 pworYyey	Poirier	17596
 pworuw	Poirot	17265
@@ -82681,7 +82681,7 @@ rYyscrt	resort	11101
 rYyscrt'N	resorting	13228
 rYyscrt'd	resorted	12125
 rYyscrts	resorts	12900
-rYysdZuwnz	reesjones'	25678
+rYysdZuwnz	reesjones	25678
 rYysdZuwnz'z	reesjones'	25678
 rYyseS'n	recession	12573
 rYyseS'nerYy	recessionary	16285
@@ -86942,7 +86942,7 @@ s'pYyn'd	subpoenaed	14980
 s'pYyn'z	subpoenas	15008
 s'pYynz'	sapienza	18475
 s'pYyuwnYy	Scipione	18559
-s'panskYy	sczepanski	25678
+s'panskYy	sapanski	25678
 s'pcr'w	Sapporo	17954
 s'pcrYyt'w	Saporito	20809
 s'pcrt	support	8596
@@ -89253,7 +89253,7 @@ sel'w	celo	17022
 selWwluws'	cellulosa	18605
 selYy	Celie	18393
 selYy'	Selia	20849
-selYyz	selies'	25678
+selYyz	selies	25678
 selawt	sellout	15829
 selawts	sellouts	17503
 selb	selbe	18560
@@ -89839,7 +89839,7 @@ seyb'r	sabre	13981
 seyb'rboyn	saberbein	25678
 seyb'rboynz	saberbein's	25678
 seyb'rt	Seybert	18822
-seyb'rtek	sabretech	25678
+seyb'rtek	sabertech	25678
 seyb'rz	sabres	14768
 seybYy	Sabey	21013
 seybrIk	Saybrook	16888
@@ -89944,14 +89944,14 @@ seynd'n	Saindon	21286
 seynsb'rYy	Sainsbury	18135
 seynt	St.	10893
 seynt'd	sainted	14451
-seyntdZRrmeyn	st germaine	25678
+seyntdZRrmeyn	st germain	25678
 seyntdZWwlYy'n	st julien	25678
 seyntdZYyn	st jean	25678
 seyntdZcrdZ	st george	25678
 seyntdZeymz	st james	25678
 seyntdZoks	st jacques	25678
 seyntdZon	Stjohn	20732
-seyntdZonz	st-johns	25678
+seyntdZonz	st johns	25678
 seyntden's	st denis	25678
 seynth'leyr	st hilaire	25678
 seynthId	sainthood	15319
@@ -92455,7 +92455,7 @@ sob'r	sauber	19419
 sob't	sabat	19464
 sob'tSinskYy	Sobocinski	21341
 sob'tYyst'	sabatista	25678
-sob'tYyst'z	sabatistas	25678
+sob'tYyst'z	sabatista's	25678
 sob'w	Sabo	18703
 sob'z	Sabas	19066
 sobYy'	sabia	16939
@@ -96147,7 +96147,7 @@ sumz	sums	11341
 sun	son	8677
 sun'N	sunning	15039
 sun'mer'k'	SunAmerica	21433
-sun'nlo	sons-in-law	25678
+sun'nlo	son-in-law	25678
 sun'p	sunup	15675
 sunSoyn	sunshine	11576
 sunSoynYy	sunshiny	15343
@@ -96313,7 +96313,7 @@ suwSYy	soshi	17843
 suwb'k	Sobek	19165
 suwb'l	Sobel	17320
 suwb'lm'n	Sobelman	21397
-suwb'lz	sobils	25678
+suwb'lz	sobil's	25678
 suwb'n	Sobin	19610
 suwb'r	sober	11705
 suwb'r'N	sobering	14159
@@ -99306,7 +99306,7 @@ tedYyz	Teddy's	17841
 tedZ'n	Tejon	17881
 tedf'rd	Tedford	19106
 tedm'n	Tedman	22010
-tedm'nd	tedmund	25678
+tedm'nd	tedmond	25678
 tedr'k	Tedrick	20874
 tedruw	Tedrow	19973
 tedz	Ted's	17095
@@ -101689,7 +101689,7 @@ truwl	troll	14867
 truwl'N	trolling	15052
 truwl'N'r	Trollinger	20706
 truwlz	trolls	15458
-truwm'	troma	20380
+truwm'	Troma	20380
 truwn	trone	17045
 truwnd'l	Troendle	21526
 truwpYy'	Tropea	20333
@@ -105152,7 +105152,7 @@ vin'g'r	vinegar	12247
 vin'g'rz	vinegars	16300
 vin'k	vinik	19470
 vin'k'r	Vinocur	21040
-vin'ks	vinnick's	25678
+vin'ks	vinick's	25678
 vin't	Vinet	18335
 vinYy	Vinnie	16798
 vind'k'yt	vindicate	13212
@@ -108526,7 +108526,7 @@ wuns	once	8212
 wunself	oneself	11461
 wunsoyd'd	one-sided	25678
 wuntoym	onetime	14374
-wunupm'nSip	one-upmanship	25678
+wunupm'nSip	one-up-manship	25678
 wunwey	one-way	25678
 wunyir	oneyear	16017
 wunz	ones	9452
