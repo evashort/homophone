@@ -24,7 +24,7 @@ insert : comparable -> PrioritySet comparable -> PrioritySet comparable
 insert k s = PairingHeap.insert (k, ()) s
 
 findMin : PrioritySet comparable -> Maybe comparable
-findMin = Maybe.map fst << PairingHeap.findMin
+findMin = Maybe.map Tuple.first << PairingHeap.findMin
 
 deleteMin : PrioritySet comparable -> PrioritySet comparable
 deleteMin s =

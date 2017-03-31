@@ -2,17 +2,17 @@ module DAGTest exposing (dagTest)
 
 import Array exposing (Array)
 import Dict exposing (Dict)
-import ElmTest exposing (..)
+import Expect
 import List
+import Test exposing (..)
 
 import DAG exposing (DAG, Edge)
 
 dagTest : Test
 dagTest =
-  suite "DAG Suite"
-    [ test
-        "It can merge redundant branches of the DAG" <|
-        assertEqual
+  describe "DAG Suite"
+    [ test "It can merge redundant branches of the DAG" <|
+        \() -> Expect.equal
           (flattenDAG <| DAG.fromPathLists [["abc", "anz", "xyz"]]) <|
           [ ('a', ['b', 'n'])
           , ('b', ['c'])
@@ -24,7 +24,7 @@ dagTest =
           ]
     , test
         "It can merge different branches of the subtree rooted at 'a' at different times" <|
-        assertEqual
+        \() -> Expect.equal
           (flattenDAG <| DAG.fromPathLists [["axyz", "az", "bxyz"]]) <|
           [ ('a', ['x', 'z'])
           , ('b', ['x'])

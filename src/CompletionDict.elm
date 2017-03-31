@@ -17,7 +17,7 @@ type alias CompletionDict valueType =
 
 fromSortedPairs : List (String, valueType) -> Maybe (CompletionDict valueType)
 fromSortedPairs sortedPairs =
-  let keys = List.map fst sortedPairs in
+  let keys = List.map Tuple.first sortedPairs in
     let sorted =
       case List.tail keys of
         Nothing -> True
@@ -26,7 +26,7 @@ fromSortedPairs sortedPairs =
       if sorted then
         Just
           { keys = Array.fromList keys
-          , values = Array.fromList <| List.map snd sortedPairs
+          , values = Array.fromList <| List.map Tuple.second sortedPairs
           }
       else Nothing
 

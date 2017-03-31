@@ -50,9 +50,12 @@ parseAtoms pronouncer atoms =
   case NumParser.parse atoms of
     Just (molecule, rest) -> molecule :: parseAtoms pronouncer rest
     Nothing ->
-      let sizes = List.reverse [ 1 .. maxMoleculeSize pronouncer atoms ] in
+      let
+        sizes =
+          List.reverse <| List.range 1 <| maxMoleculeSize pronouncer atoms
+      in
         case
-          Maybe.oneOf <| List.map (parseNAtoms pronouncer atoms) sizes
+          List.head <| List.filterMap (parseNAtoms pronouncer atoms) sizes
         of
           Just (molecule, rest) -> molecule :: parseAtoms pronouncer rest
           Nothing ->

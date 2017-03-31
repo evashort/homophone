@@ -26,15 +26,14 @@ parseErrorToString err =
       NotSorted -> "keys are not in sorted order"
 
 parse : String -> Result ParseError SubCosts
-parse fileContents =
-  Result.andThen
-    (parseMenus fileContents) <|
-    Result.fromMaybe NotSorted << CompletionDict.fromSortedPairs
+parse =
+  parseMenus >>
+    Result.andThen
+    (Result.fromMaybe NotSorted << CompletionDict.fromSortedPairs)
 
 parseMenus : String -> Result ParseError (List (String, List PricedString))
-parseMenus fileContents =
-  ParseUtils.foldResults <|
-    List.map parseMenu <| ParseUtils.nonEmptyLines fileContents
+parseMenus =
+  ParseUtils.foldResults << List.map parseMenu << ParseUtils.nonEmptyLines
 
 parseMenu : String -> Result ParseError (String, List PricedString)
 parseMenu text =
@@ -42,7 +41,7 @@ parseMenu text =
     case (List.head tokens, List.tail tokens) of
       (Just key, Just []) -> Err <| NoValues key
       (Just key, Just menu) ->
-        Result.andThen (parseMenuItems menu) <| addKey key
+        parseMenuItems menu |> Result.andThen (addKey key)
       _ -> Debug.crash "non-empty line somehow has no tokens"
 
 parseMenuItems : (List String) -> Result ParseError (List PricedString)
@@ -56,5 +55,6 @@ addKey :
   String -> List PricedString ->
     Result ParseError (String, (List PricedString))
 addKey key menuItems =
-  if List.member key <| List.map fst menuItems then Err <| KeyEqualsValue key
+  if List.member key <| List.map Tuple.first menuItems
+  then Err <| KeyEqualsValue key
   else Ok (key, menuItems)

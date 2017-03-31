@@ -1,14 +1,13 @@
-import ElmTest exposing (..)
+module Tests exposing (all)
+
+import Test exposing (..)
 
 import DAGTest
 import HomophoneTest
 
-main : Program Never
-main = runSuite all
-
 all : Test
 all =
-  suite "Everything Suite"
+  concat
     [ DAGTest.dagTest
     , HomophoneTest.homophoneTest
     ]

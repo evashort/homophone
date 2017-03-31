@@ -62,7 +62,7 @@ type alias Homophone =
 
 init : DeletionCosts -> SubCosts -> WordCosts -> Homophone
 init dCosts sCosts wCosts =
-  fst <|               -- to start off as done, we need one iteration to get
+  Tuple.first <|       -- to start off as done, we need one iteration to get
     update             -- the i=0 state, and another to determine that it has
       Random.maxInt <| -- no successors. for test cases, we may need more.
       { dCosts = dCosts
@@ -130,7 +130,7 @@ update iterations homophone =
           in let
             reusedKnapsacks =
               Dict.filter
-                (curry <| (>=) seaLevel << fst5 << fst)
+                (curry <| (>=) seaLevel << firstOf5 << Tuple.first)
                 goal.knapsacks
           in
             Search.init
@@ -165,7 +165,7 @@ update iterations homophone =
             List.filterMap
               .word <|
               finalKnapsack.state :: finalKnapsack.ancestors
-      , remainingPhonemes = DAG.length dag - 1 - fst5 finalKey
+      , remainingPhonemes = DAG.length dag - 1 - firstOf5 finalKey
       , cost = finalKnapsack.cost
       }
     , remainingIterations
@@ -196,7 +196,9 @@ firstTrue : List Bool -> Int
 firstTrue a =
   Maybe.withDefault
     (List.length a) <|
-    Maybe.map fst <| List.head <| List.filter snd <| List.indexedMap (,) a
+    Maybe.map
+      Tuple.first <|
+      List.head <| List.filter Tuple.second <| List.indexedMap (,) a
 
 force : Maybe a -> a
 force maybeX =
@@ -204,8 +206,8 @@ force maybeX =
     Just x -> x
     Nothing -> Debug.crash "expected Maybe to have a value"
 
-fst5 : (a, b, c, d, e) -> a
-fst5 (x, _, _, _, _) = x
+firstOf5 : (a, b, c, d, e) -> a
+firstOf5 (x, _, _, _, _) = x
 
 growPlants : Int -> Int -> Int
 growPlants seaLevel peak = if peak >= seaLevel then Random.maxInt else peak
@@ -266,8 +268,8 @@ getSuccessors dCosts sCosts wCosts dag (i, value, bState, beads, kLen) =
     in
       PeakedList.append
         ( List.filterMap
-          (toSuccessor wCosts dag "" value bState beads 0 kLen i 0.0)
-          [1..String.length value]
+          (toSuccessor wCosts dag "" value bState beads 0 kLen i 0.0) <|
+          List.range 1 <| String.length value
         )
         rest
 
@@ -304,8 +306,8 @@ getSuccessorsHelper
       ( List.filterMap
           ( toSuccessor
               wCosts dag word value bState beads tKLen kLen newI midCost
-          )
-          [1..String.length value]
+          ) <|
+          List.range 1 <| String.length value
       )
       rest
 

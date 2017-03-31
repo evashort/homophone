@@ -32,7 +32,7 @@ getChoices dCosts dag i =
     knapsacks =
       Dict.values <|
         Search.knapsacks <|
-          fst <|
+          Tuple.first <|
             Search.update
               Random.maxInt <|
               Search.singleton

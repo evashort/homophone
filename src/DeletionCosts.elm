@@ -22,15 +22,15 @@ parseErrorToString err =
       NotSorted -> "keys are not in sorted order"
 
 parse : String -> Result ParseError DeletionCosts
-parse fileContents =
-  Result.andThen
-    (parsePricedDeletions fileContents) <|
-    Result.fromMaybe NotSorted << CompletionDict.fromSortedPairs
+parse =
+  parsePricedDeletions >>
+    Result.andThen
+    (Result.fromMaybe NotSorted << CompletionDict.fromSortedPairs)
 
 parsePricedDeletions : String -> Result ParseError (List PricedString)
-parsePricedDeletions fileContents =
-  ParseUtils.foldResults <|
-    List.map parsePricedDeletion <| ParseUtils.nonEmptyLines fileContents
+parsePricedDeletions =
+  ParseUtils.foldResults <<
+    List.map parsePricedDeletion << ParseUtils.nonEmptyLines
 
 parsePricedDeletion : String -> Result ParseError PricedString
 parsePricedDeletion text =

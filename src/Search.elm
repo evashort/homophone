@@ -21,7 +21,7 @@ type alias Knapsack s =
 
 mapPeaks :
   (Int -> Int) -> Dict comparable (Knapsack s) -> Dict comparable (Knapsack s)
-mapPeaks f knapsacks = Dict.map (curry <| mapPeak f << snd) knapsacks
+mapPeaks f knapsacks = Dict.map (curry <| mapPeak f << Tuple.second) knapsacks
 
 mapPeak : (Int -> Int) -> Knapsack s -> Knapsack s
 mapPeak f knapsack = { knapsack | peak = f knapsack.peak }
@@ -60,7 +60,9 @@ init keyFunc successorFunc knapsacks =
   , fringe =
       PrioritySet.fromList <|
         Dict.keys <|
-          Dict.filter (curry <| (==) Random.maxInt << .peak << snd) knapsacks
+          Dict.filter
+            (curry <| (==) Random.maxInt << .peak << Tuple.second)
+            knapsacks
   , keyFunc = keyFunc
   , successorFunc = successorFunc
   }

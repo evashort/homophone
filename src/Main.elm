@@ -1,5 +1,4 @@
 import Html exposing (Html)
-import Html.App
 import Html.Events as Events
 import Html.Attributes as Attributes
 import Json.Decode
@@ -10,9 +9,9 @@ import Task
 import DataLoader
 import Rack exposing (Rack)
 
-main : Program Never
+main : Program Never Model Msg
 main =
-  Html.App.program
+  Html.program
     { init = init
     , update = update
     , view = view
@@ -29,12 +28,13 @@ type alias Model =
 
 init : (Model, Cmd Msg)
 init =
-  ( { dataLoader = fst DataLoader.init
-    , userText = RawText ""
-    , hidden = False
-    }
-  , Cmd.map DataLoaded <| snd DataLoader.init
-  )
+  let (dataLoader, loadData) = DataLoader.init in
+    ( { dataLoader = dataLoader
+      , userText = RawText ""
+      , hidden = False
+      }
+    , Cmd.map DataLoaded loadData
+    )
 
 view : Model -> Html Msg
 view model =
@@ -236,6 +236,7 @@ update action model =
         _ -> Debug.crash "RefreshText action before data loaded"
 
 yieldAndThen : msg -> Cmd msg
-yieldAndThen =
-  Task.perform identity identity <<
-    Task.andThen (Process.sleep 0.0) << always << Task.succeed
+yieldAndThen action =
+  Task.perform
+    identity
+    (Process.sleep 0.0 |> Task.andThen (always <| Task.succeed action))

@@ -10,7 +10,10 @@ type alias Molecule =
   }
 
 parse : List String -> Maybe (Molecule, List String)
-parse atoms = Maybe.oneOf [ parseInteger atoms, parseDecimal atoms ]
+parse atoms =
+  case parseInteger atoms of
+    Just result -> Just result
+    Nothing -> parseDecimal atoms
 
 parseDecimal : List String -> Maybe (Molecule, List String)
 parseDecimal atoms =

@@ -28,15 +28,13 @@ parseErrorToString err =
 parse : String -> Result ParseError (Speller, WordCosts)
 parse fileContents =
   let
-    triplets = parseTriplets fileContents
+    bothResult =
+      parseTriplets fileContents |>
+        Result.andThen
+        (Result.fromMaybe NotSorted << CompletionDict.fromSortedPairs)
   in let
-    tripletsResult =
-      Result.andThen
-        (parseTriplets fileContents) <|
-        Result.fromMaybe NotSorted << CompletionDict.fromSortedPairs
-  in let
-    spellerResult = Result.map (CompletionDict.map fst) tripletsResult
-    wordCostsResult = Result.map (CompletionDict.map snd) tripletsResult
+    spellerResult = Result.map (CompletionDict.map Tuple.first) bothResult
+    wordCostsResult = Result.map (CompletionDict.map Tuple.second) bothResult
   in
     Result.map2 (,) spellerResult wordCostsResult
 

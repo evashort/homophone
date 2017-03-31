@@ -21,15 +21,14 @@ parseErrorToString err =
       NotSorted -> "spellings are not in sorted order"
 
 parse : String -> Result ParseError Pronouncer
-parse fileContents =
-  Result.andThen
-    (parsePairs fileContents) <|
-    Result.fromMaybe NotSorted << CompletionDict.fromSortedPairs
+parse =
+  parsePairs >>
+    Result.andThen
+    (Result.fromMaybe NotSorted << CompletionDict.fromSortedPairs)
 
 parsePairs : String -> Result ParseError (List (String, List String))
-parsePairs fileContents =
-  ParseUtils.foldResults <|
-    List.map parsePair <| ParseUtils.nonEmptyLines fileContents
+parsePairs =
+  ParseUtils.foldResults << List.map parsePair << ParseUtils.nonEmptyLines
 
 parsePair : String -> Result ParseError (String, List String)
 parsePair text =

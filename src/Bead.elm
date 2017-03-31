@@ -6,7 +6,7 @@ type alias Bead = Int
 
 fromWords : List Int -> Int -> List Bead
 fromWords wordList v =
-  List.map (init (Array.fromList wordList) v) [0 .. v - 1]
+  List.map (init (Array.fromList wordList) v) <| List.range 0 <| v - 1
 
 finish : Bead
 finish = 6

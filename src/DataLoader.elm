@@ -1,8 +1,7 @@
 module DataLoader exposing (Model, init, Msg, update, data, view)
 
 import Html exposing (Html)
-import Http
-import Task
+import Http exposing (Error(..))
 
 import DeletionCosts exposing (DeletionCosts)
 import Pronouncer exposing (Pronouncer)
@@ -32,10 +31,46 @@ init : (Model, Cmd Msg)
 init =
   ( { dState = Nothing, sState = Nothing, pState = Nothing, wState = Nothing }
   , Cmd.batch
-      [ Task.perform DError DLoaded <| Http.getString dURL
-      , Task.perform SError SLoaded <| Http.getString sURL
-      , Task.perform PError PLoaded <| Http.getString pURL
-      , Task.perform WError WLoaded <| Http.getString wURL
+      [ Http.send
+          ( DResult <<
+              ( Result.mapError (httpErrorToString dURL) >>
+                  Result.andThen
+                  ( Result.mapError DeletionCosts.parseErrorToString <<
+                      DeletionCosts.parse
+                  )
+              )
+          ) <|
+          Http.getString dURL
+      , Http.send
+          ( SResult <<
+              ( Result.mapError (httpErrorToString sURL) >>
+                  Result.andThen
+                  ( Result.mapError SubCosts.parseErrorToString <<
+                      SubCosts.parse
+                  )
+              )
+          ) <|
+          Http.getString sURL
+      , Http.send
+          ( PResult <<
+              ( Result.mapError (httpErrorToString pURL) >>
+                  Result.andThen
+                  ( Result.mapError Pronouncer.parseErrorToString <<
+                      Pronouncer.parse
+                  )
+              )
+          ) <|
+          Http.getString pURL
+      , Http.send
+          ( WResult <<
+              ( Result.mapError (httpErrorToString wURL) >>
+                  Result.andThen
+                  ( Result.mapError WordCosts.parseErrorToString <<
+                      WordCosts.parse
+                  )
+              )
+          ) <|
+          Http.getString wURL
       ]
   )
 
@@ -43,65 +78,26 @@ httpErrorToString : String -> Http.Error -> String
 httpErrorToString url err =
   "error loading " ++ url ++ ": " ++
     case err of
-      Http.Timeout -> "connection timed out"
-      Http.NetworkError ->  "network error"
-      Http.UnexpectedPayload _ -> "unexpected payload"
-      Http.BadResponse statusCode _ ->
-        "bad response code " ++ toString statusCode
+      BadUrl _ -> "invalid url"
+      Timeout -> "connection timed out"
+      NetworkError ->  "network error"
+      BadPayload _ _ -> "unexpected payload"
+      BadStatus response ->
+        "bad response code " ++ toString response.status.code
 
 type Msg
-  = DLoaded String
-  | SLoaded String
-  | PLoaded String
-  | WLoaded String
-  | DError Http.Error
-  | SError Http.Error
-  | PError Http.Error
-  | WError Http.Error
+  = DResult (Result String DeletionCosts)
+  | SResult (Result String SubCosts)
+  | PResult (Result String (Pronouncer))
+  | WResult (Result String (Speller, WordCosts))
 
 update : Msg -> Model -> (Model, Cmd.Cmd Msg)
 update action model =
   ( case action of
-      DLoaded fileContents ->
-        { model
-        | dState =
-            Just <|
-              Result.formatError
-                DeletionCosts.parseErrorToString <|
-                DeletionCosts.parse fileContents
-        }
-      SLoaded fileContents ->
-        { model
-        | sState =
-            Just <|
-              Result.formatError
-                SubCosts.parseErrorToString <|
-                SubCosts.parse fileContents
-        }
-      PLoaded fileContents ->
-        { model
-        | pState =
-            Just <|
-              Result.formatError
-                Pronouncer.parseErrorToString <|
-                Pronouncer.parse fileContents
-        }
-      WLoaded fileContents ->
-        { model
-        | wState =
-            Just <|
-              Result.formatError
-                WordCosts.parseErrorToString <|
-                WordCosts.parse fileContents
-        }
-      DError httpError ->
-        { model | dState = Just <| Err <| httpErrorToString dURL httpError }
-      SError httpError ->
-        { model | sState = Just <| Err <| httpErrorToString sURL httpError }
-      WError httpError ->
-        { model | wState = Just <| Err <| httpErrorToString wURL httpError }
-      PError httpError ->
-        { model | pState = Just <| Err <| httpErrorToString pURL httpError }
+      DResult result -> { model | dState = Just result }
+      SResult result -> { model | sState = Just result }
+      PResult result -> { model | pState = Just result }
+      WResult result -> { model | wState = Just result }
   , Cmd.none
   )
 
