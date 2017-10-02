@@ -3,7 +3,7 @@ Finds a different set of words that sound like the input
 
 Single-page client-side web app written in Elm
 
-Try it out at http://homophone.me/
+Try it out at http://evanshort.name/homophone/
 
 ## Building from source
 
