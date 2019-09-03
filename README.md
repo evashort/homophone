@@ -3,13 +3,13 @@ Finds a different set of words that sound like the input
 
 Single-page client-side web app written in Elm
 
-Try it out at http://evanshort.name/homophone/
+Try it out at https://evashort.com/homophone/
 
 ## Building from source
 
 1. Install [Elm Platform 0.18](https://guide.elm-lang.org/install.html)
 
-1. Run `git clone https://github.com/evanshort73/elm-pairing-heap.git` so that
+1. Run `git clone https://github.com/evashort/elm-pairing-heap.git` so that
 `elm-pairing-heap` and `homophone` are side-by-side in the same directory
 
 1. Run `elm-make src/Main.elm --output elm.js --warn`

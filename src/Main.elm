@@ -139,7 +139,7 @@ view model =
             viewSolution model.userText
         ]
      , Html.a
-         [ Attributes.href "https://github.com/evanshort73/homophone"
+         [ Attributes.href "https://github.com/evashort/homophone"
          , Attributes.style [ ("margin", "12px") ]
          ]
          [ Html.text "GitHub" ]

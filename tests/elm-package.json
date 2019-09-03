@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
     "summary": "homophone tests",
-    "repository": "https://github.com/evanshort73/homophone.git",
+    "repository": "https://github.com/evashort/homophone.git",
     "license": "MIT",
     "source-directories": [
         ".",
