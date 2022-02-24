@@ -125,7 +125,7 @@ all but the last input phoneme, the second-to-last phoneme reappears in the
 following word. This is the part of the algorithm that's really hard to get
 right. When in doubt, remember that items in the queue should have the same
 priority if and only if the possibilities for continuation are identical
-(and each possiblity would adds the same cost to both items).
+(and each possiblity would add the same cost to both items).
 
 At this point I've explained most of the algorithm. The remaining problem is to
 figure out which words are valid continuations. For this you can do a recursive
