@@ -57,8 +57,8 @@ with more than one pronunciation in the dictionary, and it makes the code
 vastly more complex. Just choose an arbitrary pronunciation for each word and
 tweak those choices manually if they produce bad results.
 
-The reason my code doesn't produce a list of multiple pronunciations is that
-there are an exponential number of them, and not generating all of them is an
+The reason my code doesn't produce a list of multiple homophones is that there
+are an exponential number of them, and not generating all of them is an
 important optimization. For example, consider the sentence "see your packet".
 Here are some possible results:
 1. see your packet
